@@ -2080,6 +2080,10 @@ public class RotOnEntityTickUpdateProcedure {
 			return true; // Automatically attack hostiles (monsters)
 		}
 
+		if (target instanceof Mob) {
+			return true; // Support hostile modded mobs that do not extend Monster but are selected by AI goals
+		}
+
 		return false;
 	}
 
