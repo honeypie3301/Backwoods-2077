@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smelting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:ScandereResin"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 5.0,
+    "cookingTime": 250,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smeltingInputStack": {
+      "value": "CUSTOM:ScandereResin"
+    },
+    "smeltingReturnStack": {
+      "value": "CUSTOM:CrystallizedScandereResin"
+    },
+    "name": "crystallized_scandere_resin_recipe",
+    "namespace": "mod"
+  }
+}

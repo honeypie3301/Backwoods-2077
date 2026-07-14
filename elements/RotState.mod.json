@@ -1,0 +1,10 @@
+{
+  "_fv": 85,
+  "_type": "command",
+  "definition": {
+    "commandName": "rotstate",
+    "type": "STANDARD",
+    "permissionLevel": "2",
+    "argsxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"args_start\" deletable=\"false\" x=\"40\" y=\"40\"><next><block type=\"entity\"><field name=\"name\">target</field><field name=\"type\">entity</field><statement name=\"args\"><block type=\"literal\"><field name=\"name\">totem</field><statement name=\"args\"><block type=\"literal\"><field name=\"name\">on</field><statement name=\"args\"><block type=\"call_procedure\"><field name=\"procedure\">RotTotemStateToggleOn</field></block></statement><next><block type=\"literal\"><field name=\"name\">off</field><statement name=\"args\"><block type=\"call_procedure\"><field name=\"procedure\">RotTotemStateToggleOff</field></block></statement></block></next></block></statement><next><block type=\"literal\"><field name=\"name\">infinitytotem</field><statement name=\"args\"><block type=\"literal\"><field name=\"name\">on</field><statement name=\"args\"><block type=\"call_procedure\"><field name=\"procedure\">RotStateInfinityToggleOn</field></block></statement><next><block type=\"literal\"><field name=\"name\">off</field><statement name=\"args\"><block type=\"call_procedure\"><field name=\"procedure\">RotStateInfinityToggleOff</field></block></statement></block></next></block></statement></block></next></block></statement></block></next></block></xml>"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_fv": 85,
+  "_type": "potion",
+  "definition": {
+    "potionName": "Potion of Inoculation",
+    "splashName": "Splash Potion of Inoculation",
+    "lingeringName": "Lingering Potion of Inoculation",
+    "arrowName": "Arrow of Inoculation",
+    "effects": [
+      {
+        "effect": {
+          "value": "CUSTOM:InoculationEffect"
+        },
+        "duration": 2400,
+        "infinite": false,
+        "amplifier": 0,
+        "ambient": false,
+        "showParticles": true
+      }
+    ]
+  }
+}

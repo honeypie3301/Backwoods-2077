@@ -1,0 +1,12 @@
+{
+  "_fv": 85,
+  "_type": "damagetype",
+  "definition": {
+    "exhaustion": 0.1,
+    "scaling": "always",
+    "effects": "hurt",
+    "normalDeathMessage": "%1$s was obliterated by a resonant beam",
+    "itemDeathMessage": "%1$s was obliterated by a resonant beam from %2$s using %3$s",
+    "playerDeathMessage": "%1$s was vaporized by %2$s whilst trying to escape"
+  }
+}
