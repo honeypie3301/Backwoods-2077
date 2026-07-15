@@ -148,6 +148,14 @@ public class TheBackwoodsModItems {
 	public static final DeferredItem<Item> LIGNUM_PALUS_SPAWN_EGG;
 	public static final DeferredItem<Item> FRACTUS_CORE;
 	public static final DeferredItem<Item> FRACTUS_CORE_NUGGET;
+	public static final DeferredItem<Item> FRACTUS_PRIME_CORE;
+	public static final DeferredItem<Item> LIGNUM_CARO;
+	public static final DeferredItem<Item> LIGNUM_COMPOST;
+	public static final DeferredItem<Item> SCANDERE_RESIN;
+	public static final DeferredItem<Item> CRYSTALLIZED_SCANDERE_RESIN;
+	public static final DeferredItem<Item> DECAYING_LEAVES;
+	public static final DeferredItem<Item> LIGNUM_CARO_SWORD;
+	public static final DeferredItem<Item> LIGNUM_CARO_ASH;
 	static {
 		BACKWOODS = REGISTRY.register("backwoods", BackwoodsItem::new);
 		SPLINTER_SPAWN_EGG = REGISTRY.register("splinter_spawn_egg", () -> new DeferredSpawnEggItem(TheBackwoodsModEntities.SPLINTER, -7643606, -3632054, new Item.Properties()));
@@ -278,6 +286,14 @@ public class TheBackwoodsModItems {
 		LIGNUM_PALUS_SPAWN_EGG = REGISTRY.register("lignum_palus_spawn_egg", () -> new DeferredSpawnEggItem(TheBackwoodsModEntities.LIGNUM_PALUS, -9021396, -14211289, new Item.Properties()));
 		FRACTUS_CORE = block(TheBackwoodsModBlocks.FRACTUS_CORE, new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
 		FRACTUS_CORE_NUGGET = REGISTRY.register("fractus_core_nugget", FractusCoreNuggetItem::new);
+		FRACTUS_PRIME_CORE = block(TheBackwoodsModBlocks.FRACTUS_PRIME_CORE, new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+		LIGNUM_CARO = block(TheBackwoodsModBlocks.LIGNUM_CARO);
+		LIGNUM_COMPOST = REGISTRY.register("lignum_compost", LignumCompostItem::new);
+		SCANDERE_RESIN = REGISTRY.register("scandere_resin", ScandereResinItem::new);
+		CRYSTALLIZED_SCANDERE_RESIN = REGISTRY.register("crystallized_scandere_resin", CrystallizedScandereResinItem::new);
+		DECAYING_LEAVES = block(TheBackwoodsModBlocks.DECAYING_LEAVES);
+		LIGNUM_CARO_SWORD = REGISTRY.register("lignum_caro_sword", LignumCaroSwordItem::new);
+		LIGNUM_CARO_ASH = REGISTRY.register("lignum_caro_ash", LignumCaroAshItem::new);
 	}
 
 	// Start of user code block custom items

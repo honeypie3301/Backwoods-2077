@@ -16,15 +16,15 @@
     "biomesInDimensionCaves": [],
     "worldGenType": "Normal world gen",
     "mainFillerBlock": {
-      "value": "Blocks.PLANKS#0"
+      "value": "CUSTOM:LignumCaro"
     },
     "fluidBlock": {
       "value": "Blocks.AIR"
     },
-    "seaLevel": 63,
+    "seaLevel": 0,
     "generateOreVeins": false,
     "generateAquifers": false,
-    "horizontalNoiseSize": 2,
+    "horizontalNoiseSize": 1,
     "verticalNoiseSize": 2,
     "defaultEffects": "overworld",
     "useCustomEffects": true,

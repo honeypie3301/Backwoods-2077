@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:rotting_deep",
+  "features": "the_backwoods:dead_bush_rotting",
+  "step": "vegetal_decoration"
+}

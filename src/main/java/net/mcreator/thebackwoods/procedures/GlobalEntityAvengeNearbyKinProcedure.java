@@ -49,6 +49,12 @@ public class GlobalEntityAvengeNearbyKinProcedure {
 					if (entityiterator.getType().is(TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("the_backwoods:woodbound_entities")))) {
 						entityiterator.getPersistentData().putDouble("isEnraged", 1);
 						entityiterator.getPersistentData().putDouble("forced_hunt_ticks", 600);
+						if (event instanceof net.neoforged.neoforge.event.entity.living.LivingDeathEvent _deathEvent) {
+							net.minecraft.world.entity.Entity _attacker = _deathEvent.getSource().getEntity();
+							if (entityiterator instanceof net.minecraft.world.entity.LivingEntity _livingEntity && _attacker instanceof net.minecraft.world.entity.LivingEntity _livingAttacker) {
+								_livingEntity.setLastHurtByMob(_livingAttacker);
+							}
+						}
 					}
 				}
 			}

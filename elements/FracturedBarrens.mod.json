@@ -39,29 +39,29 @@
     },
     "particlesProbability": 0.1,
     "rainingPossibility": 0.0,
-    "temperature": 1.0,
+    "temperature": 0.2,
     "spawnBiome": false,
     "spawnInCaves": false,
     "spawnBiomeNether": false,
     "genTemperature": {
-      "min": 0.7,
-      "max": 0.9
+      "min": 0.5975,
+      "max": 1.0025
     },
     "genHumidity": {
-      "min": -1.0,
-      "max": -0.6
+      "min": -1.1645,
+      "max": -0.4355
     },
     "genContinentalness": {
-      "min": 0.3,
-      "max": 0.5
+      "min": 0.1975,
+      "max": 0.6025
     },
     "genErosion": {
-      "min": -0.1,
-      "max": 0.1
+      "min": -0.2025,
+      "max": 0.2025
     },
     "genWeirdness": {
-      "min": -0.3,
-      "max": -0.1
+      "min": -0.4025,
+      "max": 0.0025
     },
     "genDepth": {
       "min": 0.2,

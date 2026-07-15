@@ -1,7 +1,7 @@
 {
   "has_precipitation": true,
   "temperature": 0.4,
-  "downfall": 0.1,
+  "downfall": 0.5,
   "effects": {
     "music": {
       "sound": "ambient.soul_sand_valley.loop",

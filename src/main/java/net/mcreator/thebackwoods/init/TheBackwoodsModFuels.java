@@ -46,5 +46,11 @@ public class TheBackwoodsModFuels {
 			event.setBurnTime(270);
 		else if (itemstack.getItem() == TheBackwoodsModItems.FRACTUS_CORE_NUGGET.get())
 			event.setBurnTime(111111);
+		else if (itemstack.getItem() == TheBackwoodsModBlocks.FRACTUS_PRIME_CORE.get().asItem())
+			event.setBurnTime(2000000);
+		else if (itemstack.getItem() == TheBackwoodsModBlocks.DECAYING_LEAVES.get().asItem())
+			event.setBurnTime(1600);
+		else if (itemstack.getItem() == TheBackwoodsModBlocks.LIGNUM_CARO.get().asItem())
+			event.setBurnTime(700);
 	}
 }

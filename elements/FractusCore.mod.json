@@ -2,7 +2,7 @@
   "_fv": 85,
   "_type": "block",
   "definition": {
-    "texture": "fractuscoretexture",
+    "texture": "fractus_core_texture",
     "textureTop": "",
     "textureLeft": "",
     "textureFront": "",
@@ -19,9 +19,6 @@
     "itemTexture": "",
     "particleTexture": "",
     "blockSetType": "OAK",
-    "pottedPlant": {
-      "value": ""
-    },
     "leavesParticleChance": 0.0,
     "tintType": "No tint",
     "isItemTinted": false,
@@ -31,12 +28,12 @@
     "disableOffset": false,
     "boundingBoxes": [
       {
-        "mx": 4.0,
+        "mx": 5.0,
         "my": 0.0,
-        "mz": 4.0,
-        "Mx": 12.0,
-        "My": 8.0,
-        "Mz": 12.0,
+        "mz": 5.0,
+        "Mx": 11.0,
+        "My": 6.0,
+        "Mz": 11.0,
         "subtract": false
       }
     ],

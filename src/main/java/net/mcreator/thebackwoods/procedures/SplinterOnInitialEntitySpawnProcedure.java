@@ -8,7 +8,7 @@ public class SplinterOnInitialEntitySpawnProcedure {
 	public static void execute(Entity entity) {
 		if (entity == null)
 			return;
-		if (Math.random() < 0.1) {
+		if (Math.random() < 0.01) {
 			entity.getPersistentData().putBoolean("canTeleport", true);
 		}
 		if (entity instanceof LivingEntity _livingEntity1 && _livingEntity1.getAttributes().hasAttribute(Attributes.SAFE_FALL_DISTANCE))

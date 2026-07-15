@@ -39,7 +39,7 @@ public class TheBackwoodsModEntities {
 					.ridingOffset(-0.6f).sized(0.6f, 1.8f));
 	public static final DeferredHolder<EntityType<?>, EntityType<RotEntity>> ROT = register("rot", EntityType.Builder.<RotEntity>of(RotEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
-			.ridingOffset(-0.6f).sized(0.6f, 1.8f));
+			.sized(0.6f, 1.8f));
 	public static final DeferredHolder<EntityType<?>, EntityType<BlindspotSplinterEntity>> BLINDSPOT_SPLINTER = register("blindspot_splinter",
 			EntityType.Builder.<BlindspotSplinterEntity>of(BlindspotSplinterEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(32).setUpdateInterval(3)
 

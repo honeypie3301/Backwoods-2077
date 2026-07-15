@@ -34,6 +34,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 
+import net.mcreator.thebackwoods.procedures.SplinterEntityDiesProcedure;
 import net.mcreator.thebackwoods.procedures.LogSplinterOnInitialEntitySpawnProcedure;
 import net.mcreator.thebackwoods.procedures.LogSplinterOnEntityTickUpdateProcedure;
 import net.mcreator.thebackwoods.procedures.LogSplinterNaturalEntitySpawningConditionProcedure;
@@ -135,6 +136,12 @@ public class LogSplinterEntity extends Monster {
 		if (damagesource.is(DamageTypes.DRAGON_BREATH))
 			return false;
 		return super.hurt(damagesource, amount);
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		super.die(source);
+		SplinterEntityDiesProcedure.execute(this.level(), source.getEntity());
 	}
 
 	@Override

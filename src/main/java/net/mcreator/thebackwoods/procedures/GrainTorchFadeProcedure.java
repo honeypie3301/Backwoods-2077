@@ -43,6 +43,28 @@ public class GrainTorchFadeProcedure {
 		ResourceLocation.parse("the_backwoods:the_grain")
 	);
 
+	private static final ResourceKey<Level> THE_WEALD = ResourceKey.create(
+		Registries.DIMENSION,
+		ResourceLocation.parse("the_backwoods:the_petrified_weald")
+	);
+
+	private static boolean isInAntiTorchDimension(Level level) {
+		ResourceKey<Level> dim = level.dimension();
+		return dim.equals(THE_GRAIN) || dim.equals(THE_WEALD);
+	}
+
+	private static String getNbtListKey(Level level) {
+		return level.dimension().equals(THE_WEALD) ? "petrified_tracked_torches" : "grain_tracked_torches";
+	}
+
+	private static int getCheckInterval(Level level) {
+		return level.dimension().equals(THE_WEALD) ? 10 : 15;
+	}
+
+	private static double getDisappearChance(Level level) {
+		return level.dimension().equals(THE_WEALD) ? 0.07 : 0.06;
+	}
+
 	@SubscribeEvent
 	public static void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
 		Entity e = event.getEntity();
@@ -53,7 +75,7 @@ public class GrainTorchFadeProcedure {
 		if (level.isClientSide())
 			return;
 
-		if (!level.dimension().equals(THE_GRAIN))
+		if (!isInAntiTorchDimension(level))
 			return;
 
 		BlockState placed = event.getPlacedBlock();
@@ -74,10 +96,10 @@ public class GrainTorchFadeProcedure {
 		if (level.isClientSide())
 			return;
 
-		if (!level.dimension().equals(THE_GRAIN))
+		if (!isInAntiTorchDimension(level))
 			return;
 
-		if (player.tickCount % CHECK_INTERVAL_TICKS != 0)
+		if (player.tickCount % getCheckInterval(level) != 0)
 			return;
 
 		List<BlockPos> tracked = getTrackedTorches(player);
@@ -95,8 +117,13 @@ public class GrainTorchFadeProcedure {
 
 			boolean watched = isPlayerWatchingTorch(level, player, pos);
 
-			if (!watched && Math.random() < DISAPPEAR_CHANCE) {
-				level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+			if (!watched && Math.random() < getDisappearChance(level)) {
+				net.minecraft.world.level.block.Block unlit = getUnlitVersion(state);
+				if (unlit == Blocks.AIR) {
+					level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				} else {
+					swapBlock(level, pos, state, unlit);
+				}
 				continue;
 			}
 
@@ -107,12 +134,114 @@ public class GrainTorchFadeProcedure {
 	}
 
 	private static boolean isTorch(BlockState state) {
-		return state.is(Blocks.TORCH)
+		if (state.is(Blocks.TORCH)
 				|| state.is(Blocks.WALL_TORCH)
 				|| state.is(Blocks.SOUL_TORCH)
 				|| state.is(Blocks.SOUL_WALL_TORCH)
 				|| state.is(Blocks.REDSTONE_TORCH)
-				|| state.is(Blocks.REDSTONE_WALL_TORCH);
+				|| state.is(Blocks.REDSTONE_WALL_TORCH)
+				|| state.is(Blocks.LANTERN)
+				|| state.is(Blocks.SOUL_LANTERN)
+				|| state.is(Blocks.JACK_O_LANTERN)) {
+			return true;
+		}
+
+		net.minecraft.world.level.block.Block block = state.getBlock();
+		String regName = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block).toString();
+
+		if (regName.equals("totally_lit:glowstone_torch") || regName.equals("totally_lit:glowstone_wall_torch")) {
+			return true;
+		}
+
+		if (net.neoforged.fml.ModList.get().isLoaded("hardcore_torches")) {
+			if (regName.startsWith("hardcore_torches:lit_")) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static net.minecraft.world.level.block.Block getUnlitVersion(BlockState state) {
+		if (state.is(Blocks.JACK_O_LANTERN)) {
+			return Math.random() < 0.5 ? Blocks.CARVED_PUMPKIN : Blocks.PUMPKIN;
+		}
+
+		net.minecraft.world.level.block.Block block = state.getBlock();
+		String regName = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(block).toString();
+
+		// Determine if this is a wall-mounted torch
+		boolean isWall = regName.contains("wall_torch") || regName.contains("wall_lantern")
+				|| state.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+
+		if (net.neoforged.fml.ModList.get().isLoaded("totally_lit")) {
+			if (regName.equals("minecraft:torch")) {
+				return getBlockOrAir("totally_lit:unlit_torch");
+			} else if (regName.equals("minecraft:wall_torch")) {
+				return getBlockOrAir("totally_lit:unlit_wall_torch");
+			} else if (regName.equals("minecraft:soul_torch")) {
+				return getBlockOrAir("totally_lit:unlit_soul_torch");
+			} else if (regName.equals("minecraft:soul_wall_torch")) {
+				return getBlockOrAir("totally_lit:unlit_soul_wall_torch");
+			} else if (regName.equals("minecraft:lantern")) {
+				return getBlockOrAir("totally_lit:unlit_lantern");
+			} else if (regName.equals("minecraft:soul_lantern")) {
+				return getBlockOrAir("totally_lit:unlit_soul_lantern");
+			} else if (regName.equals("totally_lit:glowstone_torch")) {
+				return getBlockOrAir("totally_lit:unlit_torch");
+			} else if (regName.equals("totally_lit:glowstone_wall_torch")) {
+				return getBlockOrAir("totally_lit:unlit_wall_torch");
+			}
+		}
+
+		if (net.neoforged.fml.ModList.get().isLoaded("hardcore_torches")) {
+			if (regName.equals("minecraft:torch")) {
+				return getBlockOrAir("hardcore_torches:unlit_torch");
+			} else if (regName.equals("minecraft:wall_torch")) {
+				return getBlockOrAir("hardcore_torches:unlit_wall_torch");
+			} else if (regName.equals("minecraft:soul_torch")) {
+				return getBlockOrAir("hardcore_torches:unlit_soul_torch");
+			} else if (regName.equals("minecraft:soul_wall_torch")) {
+				return getBlockOrAir("hardcore_torches:unlit_soul_wall_torch");
+			} else if (regName.equals("minecraft:lantern")) {
+				return getBlockOrAir("hardcore_torches:unlit_lantern");
+			} else if (regName.equals("minecraft:soul_lantern")) {
+				return getBlockOrAir("hardcore_torches:unlit_soul_lantern");
+			}
+
+			if (regName.startsWith("hardcore_torches:lit_")) {
+				String base = regName.substring("hardcore_torches:lit_".length());
+				// Preserve wall variant in the unlit name
+				String unlitName = "hardcore_torches:unlit_" + base;
+				net.minecraft.world.level.block.Block candidate = getBlockOrAir(unlitName);
+				if (candidate != Blocks.AIR) return candidate;
+			}
+		}
+
+		return Blocks.AIR;
+	}
+
+	private static net.minecraft.world.level.block.Block getBlockOrAir(String registryName) {
+		net.minecraft.resources.ResourceLocation rl = net.minecraft.resources.ResourceLocation.parse(registryName);
+		if (net.minecraft.core.registries.BuiltInRegistries.BLOCK.containsKey(rl)) {
+			return net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(rl);
+		}
+		return Blocks.AIR;
+	}
+
+	private static void swapBlock(Level level, BlockPos pos, BlockState currentState, net.minecraft.world.level.block.Block newBlock) {
+		BlockState newState = newBlock.defaultBlockState();
+		for (net.minecraft.world.level.block.state.properties.Property<?> property : currentState.getProperties()) {
+			if (newState.hasProperty(property)) {
+				newState = copyProperty(currentState, newState, property);
+			}
+		}
+		level.setBlock(pos, newState, 3);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T extends Comparable<T>> BlockState copyProperty(BlockState src, BlockState dest, net.minecraft.world.level.block.state.properties.Property<T> property) {
+		return dest.setValue(property, src.getValue(property));
 	}
 
 	private static boolean isPlayerWatchingTorch(LevelAccessor world, Player player, BlockPos torchPos) {
@@ -165,11 +294,12 @@ public class GrainTorchFadeProcedure {
 	private static List<BlockPos> getTrackedTorches(Player player) {
 		List<BlockPos> out = new ArrayList<>();
 		CompoundTag data = player.getPersistentData();
+		String listKey = getNbtListKey(player.level());
 
-		if (!data.contains(NBT_LIST_KEY, Tag.TAG_LIST))
+		if (!data.contains(listKey, Tag.TAG_LIST))
 			return out;
 
-		ListTag list = data.getList(NBT_LIST_KEY, Tag.TAG_STRING);
+		ListTag list = data.getList(listKey, Tag.TAG_STRING);
 		for (int i = 0; i < list.size(); i++) {
 			String s = list.getString(i);
 			BlockPos p = parsePos(s);
@@ -186,7 +316,7 @@ public class GrainTorchFadeProcedure {
 		for (BlockPos p : tracked) {
 			list.add(StringTag.valueOf(encodePos(p)));
 		}
-		player.getPersistentData().put(NBT_LIST_KEY, list);
+		player.getPersistentData().put(getNbtListKey(player.level()), list);
 	}
 
 	private static String encodePos(BlockPos pos) {
@@ -204,6 +334,6 @@ public class GrainTorchFadeProcedure {
 			return new BlockPos(x, y, z);
 		} catch (Exception ignored) {
 			return null;
-		}
-	}
+		} // 1.21.1
+	}// harccore torches compat update
 }

@@ -1,6 +1,6 @@
 package net.mcreator.thebackwoods.procedures;
 
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.Event;
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 @EventBusSubscriber
 public class HeavyLungsBiomeProcedure {
 	@SubscribeEvent
-	public static void onEntityTick(EntityTickEvent.Pre event) {
+	public static void onPlayerTick(PlayerTickEvent.Post event) {
 		execute(event, event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), event.getEntity());
 	}
 
@@ -32,14 +32,16 @@ public class HeavyLungsBiomeProcedure {
 	private static void execute(@Nullable Event event, LevelAccessor world, double x, double y, double z, Entity entity) {
 		if (entity == null)
 			return;
-		if (entity instanceof LivingEntity) {
-			if (world.getBiome(BlockPos.containing(x, y, z)).is(ResourceLocation.parse("the_backwoods:ashen_barrens")) && !entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("the_backwoods:woodbound_entities")))) {
-				if (entity.getY() < 100) {
-					if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(TheBackwoodsModMobEffects.HEAVY_LUNGS_POTION, 60, 0, false, false));
-				} else if (entity.getY() >= 100) {
-					if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(TheBackwoodsModMobEffects.HEAVY_LUNGS_POTION, 60, 1, false, false));
+		if (world.getLevelData().getGameTime() % 20 == 0) {
+			if (entity instanceof LivingEntity) {
+				if (world.getBiome(BlockPos.containing(x, y, z)).is(ResourceLocation.parse("the_backwoods:ashen_barrens")) && !entity.getType().is(TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse("the_backwoods:woodbound_entities")))) {
+					if (entity.getY() < 100) {
+						if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
+							_entity.addEffect(new MobEffectInstance(TheBackwoodsModMobEffects.HEAVY_LUNGS_POTION, 60, 0, false, false));
+					} else if (entity.getY() >= 100) {
+						if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
+							_entity.addEffect(new MobEffectInstance(TheBackwoodsModMobEffects.HEAVY_LUNGS_POTION, 60, 1, false, false));
+					}
 				}
 			}
 		}

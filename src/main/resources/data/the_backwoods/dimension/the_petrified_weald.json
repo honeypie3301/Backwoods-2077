@@ -9,24 +9,24 @@
           "biome": "the_backwoods:weald_outskirts",
           "parameters": {
             "temperature": [
-              -0.5,
-              0
+              -0.3817,
+              -0.1183
             ],
             "humidity": [
-              -0.5,
-              0
+              -0.3817,
+              -0.1183
             ],
             "continentalness": [
-              -0.5,
-              0.5
+              -0.3513,
+              0.3513
             ],
             "weirdness": [
-              0,
-              0.3
+              0.0709,
+              0.2291
             ],
             "erosion": [
-              0.2,
-              0.5
+              0.2709,
+              0.4291
             ],
             "depth": 0,
             "offset": 0
@@ -36,24 +36,24 @@
           "biome": "the_backwoods:calcified_plains",
           "parameters": {
             "temperature": [
-              -1,
-              -0.5
+              -1.2284,
+              -0.2716
             ],
             "humidity": [
-              -0.5,
-              -0.1
+              -0.6827,
+              0.0828
             ],
             "continentalness": [
-              -0.5,
-              0.5
+              -0.9568,
+              0.9568
             ],
             "weirdness": [
-              -0.3,
-              0
+              -0.437,
+              0.137
             ],
             "erosion": [
-              0.5,
-              1
+              0.2716,
+              1.2284
             ],
             "depth": 0,
             "offset": 0
@@ -63,24 +63,24 @@
           "biome": "the_backwoods:petrified_thickwoods",
           "parameters": {
             "temperature": [
-              0,
-              0.5
+              0.05,
+              0.45
             ],
             "humidity": [
-              0,
-              0.5
+              0.05,
+              0.45
             ],
             "continentalness": [
-              -0.5,
-              0.5
+              -0.4,
+              0.4
             ],
             "weirdness": [
-              0.3,
-              0.6
+              0.33,
+              0.57
             ],
             "erosion": [
-              -0.2,
-              0.2
+              -0.16,
+              0.16
             ],
             "depth": 0,
             "offset": 0
@@ -90,24 +90,24 @@
           "biome": "the_backwoods:fossilized_core",
           "parameters": {
             "temperature": [
-              0.5,
-              1
+              0.144,
+              1.356
             ],
             "humidity": [
-              0.5,
-              1
+              0.144,
+              1.356
             ],
             "continentalness": [
-              0.3,
-              0.8
+              -0.056,
+              1.156
             ],
             "weirdness": [
-              0.6,
-              1
+              0.3154,
+              1.2847
             ],
             "erosion": [
-              -0.4,
-              0
+              -0.6846,
+              0.2847
             ],
             "depth": 0,
             "offset": 0
@@ -117,24 +117,24 @@
           "biome": "the_backwoods:ashen_barrens",
           "parameters": {
             "temperature": [
-              -0.7,
-              0.3
+              -0.75,
+              0.35
             ],
             "humidity": [
-              -0.7,
-              0.3
+              -0.75,
+              0.35
             ],
             "continentalness": [
-              -0.5,
-              0.5
+              -0.55,
+              0.55
             ],
             "weirdness": [
-              0.35,
-              0.67
+              0.334,
+              0.686
             ],
             "erosion": [
-              0.3,
-              0.7
+              0.28,
+              0.72
             ],
             "depth": 0,
             "offset": 0

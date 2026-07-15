@@ -16,6 +16,7 @@ public class TheBackwoodsModModels {
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(ModelFractus.LAYER_LOCATION, ModelFractus::createBodyLayer);
 		event.registerLayerDefinition(ModelStiltWalker.LAYER_LOCATION, ModelStiltWalker::createBodyLayer);
+		event.registerLayerDefinition(ModelRot.LAYER_LOCATION, ModelRot::createBodyLayer);
 		event.registerLayerDefinition(ModelLignumPalus.LAYER_LOCATION, ModelLignumPalus::createBodyLayer);
 		event.registerLayerDefinition(ModelListener.LAYER_LOCATION, ModelListener::createBodyLayer);
 		event.registerLayerDefinition(ModelLignumVermis.LAYER_LOCATION, ModelLignumVermis::createBodyLayer);

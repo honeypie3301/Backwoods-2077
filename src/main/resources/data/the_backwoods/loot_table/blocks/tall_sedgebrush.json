@@ -17,15 +17,10 @@
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
+        },
         {
           "type": "minecraft:empty",
-          "weight": 60,
+          "weight": 10,
           "functions": [
             {
               "function": "minecraft:set_count",

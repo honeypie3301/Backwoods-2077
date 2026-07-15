@@ -11,12 +11,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 
 import net.mcreator.thebackwoods.init.TheBackwoodsModBlocks;
 
 public class ScandereLignumSpreadOnTickUpdateProcedure {
 	// Simulated tickrate target (20 = normal MC, 50 = faster spread behavior)
-	private static final int DESIRED_TPS = 140;
+	private static final int DESIRED_TPS = 50;
 
 	// Fertilization influence from nearby passive animals
 	private static final int FERTILIZE_ANIMAL_RADIUS = 6;
@@ -27,6 +29,18 @@ public class ScandereLignumSpreadOnTickUpdateProcedure {
 
 		RandomSource random = (world instanceof ServerLevel sl) ? sl.getRandom() : RandomSource.create();
 		BlockPos origin = BlockPos.containing(x, y, z);
+		BlockState currentState = world.getBlockState(origin);
+		
+		int currentAge = 0;
+		IntegerProperty ageProperty = null;
+		for (Property<?> prop : currentState.getProperties()) {
+			if (prop.getName().equals("age") && prop instanceof IntegerProperty) {
+				ageProperty = (IntegerProperty) prop;
+				currentAge = currentState.getValue(ageProperty);
+				break;
+			}
+		}
+		if (currentAge >= 10) return;
 
 		boolean openSky = world.canSeeSky(origin);
 
@@ -85,18 +99,27 @@ public class ScandereLignumSpreadOnTickUpdateProcedure {
 		if (world.getBlockEntity(target) != null) return;
 
 		// Basic exclusions
-		if (targetState.isAir()) return;
-		if (targetState.getBlock() == TheBackwoodsModBlocks.SCANDERE_LIGNUM.get()) return;
-		if (targetState.getBlock() == TheBackwoodsModBlocks.SCANDERE_LIGNUM_LOG.get()) return;
-		if (targetState.is(BlockTags.LEAVES)) return;
-		if (targetState.is(BlockTags.LOGS)) return;
-		if (targetState.getBlock() == Blocks.OBSIDIAN) return;
-		if (!world.getFluidState(target).isEmpty()) return;
+		if (targetState.isAir() || !world.getFluidState(target).isEmpty()) return;
+
+		net.minecraft.world.level.block.Block tBlock = targetState.getBlock();
+		boolean isValidTarget = tBlock == Blocks.DIRT 
+				|| tBlock == Blocks.COARSE_DIRT 
+				|| tBlock == Blocks.ROOTED_DIRT 
+				|| tBlock == Blocks.GRASS_BLOCK
+				|| tBlock == Blocks.ANDESITE 
+				|| tBlock == Blocks.GRANITE 
+				|| tBlock == Blocks.DIORITE
+				|| tBlock == Blocks.CLAY 
+				|| tBlock == Blocks.SAND 
+				|| tBlock == Blocks.RED_SAND
+				|| tBlock == Blocks.STONE;
+
+		if (!isValidTarget) return;
 
 		// Vein-shape control
 		int scandereNeighbors = countScandereNeighbors(world, target);
 
-		// hard anti-blob cap (you said you set this to 2 behavior)
+		// hard anti-blob cap
 		if (scandereNeighbors >= 2) return;
 
 		boolean goodVeinConnection = (scandereNeighbors == 1);
@@ -104,7 +127,11 @@ public class ScandereLignumSpreadOnTickUpdateProcedure {
 
 		if (!goodVeinConnection && !rareBranch) return;
 
-		world.setBlock(target, TheBackwoodsModBlocks.SCANDERE_LIGNUM.get().defaultBlockState(), 3);
+		BlockState targetPlacementState = TheBackwoodsModBlocks.SCANDERE_LIGNUM.get().defaultBlockState();
+		if (ageProperty != null && targetPlacementState.hasProperty(ageProperty)) {
+			targetPlacementState = targetPlacementState.setValue(ageProperty, currentAge + 1);
+		}
+		world.setBlock(target, targetPlacementState, 3);
 
 		// Simulate faster tickrate (e.g., 50 TPS instead of 20 TPS)
 		int spreadDelayAdjusted = Math.max(1, Mth.ceil(spreadDelay * (20.0 / DESIRED_TPS)));

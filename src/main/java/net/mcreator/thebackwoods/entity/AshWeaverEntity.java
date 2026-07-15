@@ -29,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 
+import net.mcreator.thebackwoods.procedures.SplinterEntityDiesProcedure;
 import net.mcreator.thebackwoods.procedures.AshWeaverOnEntityTickUpdateProcedure;
 import net.mcreator.thebackwoods.procedures.AshWeaverNaturalEntitySpawningConditionProcedure;
 import net.mcreator.thebackwoods.init.TheBackwoodsModEntities;
@@ -105,6 +106,12 @@ public class AshWeaverEntity extends PathfinderMob {
 		if (damagesource.is(DamageTypes.DROWN))
 			return false;
 		return super.hurt(damagesource, amount);
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		super.die(source);
+		SplinterEntityDiesProcedure.execute(this.level(), source.getEntity());
 	}
 
 	@Override

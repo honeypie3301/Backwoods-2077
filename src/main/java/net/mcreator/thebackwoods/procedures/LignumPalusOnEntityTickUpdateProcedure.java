@@ -11,6 +11,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.nbt.CompoundTag;
 
@@ -40,13 +41,54 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 		if (event.getEntity() != null && event.getEntity().getClass().getName().contains("LignumPalus")) {
 			Entity entity = event.getEntity();
 			CompoundTag mData = entity.getPersistentData();
-			if (persistentBoolean(mData, "is_hypnotizing", false)) {
-				mData.putBoolean("is_hypnotizing", false);
-				mData.putBoolean("isHypnotizing", false);
-				mData.putInt("stare_ticks", 0);
-				mData.putInt("hypnosis_ticks", 0);
-				// Cooldown of 5 seconds (100 ticks) so it does not immediately re-hypnotize the player when taking damage
-				mData.putInt("hypnosis_cooldown", 100);
+			Entity attacker = event.getSource().getEntity();
+
+			if (attacker instanceof LivingEntity livingAttacker) {
+				if (livingAttacker instanceof Player player) {
+					if (persistentBoolean(mData, "is_hypnotizing", false)) {
+						mData.putBoolean("is_hypnotizing", false);
+						mData.putBoolean("isHypnotizing", false);
+						mData.putBoolean("hypnotizing_non_players", false);
+						mData.putInt("stare_ticks", 0);
+						mData.putInt("hypnosis_ticks", 0);
+						// Cooldown of 5 seconds (100 ticks) so it does not immediately re-hypnotize the player when taking damage
+						mData.putInt("hypnosis_cooldown", 100);
+
+						// Clear hypnosis tag from any nearby entities that were hypnotized by this Palus
+						String myUUID = entity.getStringUUID();
+						double x = entity.getX();
+						double y = entity.getY();
+						double z = entity.getZ();
+						List<LivingEntity> potentialTargets = entity.level().getEntitiesOfClass(LivingEntity.class, new AABB(x - 32, y - 16, z - 32, x + 32, y + 16, z + 32));
+						for (LivingEntity le : potentialTargets) {
+							if (le.getPersistentData().getString("palus_hypnotized_by").equals(myUUID)) {
+								le.getPersistentData().remove("palus_hypnotized_by");
+							}
+						}
+					}
+				} else {
+					livingAttacker.getPersistentData().putString("palus_hypnotized_by", entity.getStringUUID());
+					
+					boolean isHypnotizing = persistentBoolean(mData, "is_hypnotizing", false);
+					boolean hypnotizingNonPlayers = persistentBoolean(mData, "hypnotizing_non_players", false);
+					
+					if (!isHypnotizing || !hypnotizingNonPlayers) {
+						mData.putBoolean("is_hypnotizing", true);
+						mData.putBoolean("isHypnotizing", true);
+						mData.putBoolean("hypnotizing_non_players", true);
+						mData.putInt("stare_ticks", 0);
+						mData.putInt("hypnosis_ticks", 0);
+						
+						entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+							net.minecraft.sounds.SoundEvents.PORTAL_TRIGGER,
+							net.minecraft.sounds.SoundSource.HOSTILE,
+							2.0F, 0.35F);
+						entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+							net.minecraft.sounds.SoundEvents.END_PORTAL_SPAWN,
+							net.minecraft.sounds.SoundSource.HOSTILE,
+							2.5F, 0.40F);
+					}
+				}
 			}
 
 			if (entity instanceof Mob mob) {
@@ -157,6 +199,28 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 		}
 	}
 
+	private static int getSyncedMouthState(Entity entity) {
+		try {
+			Class<?> clazz = entity.getClass();
+			java.lang.reflect.Field field = null;
+			for (java.lang.reflect.Field f : clazz.getDeclaredFields()) {
+				if (f.getName().equalsIgnoreCase("DATA_mouth_state") || f.getName().equalsIgnoreCase("DATA_mouthState")) {
+					field = f;
+					break;
+				}
+			}
+			if (field != null) {
+				field.setAccessible(true);
+				net.minecraft.network.syncher.EntityDataAccessor<Integer> accessor = 
+					(net.minecraft.network.syncher.EntityDataAccessor<Integer>) field.get(null);
+				return entity.getEntityData().get(accessor);
+			}
+		} catch (Exception e) {
+			// Fail silently
+		}
+		return 0;
+	}
+
 	public static void execute() {
 		// Empty signature to satisfy MCreator's call inside LignumPalusEntity when it has no parameters setup in MCreator GUI
 	}
@@ -169,15 +233,9 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 			return;
 
 		CompoundTag mData = mob.getPersistentData();
+		boolean isClient = (world instanceof net.minecraft.world.level.Level level && level.isClientSide());
 
-		// Handle hypnosis cooldown decrement
-		int hypnosisCooldown = persistentInt(mData, "hypnosis_cooldown", 0);
-		if (hypnosisCooldown > 0) {
-			hypnosisCooldown--;
-			mData.putInt("hypnosis_cooldown", hypnosisCooldown);
-		}
-
-		// 1. Find nearest player
+		// 1. Find nearest player (required for both client-side lifting and server-side AI)
 		List<Player> players = world.getEntitiesOfClass(Player.class, new AABB(x - 48, y - 16, z - 48, x + 48, y + 16, z + 48));
 		Player nearestPlayer = null;
 		double minDistance = Double.MAX_VALUE;
@@ -187,6 +245,88 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 				minDistance = dist;
 				nearestPlayer = p;
 			}
+		}
+
+		double mobEyeY = mob.getY() + 5.2; // Based on 5.8 high bounding box
+		boolean isPlayerWatching = false;
+		if (nearestPlayer != null) {
+			Vec3 lookVec = nearestPlayer.getLookAngle();
+			Vec3 toMobVec = new Vec3(mob.getX() - nearestPlayer.getX(), mobEyeY - nearestPlayer.getEyeY(), mob.getZ() - nearestPlayer.getZ()).normalize();
+			double dot = lookVec.dot(toMobVec);
+			isPlayerWatching = (dot > 0.3) && mob.hasLineOfSight(nearestPlayer);
+		}
+
+		if (isClient) {
+			int syncedMouth = getSyncedMouthState(mob);
+			boolean isHypnotizing = (syncedMouth == 1 || syncedMouth == 2) && isPlayerWatching;
+			if (isHypnotizing && nearestPlayer != null && nearestPlayer.isAlive() && !nearestPlayer.isCreative() && !nearestPlayer.isSpectator() && nearestPlayer.distanceTo(mob) <= 24.0) {
+				// Lock player camera directly and helplessly to mob's eyes to force the staring gaze!
+				double pDX = mob.getX() - nearestPlayer.getX();
+				double pDY = mobEyeY - nearestPlayer.getEyeY();
+				double pDZ = mob.getZ() - nearestPlayer.getZ();
+				double r = Math.sqrt(pDX * pDX + pDZ * pDZ);
+				float pYaw = (float) (Math.atan2(pDZ, pDX) * 180.0 / Math.PI) - 90.0F;
+				float pPitch = (float) -(Math.atan2(pDY, r) * 180.0 / Math.PI);
+				nearestPlayer.setYRot(pYaw);
+				nearestPlayer.yRotO = pYaw;
+				nearestPlayer.setXRot(pPitch);
+				nearestPlayer.xRotO = pPitch;
+
+				// Snap mob rotation to face player on client
+				double dX = nearestPlayer.getX() - mob.getX();
+				double dZ = nearestPlayer.getZ() - mob.getZ();
+				float targetYawToPlayer = (float) (Math.atan2(dZ, dX) * 180.0 / Math.PI) - 90.0F;
+				mob.setYRot(targetYawToPlayer);
+				mob.yRotO = targetYawToPlayer;
+				mob.setYBodyRot(targetYawToPlayer);
+				mob.yBodyRotO = targetYawToPlayer;
+				mob.setYHeadRot(targetYawToPlayer);
+				mob.yHeadRotO = targetYawToPlayer;
+
+				// Smooth telekinetic lift: Pull and hold player horizontally in front of mob's face, slightly lowered
+				double holdDistance = 2.0; // Suspended 2 blocks away as requested
+				double targetHoldX = mob.getX() - Math.sin(Math.toRadians(targetYawToPlayer)) * holdDistance;
+				double targetHoldY = mobEyeY - 1.30; // Suspended slightly lower for ideal direct stare angle
+				double targetHoldZ = mob.getZ() + Math.cos(Math.toRadians(targetYawToPlayer)) * holdDistance;
+
+				double pullX = targetHoldX - nearestPlayer.getX();
+				double pullY = targetHoldY - nearestPlayer.getY();
+				double pullZ = targetHoldZ - nearestPlayer.getZ();
+				double dist = Math.sqrt(pullX * pullX + pullY * pullY + pullZ * pullZ);
+
+				if (dist > 0.05) {
+					double pullFactorXZ = 0.22;
+					double pullFactorY = 0.08; // Slower lifting for a creepy, dramatic levitation effect
+					double maxPull = 0.45;
+					double velX = pullX * pullFactorXZ;
+					double velY = pullY * pullFactorY;
+					double velZ = pullZ * pullFactorXZ;
+					double len = Math.sqrt(velX * velX + velY * velY + velZ * velZ);
+					if (len > maxPull) {
+						velX = (velX / len) * maxPull;
+						velY = (velY / len) * maxPull;
+						velZ = (velZ / len) * maxPull;
+					}
+					// Cap rising velocity to make lifting slower
+					if (velY > 0.12) {
+						velY = 0.12;
+					}
+					nearestPlayer.setDeltaMovement(velX, velY, velZ);
+				} else {
+					nearestPlayer.setDeltaMovement(0, 0.01, 0);
+				}
+
+				nearestPlayer.fallDistance = 0.0F;
+				nearestPlayer.hasImpulse = true;
+			}
+			return; // Client-side execution ends here!
+		}
+
+		// Handle hypnosis cooldown decrement
+		int hypnosisCooldown = persistentInt(mData, "hypnosis_cooldown", 0);
+		if (hypnosisCooldown > 0) {
+			hypnosisCooldown--;
+			mData.putInt("hypnosis_cooldown", hypnosisCooldown);
 		}
 
 		// 2. Track Player Stationary Tick Count with persistent tags in custom mob data
@@ -231,16 +371,6 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 		double mobZ = mob.getZ();
 		double targetGridX = Math.floor(mobX) + 0.5;
 		double targetGridZ = Math.floor(mobZ) + 0.5;
-
-		// 3.5. Line of Sight & Field of View Raycasting
-		boolean isPlayerWatching = false;
-		double mobEyeY = mob.getY() + 5.2; // Based on 5.8 high bounding box
-		if (nearestPlayer != null) {
-			Vec3 lookVec = nearestPlayer.getLookAngle();
-			Vec3 toMobVec = new Vec3(mob.getX() - nearestPlayer.getX(), mobEyeY - nearestPlayer.getEyeY(), mob.getZ() - nearestPlayer.getZ()).normalize();
-			double dot = lookVec.dot(toMobVec);
-			isPlayerWatching = (dot > 0.3) && mob.hasLineOfSight(nearestPlayer);
-		}
 
 		// 3.6 Deadlights Gaze checking & Hypnosis Activation
 		boolean isHypnotizing = persistentBoolean(mData, "is_hypnotizing", false);
@@ -321,136 +451,295 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 
 		// 3.7 Deadlights Hypnosis Active State Loop
 		if (isHypnotizing) {
-			if (nearestPlayer == null || !nearestPlayer.isAlive() || nearestPlayer.isCreative() || nearestPlayer.isSpectator() || nearestPlayer.distanceTo(mob) > 24.0 || mob.hurtTime > 0) {
-				// Instantly cancel if player left, died, set to creative, or mob was hit/hurt!
-				isHypnotizing = false;
-				mData.putBoolean("is_hypnotizing", false);
-				mData.putBoolean("isHypnotizing", false);
-				mData.putInt("stare_ticks", 0);
-				mData.putInt("hypnosis_ticks", 0);
-				// Cooldown of 5 seconds (100 ticks) so it does not immediately re-hypnotize the player when damaged
-				mData.putInt("hypnosis_cooldown", 100);
-			} else {
-				// Increment active hypnosis ticks count
-				int hypnosisTicks = persistentInt(mData, "hypnosis_ticks", 0) + 1;
-				mData.putInt("hypnosis_ticks", hypnosisTicks);
-
-				// Lock entity rigidly in place on its grid node
-				mob.setDeltaMovement(0, mob.getDeltaMovement().y, 0);
-				if (mob.distanceToSqr(targetGridX, mob.getY(), targetGridZ) > 0.002) {
-					mob.teleportTo(targetGridX, mob.getY(), targetGridZ);
+			if (persistentBoolean(mData, "hypnotizing_non_players", false)) {
+				List<LivingEntity> potentialTargets = world.getEntitiesOfClass(LivingEntity.class, new AABB(x - 32, y - 16, z - 32, x + 32, y + 16, z + 32));
+				List<LivingEntity> hypnotizedEntities = new java.util.ArrayList<>();
+				for (LivingEntity le : potentialTargets) {
+					if (le.isAlive() && le.getPersistentData().getString("palus_hypnotized_by").equals(mob.getStringUUID())) {
+						hypnotizedEntities.add(le);
+					}
 				}
 
-				// Snap entity rotation to face player perfectly
-				double dX = nearestPlayer.getX() - mob.getX();
-				double dY = nearestPlayer.getEyeY() - mobEyeY;
-				double dZ = nearestPlayer.getZ() - mob.getZ();
-				float targetYawToPlayer = (float) (Math.atan2(dZ, dX) * 180.0 / Math.PI) - 90.0F;
-
-				mob.setYRot(targetYawToPlayer);
-				mob.yRotO = targetYawToPlayer;
-				mob.setYBodyRot(targetYawToPlayer);
-				mob.yBodyRotO = targetYawToPlayer;
-				mob.setYHeadRot(targetYawToPlayer);
-				mob.yHeadRotO = targetYawToPlayer;
-				mob.getLookControl().setLookAt(nearestPlayer, 100.0F, 100.0F);
-
-				// Lock player camera directly and helplessly to mob's eyes to force the staring gaze!
-				double pDX = mob.getX() - nearestPlayer.getX();
-				double pDY = mobEyeY - nearestPlayer.getEyeY();
-				double pDZ = mob.getZ() - nearestPlayer.getZ();
-				double r = Math.sqrt(pDX * pDX + pDZ * pDZ);
-				float pYaw = (float) (Math.atan2(pDZ, pDX) * 180.0 / Math.PI) - 90.0F;
-				float pPitch = (float) -(Math.atan2(pDY, r) * 180.0 / Math.PI);
-				nearestPlayer.setYRot(pYaw);
-				nearestPlayer.yRotO = pYaw;
-				nearestPlayer.setXRot(pPitch);
-				nearestPlayer.xRotO = pPitch;
-
-				// Smooth telekinetic lift: Pull and hold player horizontally in front of mob's face, slightly lowered
-				double holdDistance = 2.0; // Suspended 2 blocks away as requested
-				double targetHoldX = mob.getX() - Math.sin(Math.toRadians(targetYawToPlayer)) * holdDistance;
-				double targetHoldY = mobEyeY - 1.30; // Suspended slightly lower for ideal direct stare angle
-				double targetHoldZ = mob.getZ() + Math.cos(Math.toRadians(targetYawToPlayer)) * holdDistance;
-
-				double pullX = targetHoldX - nearestPlayer.getX();
-				double pullY = targetHoldY - nearestPlayer.getY();
-				double pullZ = targetHoldZ - nearestPlayer.getZ();
-				double dist = Math.sqrt(pullX * pullX + pullY * pullY + pullZ * pullZ);
-
-				if (dist > 0.05) {
-					double pullFactorXZ = 0.22;
-					double pullFactorY = 0.08; // Slower lifting for a creepy, dramatic levitation effect
-					double maxPull = 0.45;
-					double velX = pullX * pullFactorXZ;
-					double velY = pullY * pullFactorY;
-					double velZ = pullZ * pullFactorXZ;
-					double len = Math.sqrt(velX * velX + velY * velY + velZ * velZ);
-					if (len > maxPull) {
-						velX = (velX / len) * maxPull;
-						velY = (velY / len) * maxPull;
-						velZ = (velZ / len) * maxPull;
-					}
-					// Cap rising velocity to make lifting slower
-					if (velY > 0.12) {
-						velY = 0.12;
-					}
-					nearestPlayer.setDeltaMovement(velX, velY, velZ);
+				if (hypnotizedEntities.isEmpty()) {
+					isHypnotizing = false;
+					mData.putBoolean("is_hypnotizing", false);
+					mData.putBoolean("isHypnotizing", false);
+					mData.putBoolean("hypnotizing_non_players", false);
+					mData.putInt("stare_ticks", 0);
+					mData.putInt("hypnosis_ticks", 0);
+					mData.putInt("hypnosis_cooldown", 100);
+					mData.remove("hypnosis_yaw");
 				} else {
-					nearestPlayer.setDeltaMovement(0, 0.01, 0);
+					int hypnosisTicks = persistentInt(mData, "hypnosis_ticks", 0) + 1;
+					mData.putInt("hypnosis_ticks", hypnosisTicks);
+
+					mob.setDeltaMovement(0, mob.getDeltaMovement().y, 0);
+					if (mob.distanceToSqr(targetGridX, mob.getY(), targetGridZ) > 0.002) {
+						mob.teleportTo(targetGridX, mob.getY(), targetGridZ);
+					}
+
+					hypnotizedEntities.sort(java.util.Comparator.comparing(Entity::getStringUUID));
+
+					double avgX = 0;
+					double avgY = 0;
+					double avgZ = 0;
+					for (LivingEntity le : hypnotizedEntities) {
+						avgX += le.getX();
+						avgY += le.getEyeY();
+						avgZ += le.getZ();
+					}
+					avgX /= hypnotizedEntities.size();
+					avgY /= hypnotizedEntities.size();
+					avgZ /= hypnotizedEntities.size();
+
+					double dX = avgX - mob.getX();
+					double dY = avgY - mobEyeY;
+					double dZ = avgZ - mob.getZ();
+					float targetYawToEntities = (float) (Math.atan2(dZ, dX) * 180.0 / Math.PI) - 90.0F;
+
+					float currentHypnosisYaw = persistentFloat(mData, "hypnosis_yaw", mob.getYRot());
+					float nextHypnosisYaw = currentHypnosisYaw + net.minecraft.util.Mth.wrapDegrees(targetYawToEntities - currentHypnosisYaw) * 0.1F;
+					mData.putFloat("hypnosis_yaw", nextHypnosisYaw);
+
+					mob.setYRot(nextHypnosisYaw);
+					mob.yRotO = nextHypnosisYaw;
+					mob.setYBodyRot(nextHypnosisYaw);
+					mob.yBodyRotO = nextHypnosisYaw;
+					mob.setYHeadRot(nextHypnosisYaw);
+					mob.yHeadRotO = nextHypnosisYaw;
+					mob.getLookControl().setLookAt(avgX, avgY, avgZ, 10.0F, 10.0F);
+
+					int N = hypnotizedEntities.size();
+					double holdDistance = 3.0;
+					double rad = Math.toRadians(nextHypnosisYaw);
+					double rightX = Math.cos(rad);
+					double rightZ = Math.sin(rad);
+					double spacing = 1.2;
+
+					for (int i = 0; i < N; i++) {
+						LivingEntity le = hypnotizedEntities.get(i);
+
+						double offset = (i - (N - 1) / 2.0) * spacing;
+						double targetHoldX = mob.getX() - Math.sin(rad) * holdDistance + rightX * offset;
+						double targetHoldY = mobEyeY - 1.30;
+						double targetHoldZ = mob.getZ() + Math.cos(rad) * holdDistance + rightZ * offset;
+
+						double eDX = mob.getX() - le.getX();
+						double eDY = mobEyeY - le.getEyeY();
+						double eDZ = mob.getZ() - le.getZ();
+						double r = Math.sqrt(eDX * eDX + eDZ * eDZ);
+						float eYaw = (float) (Math.atan2(eDZ, eDX) * 180.0 / Math.PI) - 90.0F;
+						float ePitch = (float) -(Math.atan2(eDY, r) * 180.0 / Math.PI);
+						le.setYRot(eYaw);
+						le.yRotO = eYaw;
+						le.setXRot(ePitch);
+						le.xRotO = ePitch;
+
+						double pullX = targetHoldX - le.getX();
+						double pullY = targetHoldY - le.getY();
+						double pullZ = targetHoldZ - le.getZ();
+						double dist = Math.sqrt(pullX * pullX + pullY * pullY + pullZ * pullZ);
+
+						if (dist > 0.05) {
+							double pullFactorXZ = 0.22;
+							double pullFactorY = 0.08;
+							double maxPull = 0.45;
+							double velX = pullX * pullFactorXZ;
+							double velY = pullY * pullFactorY;
+							double velZ = pullZ * pullFactorXZ;
+							double len = Math.sqrt(velX * velX + velY * velY + velZ * velZ);
+							if (len > maxPull) {
+								velX = (velX / len) * maxPull;
+								velY = (velY / len) * maxPull;
+								velZ = (velZ / len) * maxPull;
+							}
+							if (velY > 0.12) {
+								velY = 0.12;
+							}
+							le.setDeltaMovement(velX, velY, velZ);
+						} else {
+							le.setDeltaMovement(0, 0.01, 0);
+						}
+
+						le.fallDistance = 0.0F;
+						le.hasImpulse = true;
+
+						if (hypnosisTicks >= 40) {
+							le.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+								net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN,
+								140,
+								2,
+								false,
+								false,
+								true
+							));
+							le.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+								net.minecraft.world.effect.MobEffects.DARKNESS,
+								140,
+								0,
+								false,
+								false,
+								true
+							));
+							le.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+								net.minecraft.world.effect.MobEffects.WITHER,
+								140,
+								1,
+								false,
+								false,
+								true
+							));
+						}
+					}
+
+					if (mob.tickCount % 30 == 0) {
+						mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
+							net.minecraft.sounds.SoundEvents.PORTAL_AMBIENT,
+							net.minecraft.sounds.SoundSource.HOSTILE,
+							1.5F, 0.35F);
+					}
+					if (mob.tickCount % 25 == 0) {
+						mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
+							net.minecraft.sounds.SoundEvents.WARDEN_HEARTBEAT,
+							net.minecraft.sounds.SoundSource.HOSTILE,
+							5.0F, 0.75F);
+					}
+
+					mob.getNavigation().stop();
+					return;
 				}
+			} else {
+				if (nearestPlayer == null || !nearestPlayer.isAlive() || nearestPlayer.isCreative() || nearestPlayer.isSpectator() || nearestPlayer.distanceTo(mob) > 24.0) {
+					// Instantly cancel if player left, died, set to creative, or mob was hit/hurt!
+					isHypnotizing = false;
+					mData.putBoolean("is_hypnotizing", false);
+					mData.putBoolean("isHypnotizing", false);
+					mData.putInt("stare_ticks", 0);
+					mData.putInt("hypnosis_ticks", 0);
+					// Cooldown of 5 seconds (100 ticks) so it does not immediately re-hypnotize the player when damaged
+					mData.putInt("hypnosis_cooldown", 100);
+				} else {
+					// Increment active hypnosis ticks count
+					int hypnosisTicks = persistentInt(mData, "hypnosis_ticks", 0) + 1;
+					mData.putInt("hypnosis_ticks", hypnosisTicks);
 
-				nearestPlayer.fallDistance = 0.0F;
-				nearestPlayer.hasImpulse = true;
+					// Lock entity rigidly in place on its grid node
+					mob.setDeltaMovement(0, mob.getDeltaMovement().y, 0);
+					if (mob.distanceToSqr(targetGridX, mob.getY(), targetGridZ) > 0.002) {
+						mob.teleportTo(targetGridX, mob.getY(), targetGridZ);
+					}
 
-				// Target gets continuous slowness III, darkness, and wither for 7 seconds (140 ticks) during active hypnosis/telekinesis
-				// But we only inflict the negative potion effects after waiting for 2 seconds (40 ticks)
-				if (hypnosisTicks >= 40) {
-					nearestPlayer.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-						net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN,
-						140, // 7 seconds duration
-						2,   // slowness 3 (amplifier 2)
-						false,
-						false,
-						true
-					));
-					nearestPlayer.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-						net.minecraft.world.effect.MobEffects.DARKNESS,
-						140, // 7 seconds duration
-						0,
-						false,
-						false,
-						true
-					));
-					nearestPlayer.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-						net.minecraft.world.effect.MobEffects.WITHER,
-						140, // 7 seconds duration
-						1,   // wither II (amplifier 1)
-						false,
-						false,
-						true
-					));
+					// Snap entity rotation to face player perfectly
+					double dX = nearestPlayer.getX() - mob.getX();
+					double dY = nearestPlayer.getEyeY() - mobEyeY;
+					double dZ = nearestPlayer.getZ() - mob.getZ();
+					float targetYawToPlayer = (float) (Math.atan2(dZ, dX) * 180.0 / Math.PI) - 90.0F;
+
+					mob.setYRot(targetYawToPlayer);
+					mob.yRotO = targetYawToPlayer;
+					mob.setYBodyRot(targetYawToPlayer);
+					mob.yBodyRotO = targetYawToPlayer;
+					mob.setYHeadRot(targetYawToPlayer);
+					mob.yHeadRotO = targetYawToPlayer;
+					mob.getLookControl().setLookAt(nearestPlayer, 100.0F, 100.0F);
+
+					// Lock player camera directly and helplessly to mob's eyes to force the staring gaze!
+					double pDX = mob.getX() - nearestPlayer.getX();
+					double pDY = mobEyeY - nearestPlayer.getEyeY();
+					double pDZ = mob.getZ() - nearestPlayer.getZ();
+					double r = Math.sqrt(pDX * pDX + pDZ * pDZ);
+					float pYaw = (float) (Math.atan2(pDZ, pDX) * 180.0 / Math.PI) - 90.0F;
+					float pPitch = (float) -(Math.atan2(pDY, r) * 180.0 / Math.PI);
+					nearestPlayer.setYRot(pYaw);
+					nearestPlayer.yRotO = pYaw;
+					nearestPlayer.setXRot(pPitch);
+					nearestPlayer.xRotO = pPitch;
+
+					// Smooth telekinetic lift: Pull and hold player horizontally in front of mob's face, slightly lowered
+					double holdDistance = 2.0; // Suspended 2 blocks away as requested
+					double targetHoldX = mob.getX() - Math.sin(Math.toRadians(targetYawToPlayer)) * holdDistance;
+					double targetHoldY = mobEyeY - 1.30; // Suspended slightly lower for ideal direct stare angle
+					double targetHoldZ = mob.getZ() + Math.cos(Math.toRadians(targetYawToPlayer)) * holdDistance;
+
+					double pullX = targetHoldX - nearestPlayer.getX();
+					double pullY = targetHoldY - nearestPlayer.getY();
+					double pullZ = targetHoldZ - nearestPlayer.getZ();
+					double dist = Math.sqrt(pullX * pullX + pullY * pullY + pullZ * pullZ);
+
+					if (dist > 0.05) {
+						double pullFactorXZ = 0.22;
+						double pullFactorY = 0.08; // Slower lifting for a creepy, dramatic levitation effect
+						double maxPull = 0.45;
+						double velX = pullX * pullFactorXZ;
+						double velY = pullY * pullFactorY;
+						double velZ = pullZ * pullFactorXZ;
+						double len = Math.sqrt(velX * velX + velY * velY + velZ * velZ);
+						if (len > maxPull) {
+							velX = (velX / len) * maxPull;
+							velY = (velY / len) * maxPull;
+							velZ = (velZ / len) * maxPull;
+						}
+						// Cap rising velocity to make lifting slower
+						if (velY > 0.12) {
+							velY = 0.12;
+						}
+						nearestPlayer.setDeltaMovement(velX, velY, velZ);
+					} else {
+						nearestPlayer.setDeltaMovement(0, 0.01, 0);
+					}
+
+					nearestPlayer.fallDistance = 0.0F;
+					nearestPlayer.hasImpulse = true;
+
+					// Target gets continuous slowness III, darkness, and wither for 7 seconds (140 ticks) during active hypnosis/telekinesis
+					// But we only inflict the negative potion effects after waiting for 2 seconds (40 ticks)
+					if (hypnosisTicks >= 40) {
+						nearestPlayer.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+							net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN,
+							140, // 7 seconds duration
+							2,   // slowness 3 (amplifier 2)
+							false,
+							false,
+							true
+						));
+						nearestPlayer.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+							net.minecraft.world.effect.MobEffects.DARKNESS,
+							140, // 7 seconds duration
+							0,
+							false,
+							false,
+							true
+						));
+						nearestPlayer.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+							net.minecraft.world.effect.MobEffects.WITHER,
+							140, // 7 seconds duration
+							1,   // wither II (amplifier 1)
+							false,
+							false,
+							true
+						));
+					}
+
+					// Play deep, terrifying rumbling nether portal ambient sound repeatedly
+					if (mob.tickCount % 30 == 0) {
+						mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
+							net.minecraft.sounds.SoundEvents.PORTAL_AMBIENT,
+							net.minecraft.sounds.SoundSource.HOSTILE,
+							1.5F, 0.35F); // Louder but not deafening, highly deep distorted pitch
+					}
+
+					// Play Warden heartbeat louder periodically during high-intensity hypnosis
+					if (mob.tickCount % 25 == 0) {
+						mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
+							net.minecraft.sounds.SoundEvents.WARDEN_HEARTBEAT,
+							net.minecraft.sounds.SoundSource.HOSTILE,
+							5.0F, 0.75F); // Louder Warden heartbeat
+					}
+
+					// Abort normal navigation loop entirely while hypnotizing
+					mob.getNavigation().stop();
+					return;
 				}
-
-				// Play deep, terrifying rumbling nether portal ambient sound repeatedly
-				if (mob.tickCount % 30 == 0) {
-					mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
-						net.minecraft.sounds.SoundEvents.PORTAL_AMBIENT,
-						net.minecraft.sounds.SoundSource.HOSTILE,
-						1.5F, 0.35F); // Louder but not deafening, highly deep distorted pitch
-				}
-
-				// Play Warden heartbeat louder periodically during high-intensity hypnosis
-				if (mob.tickCount % 25 == 0) {
-					mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(),
-						net.minecraft.sounds.SoundEvents.WARDEN_HEARTBEAT,
-						net.minecraft.sounds.SoundSource.HOSTILE,
-						5.0F, 0.75F); // Louder Warden heartbeat
-				}
-
-				// Abort normal navigation loop entirely while hypnotizing
-				mob.getNavigation().stop();
-				return;
 			}
 		}
 
@@ -789,5 +1078,5 @@ public class LignumPalusOnEntityTickUpdateProcedure {
 
 	private static String persistentString(CompoundTag tag, String key, String fallback) {
 		return tag.contains(key) ? tag.getString(key) : fallback;
-	}
+	} // 1.21.1
 }

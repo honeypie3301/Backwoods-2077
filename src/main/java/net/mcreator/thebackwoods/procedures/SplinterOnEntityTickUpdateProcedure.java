@@ -113,6 +113,13 @@ public class SplinterOnEntityTickUpdateProcedure {
 	private static void execute(@Nullable Event event, LevelAccessor world, double x, double y, double z, Entity entity) {
 		if (!(entity instanceof SplinterEntity splinter)) return;
 
+		if (splinter.getTarget() instanceof Player p && (p.isCreative() || p.isSpectator())) {
+			splinter.setTarget(null);
+		}
+		if (splinter.getLastHurtByMob() instanceof Player p && (p.isCreative() || p.isSpectator())) {
+			splinter.setLastHurtByMob(null);
+		}
+
 		if (!splinter.getPersistentData().getBoolean(K_PERSONALITY_INIT)) {
 			int p = (splinter.getRandom().nextInt(100) < ANGEL_CHANCE_PERCENT) ? PERSONALITY_ANGEL : PERSONALITY_STALK_HUNT;
 			splinter.getPersistentData().putInt(K_PERSONALITY, p);
@@ -137,7 +144,87 @@ public class SplinterOnEntityTickUpdateProcedure {
 		boolean isDegraded = age >= AGE_THIRD_TO_LAST;
 		boolean isCritical = age >= AGE_SECOND_TO_LAST;
 
-		Player foundPlayer = findNearestPlayerInRange(world, splinter.getX(), splinter.getY(), splinter.getZ(), TARGET_RANGE);
+		Player foundPlayerDirect = findNearestPlayerInRange(world, splinter.getX(), splinter.getY(), splinter.getZ(), TARGET_RANGE);
+		if (world instanceof Level level && level.isClientSide()) {
+			return;
+		}
+		LivingEntity foundPlayer = foundPlayerDirect;
+
+		LivingEntity prioritizedMob = null;
+		String attackerUUIDStr = splinter.getPersistentData().getString("splinter_attacker_uuid");
+		if (!attackerUUIDStr.isEmpty() && world instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+			try {
+				java.util.UUID attackerUUID = java.util.UUID.fromString(attackerUUIDStr);
+				net.minecraft.world.entity.Entity foundEntity = serverLevel.getEntity(attackerUUID);
+				if (foundEntity instanceof LivingEntity livingAttacker && livingAttacker.isAlive() && splinter.distanceToSqr(livingAttacker) < TARGET_RANGE * TARGET_RANGE) {
+					boolean isWoodbound = livingAttacker.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+					if (!isWoodbound && !(livingAttacker instanceof Player)) {
+						prioritizedMob = livingAttacker;
+					}
+				}
+			} catch (Exception e) {}
+		}
+
+		LivingEntity attacker = splinter.getLastHurtByMob();
+		if (attacker != null) {
+			boolean isWoodbound = attacker.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+			if (isWoodbound) {
+				if (splinter.getLastHurtByMob() == attacker) {
+					splinter.setLastHurtByMob(null);
+				}
+				attacker = null;
+			} else if (attacker.isAlive() && splinter.distanceToSqr(attacker) < TARGET_RANGE * TARGET_RANGE) {
+				if (!(attacker instanceof Player)) {
+					prioritizedMob = attacker;
+					splinter.getPersistentData().putString("splinter_attacker_uuid", attacker.getUUID().toString());
+				}
+			}
+		}
+
+		boolean hadPrioritizedMob = !attackerUUIDStr.isEmpty();
+		if (hadPrioritizedMob && prioritizedMob == null) {
+			splinter.getEntityData().set(SplinterEntity.DATA_isEnraged, 0);
+			splinter.getEntityData().set(SplinterEntity.DATA_watchTimer, 0);
+			splinter.getPersistentData().putInt(K_RAGE_BONUS, 0);
+			splinter.getPersistentData().putInt(K_FORCED_HUNT_TICKS, 0);
+			splinter.getPersistentData().putInt(K_STALK_WATCH_TICKS, 0);
+			if (splinter.getLastHurtByMob() != null) {
+				splinter.setLastHurtByMob(null);
+			}
+			splinter.getPersistentData().remove("splinter_attacker_uuid");
+		}
+
+		if (prioritizedMob != null) {
+			foundPlayer = prioritizedMob;
+			splinter.getEntityData().set(SplinterEntity.DATA_isEnraged, 1);
+			if (splinter.getTarget() != prioritizedMob) {
+				splinter.setTarget(prioritizedMob);
+			}
+			if (splinter.getLastHurtByMob() != prioritizedMob) {
+				splinter.setLastHurtByMob(prioritizedMob);
+			}
+		} else {
+			if (attacker instanceof Player p && p.isAlive() && !p.isCreative() && !p.isSpectator() && splinter.distanceToSqr(attacker) < TARGET_RANGE * TARGET_RANGE) {
+				foundPlayer = p;
+			}
+			if (foundPlayer != null) {
+				if (splinter.getTarget() != foundPlayer) {
+					splinter.setTarget(foundPlayer);
+				}
+			} else {
+				if (splinter.getTarget() != null) {
+					splinter.setTarget(null);
+				}
+			}
+		}
+
+		if (foundPlayer != null) {
+			boolean isWoodbound = foundPlayer.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+			if (isWoodbound) {
+				foundPlayer = null;
+			}
+		}
+
 		if (foundPlayer == null) {
 			int remainingForcedHunt = splinter.getPersistentData().getInt(K_FORCED_HUNT_TICKS);
 
@@ -170,24 +257,30 @@ public class SplinterOnEntityTickUpdateProcedure {
 			isEnraged = 1;
 		}
 
-		if (splinter.getLastHurtByMob() instanceof Player) {
-			int lastSeenHurtTime = splinter.getPersistentData().getInt(K_LAST_HURT_TIME);
-			int currentHurtTime = splinter.hurtTime;
-			if (currentHurtTime > 0 && currentHurtTime != lastSeenHurtTime) {
-				int bonus = splinter.getPersistentData().getInt(K_RAGE_BONUS) + RAGE_THRESHOLD_HIT_BONUS;
-				splinter.getPersistentData().putInt(K_RAGE_BONUS, bonus);
-				splinter.getPersistentData().putInt(K_LAST_HURT_TIME, currentHurtTime);
+		if (splinter.getLastHurtByMob() != null) {
+			boolean isWoodbound = splinter.getLastHurtByMob().getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+			if (!isWoodbound) {
+				int lastSeenHurtTime = splinter.getPersistentData().getInt(K_LAST_HURT_TIME);
+				int currentHurtTime = splinter.hurtTime;
+				if (currentHurtTime > 0 && currentHurtTime != lastSeenHurtTime) {
+					int bonus = splinter.getPersistentData().getInt(K_RAGE_BONUS) + RAGE_THRESHOLD_HIT_BONUS;
+					splinter.getPersistentData().putInt(K_RAGE_BONUS, bonus);
+					splinter.getPersistentData().putInt(K_LAST_HURT_TIME, currentHurtTime);
+				}
 			}
 		}
 
 		int effectiveRageThreshold = Math.max(1, RAGE_WATCH_THRESHOLD - splinter.getPersistentData().getInt(K_RAGE_BONUS));
 
-		Vec3 toSplinter = splinter.getEyePosition().subtract(foundPlayer.getEyePosition());
-		if (toSplinter.lengthSqr() > 1.0e-8) toSplinter = toSplinter.normalize();
-		double dot = foundPlayer.getLookAngle().normalize().dot(toSplinter);
-		boolean isWatched = (dot > WATCH_DOT_THRESHOLD) && foundPlayer.hasLineOfSight(splinter);
+		boolean isWatched = false;
+		if (foundPlayerDirect != null) {
+			Vec3 toSplinter = splinter.getEyePosition().subtract(foundPlayerDirect.getEyePosition());
+			if (toSplinter.lengthSqr() > 1.0e-8) toSplinter = toSplinter.normalize();
+			double dot = foundPlayerDirect.getLookAngle().normalize().dot(toSplinter);
+			isWatched = (dot > WATCH_DOT_THRESHOLD) && foundPlayerDirect.hasLineOfSight(splinter);
+		}
 
-		double distToPlayer = splinter.position().distanceTo(foundPlayer.position());
+		double distToPlayer = foundPlayerDirect != null ? splinter.position().distanceTo(foundPlayerDirect.position()) : Double.MAX_VALUE;
 		if (isEnraged == 1 && distToPlayer > RAGE_ESCAPE_RANGE) {
 			if (splinter.getPersistentData().getInt(K_FORCED_HUNT_TICKS) <= 0) {
 				splinter.getEntityData().set(SplinterEntity.DATA_isEnraged, 0);
@@ -208,7 +301,10 @@ public class SplinterOnEntityTickUpdateProcedure {
 			splinter.getEntityData().set(SplinterEntity.DATA_watchTimer, 0);
 		}
 
-		boolean foundRose = checkHeldRose(foundPlayer, splinter, world, foundPlayer.getX(), foundPlayer.getY(), foundPlayer.getZ());
+		boolean foundRose = false;
+		if (foundPlayerDirect != null) {
+			foundRose = checkHeldRose(foundPlayerDirect, splinter, world, foundPlayerDirect.getX(), foundPlayerDirect.getY(), foundPlayerDirect.getZ());
+		}
 		if (!foundRose && splinter.tickCount % 5 == 0) {
 			foundRose = checkNearbyRoseBlocks(world, splinter);
 		}
@@ -228,15 +324,15 @@ public class SplinterOnEntityTickUpdateProcedure {
 		boolean isTowering = !isCritical && (heightDiff >= 1.4 && horizontalDist < 12);
 
 		if (personality == PERSONALITY_ANGEL) {
-			if (splinter.tickCount % 3 == 0) {
-				splinter.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(foundPlayer.getX(), foundPlayer.getEyeY(), foundPlayer.getZ()));
-			}
-
 			if (isWatched && isEnraged == 0) {
 				setSpeed(splinter, 0);
 				stopNav(splinter);
 				splinter.getEntityData().set(SplinterEntity.DATA_mineProgress, 0);
 				return;
+			}
+
+			if (splinter.tickCount % 3 == 0) {
+				splinter.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(foundPlayer.getX(), foundPlayer.getEyeY(), foundPlayer.getZ()));
 			}
 
 			setSpeed(splinter, isDegraded ? DEGRADED_MOVE_SPEED : ACTIVE_MOVE_SPEED);
@@ -290,15 +386,15 @@ public class SplinterOnEntityTickUpdateProcedure {
 				splinter.getPersistentData().putInt(K_HM_PHASE_TIMER, phaseTimer);
 			}
 
-			if (splinter.tickCount % 3 == 0) {
-				splinter.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(foundPlayer.getX(), foundPlayer.getEyeY(), foundPlayer.getZ()));
-			}
-
 			if (phase == PHASE_SILENT) {
 				setSpeed(splinter, 0);
 				stopNav(splinter);
 				splinter.getEntityData().set(SplinterEntity.DATA_mineProgress, 0);
 				return;
+			}
+
+			if (splinter.tickCount % 3 == 0) {
+				splinter.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(foundPlayer.getX(), foundPlayer.getEyeY(), foundPlayer.getZ()));
 			}
 
 			if (phase == PHASE_STALK) {
@@ -444,6 +540,22 @@ public class SplinterOnEntityTickUpdateProcedure {
 				splinter.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 			}
 		}
+
+		// Melee reach range increase for non-players only (by 50%)
+		LivingEntity target = splinter.getTarget();
+		if (target != null && target.isAlive() && !(target instanceof Player)) {
+			double reach = splinter.getBbWidth() + target.getBbWidth() + 0.8;
+			double increasedReach = reach * 1.5;
+			double distSqr = splinter.distanceToSqr(target);
+			if (distSqr <= increasedReach * increasedReach) {
+				int lastAttackTick = splinter.getPersistentData().getInt("last_melee_attack_tick");
+				if (splinter.tickCount - lastAttackTick >= 20) {
+					splinter.doHurtTarget(target);
+					splinter.swing(InteractionHand.MAIN_HAND);
+					splinter.getPersistentData().putInt("last_melee_attack_tick", splinter.tickCount);
+				}
+			}
+		}
 	}
 
 	private static int randomBetween(SplinterEntity entity, int min, int max) {
@@ -457,7 +569,7 @@ public class SplinterOnEntityTickUpdateProcedure {
 		}
 	}
 
-	private static boolean canMine(LevelAccessor world, BlockPos pos, Player player) {
+	private static boolean canMine(LevelAccessor world, BlockPos pos, LivingEntity player) {
 		BlockState state = world.getBlockState(pos);
 		if (state.isAir()) return false;
 		float speed = state.getDestroySpeed(world, pos);
@@ -520,7 +632,7 @@ public class SplinterOnEntityTickUpdateProcedure {
 
 	private static Player findNearestPlayerInRange(LevelAccessor world, double x, double y, double z, double range) {
 		AABB box = AABB.ofSize(new Vec3(x, y, z), range, range, range);
-		List<Player> players = world.getEntitiesOfClass(Player.class, box, e -> true);
+		List<Player> players = world.getEntitiesOfClass(Player.class, box, e -> !e.isCreative() && !e.isSpectator());
 
 		Player nearest = null;
 		double best = range * range;

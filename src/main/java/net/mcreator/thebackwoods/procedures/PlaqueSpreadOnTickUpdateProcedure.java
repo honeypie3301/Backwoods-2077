@@ -79,6 +79,6 @@ public class PlaqueSpreadOnTickUpdateProcedure {
 
 			world.setBlock(target, TheBackwoodsModBlocks.PLAQUE.get().defaultBlockState(), 3);
 			world.scheduleTick(target, TheBackwoodsModBlocks.PLAQUE.get(), spreadDelay);
-		}
+		} // 1.21.1
 	}
 }

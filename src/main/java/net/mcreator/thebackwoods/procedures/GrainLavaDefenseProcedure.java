@@ -27,7 +27,7 @@ public class GrainLavaDefenseProcedure {
     private static final int LAVA_SCAN_RADIUS_XZ = 64;
     private static final int LAVA_SCAN_RADIUS_Y = 24;
     private static final int BIG_LAVA_THRESHOLD = 10;
-    private static final int PURGE_COOLDOWN_TICKS = 20 * 6; // 6 sec
+    private static final int PURGE_COOLDOWN_TICKS = 20 * 100; // 6 sec
 
     private static final String NBT_COOLDOWN_KEY = "grain_lava_purge_cd";
 

@@ -4,7 +4,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.Event;
-
+// 1.21.1
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -56,8 +56,175 @@ public class RotEntityIsHurtProcedure {
 		double particleAmount = 0;
 		double masterRadius = 0;
 		if (entity instanceof RotEntity) {
+			float damageAmount = 0.0F;
+			if (event instanceof LivingDamageEvent.Pre preEvent) {
+				damageAmount = preEvent.getNewDamage();
+			}
+
+			// --- EXTRACTED FROM onIncomingDamage ---
+			if (entity.getPersistentData().getDouble("sentinel_scanning_ticks") > 0) {
+				Entity attackerEnt = event instanceof LivingDamageEvent.Pre pre ? pre.getSource().getEntity() : null;
+				if (attackerEnt == null && event instanceof LivingDamageEvent.Pre pre) attackerEnt = pre.getSource().getDirectEntity();
+				if (attackerEnt != null) {
+					double dx = attackerEnt.getX() - entity.getX();
+					double dz = attackerEnt.getZ() - entity.getZ();
+					float targetYaw = (float) (Math.atan2(dz, dx) * (180F / Math.PI)) - 90F;
+					entity.getPersistentData().putDouble("sentinel_scanning_base_yaw", targetYaw);
+					entity.getPersistentData().putDouble("sentinel_scanning_ticks", 12.0);
+					entity.getPersistentData().putDouble("sentinel_scan_max_ticks", 12.0);
+					entity.getPersistentData().putBoolean("sentinel_reacting_to_attacker", true);
+					
+					double dy = attackerEnt.getEyeY() - entity.getEyeY();
+					double dh = Math.sqrt(dx * dx + dz * dz);
+					float targetPitch = (float) (-(Math.atan2(dy, dh) * (180F / Math.PI)));
+					entity.getPersistentData().putDouble("sentinel_scan_target_pitch", targetPitch);
+				}
+			}
+
+			if (event instanceof LivingDamageEvent.Pre preEvent) {
+				DamageSource source = preEvent.getSource();
+				Entity direct = source.getDirectEntity();
+
+				// Track recent damage for high-DPS adaptive resistance
+				double currentRecent = entity.getPersistentData().getDouble("sentinel_recent_damage");
+				double newRecent = currentRecent + damageAmount;
+				entity.getPersistentData().putDouble("sentinel_recent_damage", newRecent);
+
+				// Track cumulative total damage taken for adaptation scaling
+				double totalDamageTaken = entity.getPersistentData().getDouble("sentinel_total_damage_taken") + damageAmount;
+				entity.getPersistentData().putDouble("sentinel_total_damage_taken", totalDamageTaken);
+
+				// Slowly grow base knockback resistance as it keeps taking damage
+				if (((LivingEntity)entity).getAttributes().hasAttribute(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE)) {
+					double baseKb = Math.min(1.0, totalDamageTaken * 0.003); // Grows up to 100% knockback resistance
+					((LivingEntity)entity).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE).setBaseValue(baseKb);
+				}
+
+				if (source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE)) {
+					entity.getPersistentData().putBoolean("taken_fire_damage", true);
+				}
+				if (source.is(net.minecraft.world.damagesource.DamageTypes.FREEZE)) {
+					entity.getPersistentData().putBoolean("taken_freeze_damage", true);
+				}
+
+				if (direct instanceof net.minecraft.world.entity.projectile.Projectile || source.is(net.minecraft.tags.DamageTypeTags.IS_PROJECTILE)) {
+					if (net.mcreator.thebackwoods.procedures.RotOnEntityTickUpdateProcedure.tryDodgeProjectile(entity, source)) {
+						if (preEvent instanceof net.neoforged.bus.api.ICancellableEvent cancellable) cancellable.setCanceled(true);
+						preEvent.setNewDamage(0.0F);
+					}
+				}
+
+				// Swing arms when attacking any entity
+				Entity attackerEnt = preEvent.getSource().getEntity();
+				if (attackerEnt instanceof RotEntity rot) {
+					rot.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+				}
+			}
+			// --- END EXTRACTED ---
+
+
+			// 1. Choke state break mechanics (stagger from hits)
+			if (entity.getPersistentData().getBoolean("is_armor_ripping")) {
+				double hitsTaken = entity.getPersistentData().getDouble("rot_choke_hits_taken") + 1;
+				entity.getPersistentData().putDouble("rot_choke_hits_taken", hitsTaken);
+				double requiredHits = entity.getPersistentData().getDouble("rot_choke_break_hits");
+				if (hitsTaken >= requiredHits) {
+					entity.getPersistentData().putDouble("rot_armor_rip_ticks", 0);
+					entity.getPersistentData().putBoolean("is_armor_ripping", false);
+					if (world instanceof ServerLevel level) {
+						level.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+							net.minecraft.sounds.SoundEvents.ITEM_BREAK, net.minecraft.sounds.SoundSource.HOSTILE, 1.5F, 0.7F);
+						level.sendParticles(ParticleTypes.DUST_PLUME, entity.getX(), entity.getY() + 1.0, entity.getZ(), 15, 0.4, 0.4, 0.4, 0.1);
+					}
+				}
+			}
+
+			// 2. Blocking logic & immunity check
+			if (entity.getPersistentData().getBoolean("is_blocking")) {
+				if (event instanceof LivingDamageEvent.Pre preEvent) {
+					DamageSource source = preEvent.getSource();
+					boolean isBypassingBlock = false;
+					if (source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)
+						|| source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE)
+						|| source.is(net.minecraft.tags.DamageTypeTags.WITCH_RESISTANT_TO)
+						|| source.getMsgId().equals("magic")
+						|| source.getMsgId().equals("indirectMagic")
+						|| source.getMsgId().equals("potion")
+						|| source.getMsgId().equals("void")
+						|| source.getMsgId().equals("outOfWorld")) {
+						isBypassingBlock = true;
+					}
+
+					if (!isBypassingBlock) {
+						if (world instanceof Level lvl) {
+							if (!lvl.isClientSide()) {
+								lvl.playSound(null, BlockPos.containing(x, y, z),
+									net.minecraft.sounds.SoundEvents.SHIELD_BLOCK, net.minecraft.sounds.SoundSource.HOSTILE, 1.2F, 0.85F);
+							}
+						}
+						if (world instanceof ServerLevel level) {
+							level.sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 1.2, entity.getZ(), 10, 0.3, 0.3, 0.3, 0.1);
+						}
+						preEvent.setNewDamage(0.0F);
+						return;
+					}
+				}
+			} else {
+				// Trigger block check
+				double blockCooldown = entity.getPersistentData().getDouble("rot_block_cooldown");
+				boolean isChannelingAbility = entity.getPersistentData().getDouble("sentinel_solar_charge_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_solar_fire_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_cryo_charge_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_cryo_fire_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_grapple_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_tk_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_sonic_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_laser_closing_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_sky_warp_slam_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_judgment_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_omni_sonic_charge_ticks") > 0
+					|| entity.getPersistentData().getDouble("sentinel_sonic_scream_ticks") > 0
+					|| entity.getPersistentData().getDouble("rot_armor_rip_ticks") > 0
+					|| entity.getPersistentData().getDouble("rot_block_active_ticks") > 0;
+
+				if (blockCooldown <= 0 && !isChannelingAbility) {
+					double dmgThisSec = entity.getPersistentData().getDouble("rot_dmg_this_sec") + damageAmount;
+					entity.getPersistentData().putDouble("rot_dmg_this_sec", dmgThisSec);
+
+					double sec0 = entity.getPersistentData().getDouble("rot_dmg_sec_0");
+					double sec1 = entity.getPersistentData().getDouble("rot_dmg_sec_1");
+					double sec2 = entity.getPersistentData().getDouble("rot_dmg_sec_2");
+					double sec3 = entity.getPersistentData().getDouble("rot_dmg_sec_3");
+					double sec4 = entity.getPersistentData().getDouble("rot_dmg_sec_4");
+					double totalDps = (sec0 + sec1 + sec2 + sec3 + sec4) / 5.0;
+
+					if ((damageAmount >= 50.0F || totalDps >= 50.0F) && RotOnEntityTickUpdateProcedure.ENABLE_BLOCKING) {
+						double blockFailCount = entity.getPersistentData().getDouble("rot_block_fail_count") + 1;
+						entity.getPersistentData().putDouble("rot_block_fail_count", blockFailCount);
+						double blockChance = 0.25 + (blockFailCount * 0.15);
+
+						if (Math.random() < blockChance) {
+							entity.getPersistentData().putDouble("rot_block_fail_count", 0);
+							double minTicks = RotOnEntityTickUpdateProcedure.BLOCK_MIN_TICKS;
+							double maxTicks = RotOnEntityTickUpdateProcedure.BLOCK_MAX_TICKS;
+							double blockTicks = minTicks + Math.random() * (maxTicks - minTicks);
+							entity.getPersistentData().putDouble("rot_block_active_ticks", blockTicks);
+							entity.getPersistentData().putBoolean("is_blocking", true);
+							entity.getPersistentData().putDouble("rot_block_cooldown", 300);
+
+							if (world instanceof Level lvl) {
+								if (!lvl.isClientSide()) {
+									lvl.playSound(null, BlockPos.containing(x, y, z),
+										net.minecraft.sounds.SoundEvents.SHIELD_BLOCK, net.minecraft.sounds.SoundSource.HOSTILE, 1.5F, 0.65F);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			attacker = (entity instanceof LivingEntity _entity) ? _entity.getLastHurtByMob() : null;
 			foundPlayer = findEntityInWorldRange(world, Player.class, x, y, z, 64);
-			attacker = findEntityInWorldRange(world, Player.class, x, y, z, 64);
 			if (attacker != null) {
 				if (hasEntityInInventory(attacker, new ItemStack(Items.TOTEM_OF_UNDYING))) {
 					if (Math.random() < 0.004) {
@@ -162,5 +329,5 @@ public class RotEntityIsHurtProcedure {
 		if (entity instanceof Player player)
 			return player.getInventory().contains(stack -> !stack.isEmpty() && ItemStack.isSameItem(stack, itemstack));
 		return false;
-	}
+	} // 1.21.1
 }

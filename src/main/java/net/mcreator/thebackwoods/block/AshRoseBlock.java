@@ -3,6 +3,7 @@ package net.mcreator.thebackwoods.block;
 import org.checkerframework.checker.units.qual.s;
 
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.tags.BlockTags;
@@ -32,6 +34,11 @@ public class AshRoseBlock extends FlowerBlock {
 	@Override
 	public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return 100;
+	}
+
+	@Override
+	public PathType getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+		return PathType.LAVA;
 	}
 
 	@Override

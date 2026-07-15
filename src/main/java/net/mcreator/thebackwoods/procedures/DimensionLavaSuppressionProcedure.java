@@ -24,10 +24,9 @@ public class DimensionLavaSuppressionProcedure {
 
     // --- TUNABLE CONSTANTS ---
     private static final int CHECK_INTERVAL_TICKS = 3;           // Scan roughly 7 times per second
-    private static final int SCAN_RADIUS_XZ = 96;                
-    private static final int SCAN_RADIUS_Y = 24;                 // Optimized vertical range (25 blocks deep)
+    private static final int SCAN_RADIUS_XZ = 128;               // Expanded horizontal range (257x257 block chunk diameter)
     private static final int Y_THRESHOLD = -54;                  // only suppress at or below this Y
-    private static final int MAX_CHECKS_PER_PLAYER_SCAN = 1000000; // High budget so the scan actually completes
+    private static final int MAX_CHECKS_PER_PLAYER_SCAN = 1200000; // High budget so the scan actually completes
     private static final int MAX_REMOVALS_PER_PLAYER_SCAN = 8192; // Allows removing vast sections of lakes at once
     
     private static final long PLAYER_LAVA_PROTECTION_TICKS = 20L * 60L * 10L; // 10 minutes
@@ -67,44 +66,83 @@ public class DimensionLavaSuppressionProcedure {
 
         if (!isTargetDimension(dim)) return;
 
-        // Trigger scan if player is within range of the vertical threshold zone
-        if (player.getY() > Y_THRESHOLD + SCAN_RADIUS_Y) return;
+        // Trigger scan only when the player is deep underground where underground pools exist (-30 and below)
+        if (player.getY() > -30) return;
 
         cleanupOldPlayerPlacedLava(level);
 
         BlockPos center = player.blockPosition();
         
-        // OPTIMIZATION: One reusable position pointer prevents millions of temporary objects from lagging garbage collection
+        // Slicing to distribute performance budget over multiple ticks
+        int totalSlices = 12;
+        int currentSlice = (int) ((player.tickCount / CHECK_INTERVAL_TICKS) % totalSlices);
+        
+        int range = SCAN_RADIUS_XZ;
+        int sliceWidth = (range * 2 + 1 + totalSlices - 1) / totalSlices;
+        int startDx = -range + currentSlice * sliceWidth;
+        int endDx = Math.min(range, startDx + sliceWidth - 1);
+
+        // OPTIMIZATION: Reusable pos pointers prevent billions of temporary object allocations
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos neighborPos = new BlockPos.MutableBlockPos();
 
         int checked = 0;
         int removed = 0;
 
-        for (int dy = -SCAN_RADIUS_Y; dy <= SCAN_RADIUS_Y; dy++) {
-            int absY = center.getY() + dy;
-            if (absY > Y_THRESHOLD) continue;
+        // ABSOLUTE Y-BAND OPTIMIZATION:
+        // Scanning relative to the player's fine vertical position introduces massive overlapping checks and Y-levels that don't need suppression.
+        // Instead, we target the exact fixed absolute band where deep slate lava pools exist (-64 to -54), and clean up fire up to 5 blocks above (-53 to -49).
+        // This is 3 times faster and perfectly fixes any fire from escaping on top!
+        // We also check chunk loading ONCE per block column (X, Z) instead of on every single Y coord lookup, speeding checks up by 16x.
+        for (int dx = startDx; dx <= endDx; dx++) {
+            int absX = center.getX() + dx;
+            for (int dz = -SCAN_RADIUS_XZ; dz <= SCAN_RADIUS_XZ; dz++) {
+                int absZ = center.getZ() + dz;
 
-            for (int dx = -SCAN_RADIUS_XZ; dx <= SCAN_RADIUS_XZ; dx++) {
-                for (int dz = -SCAN_RADIUS_XZ; dz <= SCAN_RADIUS_XZ; dz++) {
+                mutablePos.set(absX, -64, absZ);
+                if (!level.hasChunkAt(mutablePos)) continue;
+
+                for (int absY = -64; absY <= -49; absY++) {
                     checked++;
                     if (checked > MAX_CHECKS_PER_PLAYER_SCAN) return;
 
-                    mutablePos.set(center.getX() + dx, absY, center.getZ() + dz);
-
-                    // OPTIMIZATION: Skip safely if the player's giant radius touches un-generated chunks
-                    if (!level.hasChunkAt(mutablePos)) continue;
-
-                    // Ignore if this specific coordinate belongs to player-placed lava
-                    if (PLAYER_PLACED_LAVA.containsKey(mutablePos.asLong())) continue;
-
+                    mutablePos.set(absX, absY, absZ);
                     BlockState state = level.getBlockState(mutablePos);
 
-                    if (state.is(Blocks.LAVA) || state.getFluidState().is(Fluids.LAVA)) {
-                        level.setBlock(mutablePos, Blocks.OAK_PLANKS.defaultBlockState(), 2);
-                        removed++;
+                    if (absY <= Y_THRESHOLD) {
+                        // --- LAVA PLACEMENT ZONE (-64 to -54) ---
+                        // Skip any coordinates protected by player placement actions
+                        if (PLAYER_PLACED_LAVA.containsKey(mutablePos.asLong())) continue;
 
-                        if (removed >= MAX_REMOVALS_PER_PLAYER_SCAN) {
-                            return;
+                        if (state.is(Blocks.LAVA) || state.getFluidState().is(Fluids.LAVA)) {
+                            level.setBlock(mutablePos, Blocks.OAK_PLANKS.defaultBlockState(), 2);
+                            removed++;
+
+                            // Extinguish adjacent fire blocks immediately around the newly converted wood
+                            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+                                if (dir == net.minecraft.core.Direction.DOWN) continue;
+                                neighborPos.set(mutablePos.getX() + dir.getStepX(), mutablePos.getY() + dir.getStepY(), mutablePos.getZ() + dir.getStepZ());
+                                if (level.hasChunkAt(neighborPos)) {
+                                    BlockState neighborState = level.getBlockState(neighborPos);
+                                    if (neighborState.getBlock() instanceof net.minecraft.world.level.block.BaseFireBlock 
+                                        || neighborState.is(Blocks.FIRE) 
+                                        || neighborState.is(Blocks.SOUL_FIRE)) {
+                                        level.setBlock(neighborPos, Blocks.AIR.defaultBlockState(), 3);
+                                    }
+                                }
+                            }
+
+                            if (removed >= MAX_REMOVALS_PER_PLAYER_SCAN) {
+                                return;
+                            }
+                        }
+                    } else {
+                        // --- THE ACTIVE FIRE CEILING ZONE (-53 to -49) ---
+                        // Extinguish any fire blocks in the air layers sitting directly on top of the suppression threshold
+                        if (state.getBlock() instanceof net.minecraft.world.level.block.BaseFireBlock 
+                            || state.is(Blocks.FIRE) 
+                            || state.is(Blocks.SOUL_FIRE)) {
+                            level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }

@@ -17,7 +17,7 @@ public class ThePetrifiedWealdDimension {
 			DimensionSpecialEffects customEffect = new DimensionSpecialEffects(Float.NaN, true, DimensionSpecialEffects.SkyType.NONE, false, false) {
 				@Override
 				public Vec3 getBrightnessDependentFogColor(Vec3 color, float sunHeight) {
-					return color;
+					return new Vec3(0.0705882353, 0.0862745098, 0.0705882353);
 				}
 
 				@Override

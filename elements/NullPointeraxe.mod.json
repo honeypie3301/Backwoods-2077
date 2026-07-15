@@ -10,7 +10,7 @@
     "blockingModelName": "Normal blocking",
     "guiTexture": "",
     "name": "Null Pointer Axe",
-    "rarity": "COMMON",
+    "rarity": "RARE",
     "specialInformation": {
       "fixedValue": [
         "§8For testing only."
@@ -46,7 +46,56 @@
     "immuneToFire": true,
     "blockDropsTier": "NETHERITE",
     "blocksAffected": [],
-    "attributeModifiers": [],
+    "attributeModifiers": [
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "ATTACK_SPEED"
+        },
+        "amount": 1.0,
+        "operation": "ADD_VALUE"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "OXYGEN_BONUS"
+        },
+        "amount": 10.0,
+        "operation": "ADD_VALUE"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "MAX_HEALTH"
+        },
+        "amount": 500.0,
+        "operation": "ADD_VALUE"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "STEP_HEIGHT"
+        },
+        "amount": 1.0,
+        "operation": "ADD_VALUE"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "WATER_MOVEMENT_EFFICIENCY"
+        },
+        "amount": 1.0,
+        "operation": "ADD_VALUE"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "SNEAKING_SPEED"
+        },
+        "amount": 0.5,
+        "operation": "ADD_VALUE"
+      }
+    ],
     "stayInGridWhenCrafting": false,
     "damageOnCrafting": false
   }

@@ -38,6 +38,7 @@ import net.mcreator.thebackwoods.procedures.SplinterOnInitialEntitySpawnProcedur
 import net.mcreator.thebackwoods.procedures.SplinterOnEntityTickUpdateProcedure;
 import net.mcreator.thebackwoods.procedures.SplinterNaturalEntitySpawningConditionProcedure;
 import net.mcreator.thebackwoods.procedures.SplinterItIsStruckByLightningProcedure;
+import net.mcreator.thebackwoods.procedures.SplinterEntityDiesProcedure;
 import net.mcreator.thebackwoods.init.TheBackwoodsModEntities;
 
 import javax.annotation.Nullable;
@@ -139,6 +140,12 @@ public class SplinterEntity extends Monster {
 		if (damagesource.is(DamageTypes.DRAGON_BREATH))
 			return false;
 		return super.hurt(damagesource, amount);
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		super.die(source);
+		SplinterEntityDiesProcedure.execute(this.level(), source.getEntity());
 	}
 
 	@Override

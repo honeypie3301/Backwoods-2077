@@ -9,24 +9,24 @@
           "biome": "the_backwoods:uniform_grain",
           "parameters": {
             "temperature": [
-              -0.5,
-              0.5
+              -0.221,
+              0.221
             ],
             "humidity": [
-              -0.3,
-              0.5
+              -0.0769,
+              0.2769
             ],
             "continentalness": [
-              -1,
-              0.2
+              -0.6654,
+              -0.1346
             ],
             "weirdness": [
-              -1,
-              -0.3
+              -0.8046,
+              -0.4954
             ],
             "erosion": [
-              -1,
-              0.2
+              -0.6654,
+              -0.1346
             ],
             "depth": 0,
             "offset": 0
@@ -63,24 +63,24 @@
           "biome": "the_backwoods:splinter_nest",
           "parameters": {
             "temperature": [
-              0.2,
-              0.6
+              -0.5638,
+              1.3638
             ],
             "humidity": [
-              -0.5,
-              0.2
+              -1.8372,
+              1.5372
             ],
             "continentalness": [
-              0.8,
-              1
+              0.4179,
+              1.3821
             ],
             "weirdness": [
-              0.85,
-              1
+              0.5633,
+              1.2868
             ],
             "erosion": [
-              -0.3,
-              0.2
+              -1.2543,
+              1.1543
             ],
             "depth": 0,
             "offset": 0
@@ -90,24 +90,24 @@
           "biome": "the_backwoods:pillar_thicket",
           "parameters": {
             "temperature": [
-              0,
-              0.1
+              -0.15,
+              0.25
             ],
             "humidity": [
-              -0.1,
-              0.1
+              -0.4,
+              0.4
             ],
             "continentalness": [
-              0.85,
-              0.95
+              0.7,
+              1.1
             ],
             "weirdness": [
-              -0.6,
-              -0.4
+              -0.9,
+              -0.1
             ],
             "erosion": [
-              0.6,
-              0.8
+              0.3,
+              1.1
             ],
             "depth": 0,
             "offset": 0
@@ -117,24 +117,24 @@
           "biome": "the_backwoods:fractured_barrens",
           "parameters": {
             "temperature": [
-              0.7,
-              0.9
+              0.5975,
+              1.0025
             ],
             "humidity": [
-              -1,
-              -0.6
+              -1.1645,
+              -0.4355
             ],
             "continentalness": [
-              0.3,
-              0.5
+              0.1975,
+              0.6025
             ],
             "weirdness": [
-              -0.3,
-              -0.1
+              -0.4025,
+              0.0025
             ],
             "erosion": [
-              -0.1,
-              0.1
+              -0.2025,
+              0.2025
             ],
             "depth": 0,
             "offset": 0
@@ -144,24 +144,24 @@
           "biome": "the_backwoods:labyrinthine_grids",
           "parameters": {
             "temperature": [
-              -0.2,
-              0.2
+              -0.486,
+              0.486
             ],
             "humidity": [
-              0.6,
-              1
+              0.314,
+              1.286
             ],
             "continentalness": [
-              0,
-              0.5
+              -0.3576,
+              0.8576
             ],
             "weirdness": [
-              0.4,
-              0.6
+              0.23,
+              0.77
             ],
             "erosion": [
-              0.8,
-              1
+              0.63,
+              1.17
             ],
             "depth": 0,
             "offset": 0
@@ -177,7 +177,10 @@
       "aquifers_enabled": true,
       "ore_veins_enabled": false,
       "default_block": {
-        "Name": "minecraft:oak_planks"
+        "Name": "the_backwoods:lignum_caro",
+        "Properties": {
+          "infected": "false"
+        }
       },
       "default_fluid": {
         "Name": "minecraft:oak_planks"

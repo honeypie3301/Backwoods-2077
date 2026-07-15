@@ -20,9 +20,6 @@
     "particleTexture": "",
     "blockBase": "Leaves",
     "blockSetType": "OAK",
-    "pottedPlant": {
-      "value": ""
-    },
     "leavesParticleChance": 0.0,
     "tintType": "No tint",
     "isItemTinted": false,
@@ -71,7 +68,7 @@
     "enchantPowerBonus": 0.0,
     "plantsGrowOn": false,
     "canRedstoneConnect": false,
-    "hasCustomOpacity": true,
+    "hasCustomOpacity": false,
     "lightOpacity": 15,
     "tickRate": 0,
     "tickRandomly": false,
@@ -145,6 +142,12 @@
     "isFluidTank": false,
     "fluidCapacity": 8000,
     "fluidRestrictions": [],
+    "onEntityWalksOn": {
+      "name": "FalseOakPlanksEntityWalksOnTheBlock"
+    },
+    "onEntityFallsOn": {
+      "name": "FalseOakPlanksEntityFallsOnTheBlock"
+    },
     "generateFeature": false,
     "restrictionBiomes": [],
     "blocksToReplace": [

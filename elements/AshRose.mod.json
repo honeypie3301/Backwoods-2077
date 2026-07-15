@@ -4,7 +4,6 @@
   "definition": {
     "renderType": 12,
     "texture": "ash_rose",
-    "textureBottom": "",
     "customModelName": "Cross model",
     "itemTexture": "ash_rose",
     "particleTexture": "",
@@ -27,7 +26,7 @@
       null
     ],
     "growapableSpawnType": "Plains",
-    "growapableMaxHeight": 3,
+    "growapableMaxHeight": 0,
     "customBoundingBox": false,
     "disableOffset": false,
     "boundingBoxes": [
@@ -95,7 +94,7 @@
       "value": ""
     },
     "offsetType": "XZ",
-    "aiPathNodeType": "DEFAULT",
+    "aiPathNodeType": "LAVA",
     "strippingResult": {
       "value": ""
     },

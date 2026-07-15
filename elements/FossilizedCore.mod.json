@@ -54,30 +54,30 @@
       "value": "ASH"
     },
     "particlesProbability": 0.4,
-    "rainingPossibility": 0.1,
+    "rainingPossibility": 0.5,
     "temperature": 0.4,
     "spawnBiome": false,
     "spawnInCaves": false,
     "spawnBiomeNether": false,
     "genTemperature": {
-      "min": 0.5,
-      "max": 1.0
+      "min": 0.144,
+      "max": 1.356
     },
     "genHumidity": {
-      "min": 0.5,
-      "max": 1.0
+      "min": 0.144,
+      "max": 1.356
     },
     "genContinentalness": {
-      "min": 0.3,
-      "max": 0.8
+      "min": -0.056,
+      "max": 1.156
     },
     "genErosion": {
-      "min": -0.4,
-      "max": 0.0
+      "min": -0.6846,
+      "max": 0.2847
     },
     "genWeirdness": {
-      "min": 0.6,
-      "max": 1.0
+      "min": 0.3154,
+      "max": 1.2847
     },
     "genDepth": {
       "min": 0.2,

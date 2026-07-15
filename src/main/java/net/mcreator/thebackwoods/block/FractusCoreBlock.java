@@ -16,7 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 
 public class FractusCoreBlock extends Block {
-	private static final VoxelShape SHAPE = box(4, 0, 4, 12, 8, 12);
+	private static final VoxelShape SHAPE = box(5, 0, 5, 11, 6, 11);
 
 	public FractusCoreBlock() {
 		super(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW)

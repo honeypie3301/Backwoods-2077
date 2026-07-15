@@ -735,7 +735,6 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 				resetLaser(entity);
 				double speed = isWorldTakeoverDimension(entity) ? MAX_DRONE_SPEED : IDLE_MAX_SPEED;
 				moveToward(entity, idleHomePoint(entity), speed);
-				faceMovement(entity);
 				return;
 			}
 
@@ -1213,7 +1212,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 				BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()),
 				sound,
 				SoundSource.HOSTILE,
-				3.0f,
+				net.mcreator.thebackwoods.FractusLaserBeam.PRIME_SPHERE_BURST_VOLUME,
 				1.0f
 			);
 		}
@@ -1333,7 +1332,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 
 		AABB searchBox = new AABB(center.x - outerRadius - 1, center.y - outerRadius - 1, center.z - outerRadius - 1,
 								 center.x + outerRadius + 1, center.y + outerRadius + 1, center.z + outerRadius + 1);
-		java.util.List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, searchBox, t -> t != null && t.isAlive() && t != entity && !isWoodboundEntity(t));
+		java.util.List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, searchBox, t -> t != null && t.isAlive() && t != entity && (shouldIgnoreCombatFilter(entity) || !isWoodboundEntity(t)));
 		for (LivingEntity target : targets) {
 			double dist = target.position().distanceTo(center);
 			if (dist >= innerRadius - 1.0 && dist <= outerRadius + 1.0) {
@@ -1516,7 +1515,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 				BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()),
 				sound,
 				SoundSource.HOSTILE,
-				1.95f,
+				net.mcreator.thebackwoods.FractusLaserBeam.PRIME_LASER_VOLUME,
 				0.65f
 			);
 		}
@@ -1530,7 +1529,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 				BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()),
 				sound,
 				SoundSource.HOSTILE,
-				3.5f,
+				net.mcreator.thebackwoods.FractusLaserBeam.PRIME_BURST_VOLUME,
 				1.0f
 			);
 		}
@@ -1544,7 +1543,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 				BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()),
 				sound,
 				SoundSource.HOSTILE,
-				0.7f,
+				net.mcreator.thebackwoods.FractusLaserBeam.PRIME_ANGER_VOLUME,
 				1.0f
 			);
 		}
@@ -1711,6 +1710,14 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 		}
 
 		Vec3 direction = destroyingAim(entity);
+		entity.lookAt(EntityAnchorArgument.Anchor.EYES, start.add(direction));
+		if (entity instanceof LivingEntity living) {
+			living.setYBodyRot(living.getYRot());
+		}
+		if (entity instanceof Mob mob) {
+			Vec3 targetLook = start.add(direction);
+			mob.getLookControl().setLookAt(targetLook.x, targetLook.y, targetLook.z, 180.0F, 180.0F);
+		}
 		BlockHitResult blockHit = clipBlocks(level, entity, start, start.add(direction.scale(DESTROYING_LASER_RANGE)));
 		Vec3 end = blockHit.getType() == HitResult.Type.MISS ? start.add(direction.scale(DESTROYING_LASER_RANGE)) : blockHit.getLocation();
 
@@ -1888,6 +1895,13 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 	}
 
 	private static LivingEntity findTarget(ServerLevel level, Entity self, double x, double y, double z) {
+		if (self instanceof Mob mob && mob.getTarget() != null && mob.getTarget().isAlive()) {
+			LivingEntity currentTarget = mob.getTarget();
+			if (shouldIgnoreCombatFilter(self) || shouldIgnoreCombatFilter(currentTarget)) {
+				return currentTarget;
+			}
+		}
+
 		LivingEntity retaliationTarget = retaliationTarget(self);
 
 		if (retaliationTarget != null && retaliationTarget.distanceTo(self) <= DETECTION_RANGE * 1.6) {
@@ -1995,6 +2009,10 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 			return false;
 		}
 
+		if (shouldIgnoreCombatFilter(self) || shouldIgnoreCombatFilter(target)) {
+			return true;
+		}
+
 		if (isFractusKind(target)) {
 			return false;
 		}
@@ -2023,6 +2041,13 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 	private static boolean canTargetNormally(Entity self, LivingEntity target) {
 		if (target == null || target == self || !target.isAlive()) {
 			return false;
+		}
+
+		boolean bypassFactionFilter = shouldIgnoreCombatFilter(self) || shouldIgnoreCombatFilter(target)
+			|| (self instanceof Mob m && m.getTarget() == target);
+
+		if (bypassFactionFilter) {
+			return true;
 		}
 
 		if (isFractusKind(target)) {
@@ -2088,6 +2113,11 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 	}
 
 	private static boolean canRetaliateAgainst(Entity self, LivingEntity target) {
+		boolean bypassFactionFilter = shouldIgnoreCombatFilter(self) || shouldIgnoreCombatFilter(target)
+			|| (self instanceof Mob m && m.getTarget() == target);
+		if (bypassFactionFilter) {
+			return target != null && target != self && target.isAlive();
+		}
 		return target != null
 			&& target != self
 			&& target.isAlive()
@@ -2095,6 +2125,27 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 			&& !isWoodboundEntity(target)
 			&& !(target instanceof AgeableMob ageableMob && ageableMob.isBaby())
 			&& !isSeaAnimal(target);
+	}
+
+	private static boolean shouldIgnoreCombatFilter(Entity entity) {
+		if (entity == null) return false;
+		if (entity.getTags().contains("mob_battle")
+			|| entity.getTags().contains("mobbattle")
+			|| entity.getTags().contains("test")
+			|| entity.getTags().contains("ignore_targets")
+			|| entity.getTeam() != null
+			|| entity.getPersistentData().getBoolean("mob_battle_mode")
+			|| entity.getPersistentData().contains("MobBattleTarget")
+			|| (entity instanceof Mob mob && mob.getTarget() != null && (mob.getTarget().getTags().contains("mob_battle") || mob.getTarget().getTeam() != null))) {
+			return true;
+		}
+		for (String tag : entity.getTags()) {
+			String lower = tag.toLowerCase(java.util.Locale.ROOT);
+			if (lower.contains("battle") || lower.contains("stick") || lower.contains("target")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean isRetaliationTarget(Entity self, LivingEntity target) {
@@ -2825,6 +2876,15 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 		self.getPersistentData().putDouble(K_AIM_Y, adjusted.y);
 		self.getPersistentData().putDouble(K_AIM_Z, adjusted.z);
 
+		self.lookAt(EntityAnchorArgument.Anchor.EYES, start.add(adjusted));
+		if (self instanceof LivingEntity living) {
+			living.setYBodyRot(living.getYRot());
+		}
+		if (self instanceof Mob mob) {
+			Vec3 targetLook = start.add(adjusted);
+			mob.getLookControl().setLookAt(targetLook.x, targetLook.y, targetLook.z, 180.0F, 180.0F);
+		}
+
 		return adjusted;
 	}
 
@@ -2862,11 +2922,14 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 	}
 
 	private static Vec3 laserStart(Entity entity) {
-		if (entity instanceof LivingEntity living) {
-			return living.getEyePosition().subtract(0.0, living.getBbHeight() * 0.18, 0.0);
-		}
-
-		return entity.position().add(0.0, entity.getBbHeight() * 0.65, 0.0);
+		Vec3 base = entity.position().add(0.0, entity.getBbHeight() * 0.5, 0.0);
+		float yaw = entity.getYRot();
+		float yawRad = -yaw * ((float)Math.PI / 180F);
+		float cosYaw = Mth.cos(yawRad);
+		float sinYaw = Mth.sin(yawRad);
+		double rx = net.mcreator.thebackwoods.FractusLaserBeam.OFFSET_X * cosYaw - net.mcreator.thebackwoods.FractusLaserBeam.OFFSET_Z * sinYaw;
+		double rz = net.mcreator.thebackwoods.FractusLaserBeam.OFFSET_X * sinYaw + net.mcreator.thebackwoods.FractusLaserBeam.OFFSET_Z * cosYaw;
+		return base.add(rx, net.mcreator.thebackwoods.FractusLaserBeam.OFFSET_Y, rz);
 	}
 
 	private static BlockHitResult clipBlocks(ServerLevel level, Entity self, Vec3 start, Vec3 end) {
@@ -3113,6 +3176,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 		Vec3 end = start.add(direction.scale(BURST_LASER_RANGE));
 
 		if (hasTelekinesis && elapsed < TELEKINESIS_LIFT_ONLY_TICKS) {
+			entity.getPersistentData().putInt(K_LASER_STATE, 0); // Maintain 0 state during lift
 			// Pure lift phase: do nothing here regarding the laser burst
 			return;
 		}
@@ -3126,11 +3190,13 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 		}
 
 		if (activeElapsed < firePeak) {
+			entity.getPersistentData().putInt(K_LASER_STATE, 2); // Synced Charging for burst visual
 			spawnBurstBuildup(level, entity, start, activeElapsed);
 			return;
 		}
 
 		if (activeElapsed <= coreEnd) {
+			entity.getPersistentData().putInt(K_LASER_STATE, 3); // Synced Firing for burst visual
 			BlockHitResult blockHit = clipBlocks(level, entity, start, end);
 			Vec3 blockedEnd = blockHit.getType() == HitResult.Type.MISS ? end : blockHit.getLocation();
 			destroyBurstBlocksInLaserPath(level, entity, start, blockedEnd, blockHit.getType() == HitResult.Type.MISS ? null : blockHit.getBlockPos());
@@ -3147,7 +3213,10 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 			return;
 		}
 
+		entity.getPersistentData().putInt(K_LASER_STATE, 4); // Synced Cooldown / dissipation
+
 		if (burstTicks == 1) {
+			entity.getPersistentData().putInt(K_LASER_STATE, 0); // Reset state
 			entity.getPersistentData().putDouble(K_BURST_AIM_X, 0.0);
 			entity.getPersistentData().putDouble(K_BURST_AIM_Y, 0.0);
 			entity.getPersistentData().putDouble(K_BURST_AIM_Z, 0.0);
@@ -3379,15 +3448,17 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 		Vec3 side = direction.cross(up).normalize();
 		Vec3 verticalSide = direction.cross(side).normalize();
 
-		for (double d = 0.0; d <= length; d += spacing) {
-			Vec3 center = start.add(direction.scale(d));
-			double coreRadius = 0.65; // Increased cylinder radius for the ray of the laser burst
-			level.sendParticles(getBurstLaserParticle(), center.x, center.y, center.z, 12, coreRadius, coreRadius, coreRadius, 0.0);
+		if (net.mcreator.thebackwoods.FractusLaserBeam.USE_OLD_LASER_PARTICLES) {
+			for (double d = 0.0; d <= length; d += spacing) {
+				Vec3 center = start.add(direction.scale(d));
+				double coreRadius = 0.65; // Increased cylinder radius for the ray of the laser burst
+				level.sendParticles(getBurstLaserParticle(), center.x, center.y, center.z, 12, coreRadius, coreRadius, coreRadius, 0.0);
 
-			for (int a = 0; a < numArms; a++) {
-				double angle = (Math.PI * 2.0 * a / numArms) + (d * 0.20) + (elapsed * 0.75);
-				Vec3 pos = center.add(side.scale(Math.cos(angle) * ringRadius)).add(verticalSide.scale(Math.sin(angle) * ringRadius));
-				level.sendParticles(getBurstLaserParticle(), pos.x, pos.y, pos.z, 4, 0.02, 0.02, 0.02, 0.0);
+				for (int a = 0; a < numArms; a++) {
+					double angle = (Math.PI * 2.0 * a / numArms) + (d * 0.20) + (elapsed * 0.75);
+					Vec3 pos = center.add(side.scale(Math.cos(angle) * ringRadius)).add(verticalSide.scale(Math.sin(angle) * ringRadius));
+					level.sendParticles(getBurstLaserParticle(), pos.x, pos.y, pos.z, 4, 0.02, 0.02, 0.02, 0.0);
+				}
 			}
 		}
 
@@ -3530,36 +3601,23 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 	}
 
 	private static void spawnLaser(ServerLevel level, Vec3 start, Vec3 end, double spacing, double jitter, boolean firing, boolean angry) {
-		Vec3 line = end.subtract(start);
-		double length = line.length();
-
-		if (length < 0.01) {
-			return;
+		if (!firing) {
+			return; // Completely remove pre-aiming laser particles!
 		}
 
-		Vec3 direction = line.normalize();
-		Vec3 up = Math.abs(direction.y) > 0.92 ? new Vec3(1.0, 0.0, 0.0) : new Vec3(0.0, 1.0, 0.0);
-		Vec3 side = direction.cross(up).normalize();
-		Vec3 verticalSide = direction.cross(side).normalize();
 		net.minecraft.core.particles.ParticleOptions particle = laserParticle(angry);
-		double time = level.getGameTime() * 0.32;
+		level.sendParticles(particle, end.x, end.y, end.z, 10, 0.08, 0.08, 0.08, 0.0);
 
-		for (double d = 0.0; d <= length; d += spacing) {
-			Vec3 pos = start.add(direction.scale(d));
-
-			if (firing) {
-				// Straighten the main laser: Make into a thin cylinder of radius 0.045 block
-				double radius = 0.045;
-				double angle = (d * 5.0) + time;
-				Vec3 offset = side.scale(Math.cos(angle) * radius).add(verticalSide.scale(Math.sin(angle) * radius));
-				pos = pos.add(offset);
+		if (net.mcreator.thebackwoods.FractusLaserBeam.USE_OLD_LASER_PARTICLES) {
+			Vec3 line = end.subtract(start);
+			double length = line.length();
+			if (length >= 0.01) {
+				Vec3 direction = line.normalize();
+				for (double d = 0.0; d <= length; d += spacing) {
+					Vec3 pos = start.add(direction.scale(d));
+					level.sendParticles(particle, pos.x, pos.y, pos.z, 1, jitter, jitter, jitter, 0.0);
+				}
 			}
-
-			level.sendParticles(particle, pos.x, pos.y, pos.z, 1, jitter, jitter, jitter, 0.0);
-		}
-
-		if (firing) {
-			level.sendParticles(particle, end.x, end.y, end.z, 10, 0.08, 0.08, 0.08, 0.0);
 		}
 	}
 
@@ -3591,30 +3649,7 @@ public class FractusPrimeOnEntityTickUpdateProcedure {
 	}
 
 	private static void spawnChargeBeamHum(ServerLevel level, Vec3 start, Vec3 end, double progress, boolean angry) {
-		Vec3 line = end.subtract(start);
-		double length = line.length();
-
-		if (length < 0.01) {
-			return;
-		}
-
-		Vec3 direction = line.normalize();
-		net.minecraft.core.particles.ParticleOptions particle = laserParticle(angry);
-		double spacing = Mth.lerp(progress, 1.35, 0.34);
-		double pulse = level.getGameTime() * 0.18;
-
-		for (double d = 0.0; d <= length; d += spacing) {
-			double flicker = 0.5 + 0.5 * Math.sin(d * 1.7 + pulse);
-			if (flicker < 0.35 - progress * 0.2) {
-				continue;
-			}
-
-			Vec3 pos = start.add(direction.scale(d));
-			level.sendParticles(particle, pos.x, pos.y, pos.z, 1, 0.018 + progress * 0.025, 0.018 + progress * 0.025, 0.018 + progress * 0.025, 0.0);
-			if (level.getRandom().nextFloat() < 0.15f * progress) {
-				level.sendParticles(ParticleTypes.GLOW, pos.x, pos.y, pos.z, 1, 0.02, 0.02, 0.02, 0.0);
-			}
-		}
+		// Completely removed old pre-aiming lasers per instructions
 	}
 
 	private static void spawnChargeParticles(ServerLevel level, Entity entity, int chargeTicks, boolean angry) {

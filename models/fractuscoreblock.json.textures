@@ -3,7 +3,7 @@
     "default": {
       "name": "default",
       "map": {
-        "0": "fractuscoretexture"
+        "0": "fractus_core_texture"
       }
     }
   }

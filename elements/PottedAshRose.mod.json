@@ -82,7 +82,7 @@
       "value": ""
     },
     "offsetType": "NONE",
-    "aiPathNodeType": "DEFAULT",
+    "aiPathNodeType": "LAVA",
     "strippingResult": {
       "value": ""
     },

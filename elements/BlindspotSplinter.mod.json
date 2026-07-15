@@ -277,6 +277,9 @@
     "onStruckByLightning": {
       "name": "BlindspotSplinterItIsStruckByLightning"
     },
+    "whenMobDies": {
+      "name": "SplinterEntityDies"
+    },
     "onMobTickUpdate": {
       "name": "BlindspotSplinterOnEntityTickUpdate"
     },

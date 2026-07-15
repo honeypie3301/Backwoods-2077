@@ -178,6 +178,9 @@
         "value": 0
       }
     ],
+    "whenMobDies": {
+      "name": "SplinterEntityDies"
+    },
     "whenMobIsHurt": {
       "name": "PetrifiedLogSplinterEntityIsHurt"
     },

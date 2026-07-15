@@ -75,4 +75,5 @@ public class TheBackwoodsModSounds {
 			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("the_backwoods", "fractus_prime_laser_burst")));
 	public static final DeferredHolder<SoundEvent, SoundEvent> FRACTUS_PRIME_LASER_SPHERE_BURST = REGISTRY.register("fractus_prime_laser_sphere_burst",
 			() -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("the_backwoods", "fractus_prime_laser_sphere_burst")));
+	public static final DeferredHolder<SoundEvent, SoundEvent> SONIC_SCREAM = REGISTRY.register("sonic_scream", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("the_backwoods", "sonic_scream")));
 }

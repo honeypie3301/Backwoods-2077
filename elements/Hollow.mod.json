@@ -121,6 +121,9 @@
       "value": ""
     },
     "entityDataEntries": [],
+    "whenMobDies": {
+      "name": "SplinterEntityDies"
+    },
     "whenMobIsHurt": {
       "name": "HollowEntityIsHurt"
     },

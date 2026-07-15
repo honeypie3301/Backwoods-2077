@@ -76,13 +76,97 @@ public class PetrifiedLogSplinterOnEntityTickUpdateProcedure {
         if (!(entity instanceof PetrifiedLogSplinterEntity petrified))
             return;
 
+        if (petrified.getTarget() instanceof Player p && (p.isCreative() || p.isSpectator())) {
+            petrified.setTarget(null);
+        }
+        if (petrified.getLastHurtByMob() instanceof Player p && (p.isCreative() || p.isSpectator())) {
+            petrified.setLastHurtByMob(null);
+        }
+
         if (petrified.isPassenger() && (petrified.getVehicle() instanceof net.minecraft.world.entity.vehicle.Boat ||
             petrified.getVehicle() instanceof net.minecraft.world.entity.vehicle.ChestBoat)) {
             petrified.stopRiding();
             petrified.setDeltaMovement(petrified.getDeltaMovement().add(0, 0.2, 0));
         }
 
-        Player foundPlayer = (Player) findEntityInWorldRange(world, Player.class, x, y, z, TARGET_RANGE);
+        Player foundPlayerDirect = (Player) findEntityInWorldRange(world, Player.class, x, y, z, TARGET_RANGE);
+        if (world instanceof Level level && level.isClientSide()) {
+            return;
+        }
+        LivingEntity foundPlayer = foundPlayerDirect;
+
+        LivingEntity prioritizedMob = null;
+        String attackerUUIDStr = petrified.getPersistentData().getString("splinter_attacker_uuid");
+        if (!attackerUUIDStr.isEmpty() && world instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            try {
+                java.util.UUID attackerUUID = java.util.UUID.fromString(attackerUUIDStr);
+                net.minecraft.world.entity.Entity foundEntity = serverLevel.getEntity(attackerUUID);
+                if (foundEntity instanceof LivingEntity livingAttacker && livingAttacker.isAlive() && petrified.distanceToSqr(livingAttacker) < TARGET_RANGE * TARGET_RANGE) {
+                    boolean isWoodbound = livingAttacker.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+                    if (!isWoodbound && !(livingAttacker instanceof Player)) {
+                        prioritizedMob = livingAttacker;
+                    }
+                }
+            } catch (Exception e) {}
+        }
+
+        LivingEntity attacker = petrified.getLastHurtByMob();
+        if (attacker != null) {
+            boolean isWoodbound = attacker.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+            if (isWoodbound) {
+                if (petrified.getLastHurtByMob() == attacker) {
+                    petrified.setLastHurtByMob(null);
+                }
+                attacker = null;
+            } else if (attacker.isAlive() && petrified.distanceToSqr(attacker) < TARGET_RANGE * TARGET_RANGE) {
+                if (!(attacker instanceof Player)) {
+                    prioritizedMob = attacker;
+                    petrified.getPersistentData().putString("splinter_attacker_uuid", attacker.getUUID().toString());
+                }
+            }
+        }
+
+        boolean hadPrioritizedMob = !attackerUUIDStr.isEmpty();
+        if (hadPrioritizedMob && prioritizedMob == null) {
+            resetState(petrified);
+            petrified.getPersistentData().putInt(K_RAGE_BONUS, 0);
+            if (petrified.getLastHurtByMob() != null) {
+                petrified.setLastHurtByMob(null);
+            }
+            petrified.getPersistentData().remove("splinter_attacker_uuid");
+        }
+
+        if (prioritizedMob != null) {
+            foundPlayer = prioritizedMob;
+            petrified.getEntityData().set(PetrifiedLogSplinterEntity.DATA_isEnraged, 1);
+            if (petrified.getTarget() != prioritizedMob) {
+                petrified.setTarget(prioritizedMob);
+            }
+            if (petrified.getLastHurtByMob() != prioritizedMob) {
+                petrified.setLastHurtByMob(prioritizedMob);
+            }
+        } else {
+            if (attacker instanceof Player p && p.isAlive() && !p.isCreative() && !p.isSpectator() && petrified.distanceToSqr(attacker) < TARGET_RANGE * TARGET_RANGE) {
+                foundPlayer = p;
+            }
+            if (foundPlayer != null) {
+                if (petrified.getTarget() != foundPlayer) {
+                    petrified.setTarget(foundPlayer);
+                }
+            } else {
+                if (petrified.getTarget() != null) {
+                    petrified.setTarget(null);
+                }
+            }
+        }
+
+        if (foundPlayer != null) {
+            boolean isWoodbound = foundPlayer.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+            if (isWoodbound) {
+                foundPlayer = null;
+            }
+        }
+
         if (foundPlayer == null) {
             resetState(petrified);
             petrified.getPersistentData().putInt(K_RAGE_BONUS, 0);
@@ -93,21 +177,28 @@ public class PetrifiedLogSplinterOnEntityTickUpdateProcedure {
         int watchTimer = petrified.getEntityData().get(PetrifiedLogSplinterEntity.DATA_watchTimer);
 
         // NEW: decrease threshold by +280 bonus each time hit by player
-        if (petrified.getLastHurtByMob() instanceof Player) {
-            int lastSeenHurtTime = petrified.getPersistentData().getInt(K_LAST_HURT_TIME);
-            int currentHurtTime = petrified.hurtTime;
-            if (currentHurtTime > 0 && currentHurtTime != lastSeenHurtTime) {
-                int bonus = petrified.getPersistentData().getInt(K_RAGE_BONUS) + RAGE_THRESHOLD_HIT_BONUS;
-                petrified.getPersistentData().putInt(K_RAGE_BONUS, bonus);
-                petrified.getPersistentData().putInt(K_LAST_HURT_TIME, currentHurtTime);
+        if (petrified.getLastHurtByMob() != null) {
+            boolean isWoodbound = petrified.getLastHurtByMob().getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, net.minecraft.resources.ResourceLocation.parse("the_backwoods:woodbound_entities")));
+            if (!isWoodbound) {
+                int lastSeenHurtTime = petrified.getPersistentData().getInt(K_LAST_HURT_TIME);
+                int currentHurtTime = petrified.hurtTime;
+                if (currentHurtTime > 0 && currentHurtTime != lastSeenHurtTime) {
+                    int bonus = petrified.getPersistentData().getInt(K_RAGE_BONUS) + RAGE_THRESHOLD_HIT_BONUS;
+                    petrified.getPersistentData().putInt(K_RAGE_BONUS, bonus);
+                    petrified.getPersistentData().putInt(K_LAST_HURT_TIME, currentHurtTime);
+                }
             }
         }
         int effectiveRageThreshold = Math.max(1, RAGE_WATCH_THRESHOLD - petrified.getPersistentData().getInt(K_RAGE_BONUS));
 
-        Vec3 toSplinter = petrified.getEyePosition().subtract(foundPlayer.getEyePosition()).normalize();
-        boolean isWatched = foundPlayer.getLookAngle().normalize().dot(toSplinter) > WATCH_DOT_THRESHOLD && foundPlayer.hasLineOfSight(petrified);
+        boolean isWatched = false;
+        if (foundPlayerDirect != null) {
+            Vec3 toSplinter = petrified.getEyePosition().subtract(foundPlayerDirect.getEyePosition()).normalize();
+            isWatched = foundPlayerDirect.getLookAngle().normalize().dot(toSplinter) > WATCH_DOT_THRESHOLD && foundPlayerDirect.hasLineOfSight(petrified);
+        }
 
-        if (isEnraged == 1 && petrified.position().distanceTo(foundPlayer.position()) > RAGE_ESCAPE_RANGE) {
+        double distToPlayer = foundPlayerDirect != null ? petrified.position().distanceTo(foundPlayerDirect.position()) : Double.MAX_VALUE;
+        if (isEnraged == 1 && distToPlayer > RAGE_ESCAPE_RANGE) {
             resetState(petrified);
             isEnraged = 0;
         }
@@ -169,15 +260,34 @@ public class PetrifiedLogSplinterOnEntityTickUpdateProcedure {
             handleVerticalPathing(world, petrified, foundPlayer);
         }
 
-        if (checkHeldRose(foundPlayer, petrified, world, foundPlayer.getX(), foundPlayer.getY(), foundPlayer.getZ())
-                || (petrified.tickCount % 5 == 0 && checkNearbyRoseBlocks(world, petrified))) {
+        boolean foundRose = false;
+        if (foundPlayerDirect != null) {
+            foundRose = checkHeldRose(foundPlayerDirect, petrified, world, foundPlayerDirect.getX(), foundPlayerDirect.getY(), foundPlayerDirect.getZ());
+        }
+        if (foundRose || (petrified.tickCount % 5 == 0 && checkNearbyRoseBlocks(world, petrified))) {
             setSpeed(petrified, 0);
             resetState(petrified);
             petrified.getPersistentData().putInt(K_RAGE_BONUS, 0);
         }
+
+        // Melee reach range increase for non-players only (by 50%)
+        LivingEntity target = petrified.getTarget();
+        if (target != null && target.isAlive() && !(target instanceof Player)) {
+            double reach = petrified.getBbWidth() + target.getBbWidth() + 0.8;
+            double increasedReach = reach * 1.5;
+            double distSqr = petrified.distanceToSqr(target);
+            if (distSqr <= increasedReach * increasedReach) {
+                int lastAttackTick = petrified.getPersistentData().getInt("last_melee_attack_tick");
+                if (petrified.tickCount - lastAttackTick >= 20) {
+                    petrified.doHurtTarget(target);
+                    petrified.swing(InteractionHand.MAIN_HAND);
+                    petrified.getPersistentData().putInt("last_melee_attack_tick", petrified.tickCount);
+                }
+            }
+        }
     }
 
-    private static void handleVerticalPathing(LevelAccessor world, PetrifiedLogSplinterEntity splinter, Player foundPlayer) {
+    private static void handleVerticalPathing(LevelAccessor world, PetrifiedLogSplinterEntity splinter, LivingEntity foundPlayer) {
         double heightDiff = foundPlayer.getY() - splinter.getY();
         double horizontalDist = splinter.position().distanceTo(foundPlayer.position());
         if (heightDiff >= 1.4 && horizontalDist < 12) {
@@ -207,7 +317,7 @@ public class PetrifiedLogSplinterOnEntityTickUpdateProcedure {
         }
     }
 
-    private static boolean canMine(LevelAccessor world, BlockPos pos, Player player) {
+    private static boolean canMine(LevelAccessor world, BlockPos pos, LivingEntity player) {
         float speed = world.getBlockState(pos).getDestroySpeed(world, pos);
         return speed >= 0 && speed < MAX_BREAKABLE_HARDNESS && pos.getY() != (int) (player.getY() - 2) && !world.getBlockState(pos).isAir();
     }
@@ -248,6 +358,11 @@ public class PetrifiedLogSplinterOnEntityTickUpdateProcedure {
     }
 
     private static Entity findEntityInWorldRange(LevelAccessor world, Class<? extends Entity> clazz, double x, double y, double z, double range) {
-        return world.getEntitiesOfClass(clazz, AABB.ofSize(new Vec3(x, y, z), range, range, range), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(x, y, z))).findFirst().orElse(null);
+        return world.getEntitiesOfClass(clazz, AABB.ofSize(new Vec3(x, y, z), range, range, range), e -> {
+            if (e instanceof Player p) {
+                return !p.isCreative() && !p.isSpectator();
+            }
+            return true;
+        }).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(x, y, z))).findFirst().orElse(null);
     }
 }

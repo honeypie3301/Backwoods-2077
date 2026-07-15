@@ -38,6 +38,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.neoforged.fml.ModList;
 
 @EventBusSubscriber
 public class BackwoodsThreatSystemProcedure {
@@ -120,6 +122,11 @@ public class BackwoodsThreatSystemProcedure {
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
+        if (player == null) return;
+        if (player.isCreative() || player.isSpectator()) {
+            putInt(player, K_THREAT, 0); // Reset threat to 0 for creative/spectator
+            return;
+        }
         Level level = player.level();
         if (level.isClientSide()) return;
         if (level.dimension() != BACKWOODS_DIM) return;
@@ -130,6 +137,7 @@ public class BackwoodsThreatSystemProcedure {
         decayThreat(player, gameTime);
         maybeWarn(player, serverLevel, gameTime);
         maybeSpawnRot(player, serverLevel, gameTime);
+        scanPlayerLoadout(player, gameTime);
     }
 
     @SubscribeEvent
@@ -156,6 +164,7 @@ public class BackwoodsThreatSystemProcedure {
         if (dead instanceof RotEntity) {
             Player killer = resolvePlayerAttacker(event.getSource(), dead);
             if (killer != null && killer.level().dimension() == BACKWOODS_DIM) {
+                if (killer.isCreative() || killer.isSpectator()) return;
                 long now = killer.level().getGameTime();
                 putLong(killer, K_LAST_SPAWN, Math.max(0L, now - (SPAWN_COOLDOWN_TICKS - 40)));
                 addThreat(killer, THREAT_KILLED_ROT);
@@ -180,12 +189,26 @@ public class BackwoodsThreatSystemProcedure {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Post event) {
         LivingEntity victim = event.getEntity();
+        if (victim == null) return;
+
+        // 1. Ignore Spore mod entities entirely
+        ResourceLocation victimRl = BuiltInRegistries.ENTITY_TYPE.getKey(victim.getType());
+        if (victimRl != null && victimRl.getNamespace().equals("spore")) {
+            return;
+        }
+
+        // 2. Resolve and validate player attacker
         Player attacker = resolvePlayerAttacker(event.getSource(), victim);
         if (attacker == null) return;
+        if (attacker.isCreative() || attacker.isSpectator()) return;
 
         Level level = attacker.level();
         if (level.isClientSide()) return;
         if (level.dimension() != BACKWOODS_DIM) return;
+
+        // 3. Only trigger threat when the victim is a woodbound entity (Splinter) in the Backwoods
+        boolean isWoodbound = victim.getType().is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, ResourceLocation.parse("the_backwoods:woodbound_entities")));
+        if (!isWoodbound) return;
 
         Entity direct = event.getSource().getDirectEntity();
 
@@ -200,9 +223,33 @@ public class BackwoodsThreatSystemProcedure {
                         && event.getSource().getEntity() != direct);
 
         if (projectileLike) {
-            addThreat(attacker, THREAT_PROJECTILE_HIT);
+            // Detect if they actively hold/use a gun or a gun mod is loaded and they are wielding it
+            boolean holdsGun = attacker.getPersistentData().getBoolean("bw_threat_holds_gun") 
+                            || attacker.getPersistentData().getBoolean("bw_threat_gun_mod");
+            
+            if (holdsGun) {
+                // High-threat trigger: actively shooting with a gun
+                addThreat(attacker, THREAT_PROJECTILE_HIT);
 
-            if (event.getNewDamage() >= 10.0F) {
+                // If doing high DPS or rapid firing (e.g., hit is high damage)
+                if (event.getNewDamage() >= 25.0F) {
+                    addThreat(attacker, THREAT_HIGH_DPS_HIT);
+                }
+            } else {
+                // If they don't hold a gun, standard projectile hits (e.g. snowballs, standard bow) don't trigger high threat
+                // unless it is an extremely high DPS single hit (>= 25.0F)
+                if (event.getNewDamage() >= 25.0F) {
+                    addThreat(attacker, THREAT_PROJECTILE_HIT);
+                }
+            }
+        } else {
+            // Melee damage
+            // Only trigger high threat if the player has op/modded combat gear and is dealing massive DPS
+            double attackDmg = attacker.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            double attackSpeed = attacker.getAttributeValue(Attributes.ATTACK_SPEED);
+            boolean highDpsMelee = attackDmg > 20.0 || (attackDmg * attackSpeed) > 30.0;
+            
+            if (highDpsMelee && event.getNewDamage() >= 25.0F) {
                 addThreat(attacker, THREAT_HIGH_DPS_HIT);
             }
         }
@@ -223,20 +270,88 @@ public class BackwoodsThreatSystemProcedure {
         return null;
     }
 
+    
+    private static final int SCAN_INTERVAL_TICKS = 40;
+
+    private static void scanPlayerLoadout(Player player, long gameTime) {
+        if (player.isCreative() || player.isSpectator()) return;
+        long lastScan = getLong(player, "bw_last_scan", 0L);
+        if (gameTime - lastScan < SCAN_INTERVAL_TICKS) return;
+        putLong(player, "bw_last_scan", gameTime);
+
+        // 1. Check Armor & Toughness
+        boolean highArmor = false;
+        double armorVal = player.getAttributeValue(Attributes.ARMOR);
+        double toughnessVal = player.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+        
+        // Treat over 25 armor or 15+ toughness as high (above standard vanilla tier)
+        if (armorVal > 25.0 || toughnessVal >= 15.0) {
+            highArmor = true;
+        }
+
+        // 2. Check Melee Damage & Speed of currently held item
+        boolean highDps = false;
+        double attackDmg = player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        double attackSpeed = player.getAttributeValue(Attributes.ATTACK_SPEED);
+        // Standard Netherite Sword is ~8 damage, 1.6 speed. (12.8 dps).
+        // If damage > 20, or dps > 30, consider it extreme melee damage
+        if (attackDmg > 20.0 || (attackDmg * attackSpeed) > 30.0) {
+            highDps = true;
+        }
+
+        // 3. Scan equipped items for guns
+        boolean holdsGun = false;
+        ItemStack main = player.getMainHandItem();
+        ItemStack off = player.getOffhandItem();
+        if (isGunItem(main) || isGunItem(off)) {
+            holdsGun = true;
+        }
+
+        // 4. Check for powerful combat or gun mods loaded in the instance
+        boolean combatMod = false;
+        if (ModList.get().isLoaded("epicfight") || ModList.get().isLoaded("bettercombat")) {
+            combatMod = true;
+        }
+
+        boolean hasGunMod = ModList.get().isLoaded("tacz") 
+                         || ModList.get().isLoaded("pointblank") 
+                         || ModList.get().isLoaded("cgm")
+                         || ModList.get().isLoaded("vicmwc");
+
+        double maxHp = player.getAttributeValue(Attributes.MAX_HEALTH);
+        boolean opStats = maxHp > 40.0 || (attackDmg * attackSpeed) > 100.0;
+
+        // Record persistent flags on the player for the Rot AI to read
+        player.getPersistentData().putBoolean("bw_threat_high_armor", highArmor);
+        player.getPersistentData().putBoolean("bw_threat_high_dps", highDps);
+        player.getPersistentData().putBoolean("bw_threat_holds_gun", holdsGun);
+        player.getPersistentData().putBoolean("bw_threat_combat_mod", combatMod);
+        player.getPersistentData().putBoolean("bw_threat_gun_mod", hasGunMod);
+    }
+
+    private static boolean isGunItem(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+        ResourceLocation rl = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        if (rl == null) return false;
+        String path = rl.getPath().toLowerCase(java.util.Locale.ROOT);
+        String namespace = rl.getNamespace().toLowerCase(java.util.Locale.ROOT);
+        
+        if (namespace.equals("tacz") || namespace.equals("pointblank") || namespace.equals("cgm") || namespace.equals("mr_crayfish") || namespace.equals("vicmwc")) {
+            return true;
+        }
+        
+        return path.contains("gun") || path.contains("rifle") || path.contains("pistol") 
+            || path.contains("revolver") || path.contains("shotgun") || path.contains("sniper") 
+            || path.contains("carbine") || path.contains("blaster") || path.contains("musket") || path.contains("cannon");
+    }
+
     private static boolean isPowerPlayer(Player p) {
         if (p == null) return false;
 
         int armor = p.getArmorValue();
-        boolean highArmor = armor >= 16;
+        boolean superHighArmor = armor > 25;
         boolean flying = p.isFallFlying();
-        boolean hasTotem = hasItem(p, Items.TOTEM_OF_UNDYING);
-        boolean hasNetheriteArmor =
-                hasItem(p, Items.NETHERITE_HELMET)
-                        || hasItem(p, Items.NETHERITE_CHESTPLATE)
-                        || hasItem(p, Items.NETHERITE_LEGGINGS)
-                        || hasItem(p, Items.NETHERITE_BOOTS);
-
-        return highArmor || flying || hasTotem || hasNetheriteArmor;
+        return superHighArmor || flying;
     }
 
     private static boolean hasItem(Player p, net.minecraft.world.item.Item item) {
@@ -261,30 +376,33 @@ public class BackwoodsThreatSystemProcedure {
         int current = getInt(player, K_THREAT, 0);
         int next = Math.max(0, current - DECAY_PER_INTERVAL);
         putInt(player, K_THREAT, next);
+
+        if (next == 0) {
+            player.getPersistentData().putBoolean("bw_threat_warn_played", false);
+        }
     }
 
     private static void maybeWarn(Player player, ServerLevel level, long gameTime) {
         int threat = getInt(player, K_THREAT, 0);
         if (threat < THREAT_WARN) return;
 
-        long lastWarn = getLong(player, K_LAST_WARN, 0L);
-        if (gameTime - lastWarn < WARN_COOLDOWN_TICKS) return;
+        if (!player.getPersistentData().getBoolean("bw_threat_warn_played")) {
+            player.getPersistentData().putBoolean("bw_threat_warn_played", true);
 
-        putLong(player, K_LAST_WARN, gameTime);
+            String line = WARN_LINES[level.random.nextInt(WARN_LINES.length)];
+            player.displayClientMessage(Component.literal(line), true);
 
-        String line = WARN_LINES[level.random.nextInt(WARN_LINES.length)];
-        player.displayClientMessage(Component.literal(line), true);
-
-        SoundEvent bell = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("block.bell.resonate"));
-        if (bell != null) {
-            level.playSound(
-                    null,
-                    BlockPos.containing(player.getX(), player.getY(), player.getZ()),
-                    bell,
-                    SoundSource.HOSTILE,
-                    1.35f,
-                    0.65f
-            );
+            SoundEvent bell = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("block.bell.resonate"));
+            if (bell != null) {
+                level.playSound(
+                        null,
+                        BlockPos.containing(player.getX(), player.getY(), player.getZ()),
+                        bell,
+                        SoundSource.HOSTILE,
+                        1.35f,
+                        0.65f
+                );
+            }
         }
     }
 
@@ -312,6 +430,7 @@ public class BackwoodsThreatSystemProcedure {
                     MobSpawnType.MOB_SUMMONED
             );
             if (spawned instanceof RotEntity rot) {
+                rot.getPersistentData().putBoolean("sentinel_should_scan", true);
                 rot.setDeltaMovement(0, 0, 0);
                 player.getPersistentData().putString("bw_active_rot_uuid", rot.getUUID().toString());
             }

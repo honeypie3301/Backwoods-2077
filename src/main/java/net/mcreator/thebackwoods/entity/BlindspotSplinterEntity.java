@@ -35,6 +35,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 
 import net.mcreator.thebackwoods.procedures.SplinterOnInitialEntitySpawnProcedure;
+import net.mcreator.thebackwoods.procedures.SplinterEntityDiesProcedure;
 import net.mcreator.thebackwoods.procedures.BlindspotSplinterOnEntityTickUpdateProcedure;
 import net.mcreator.thebackwoods.procedures.BlindspotSplinterNaturalEntitySpawningConditionProcedure;
 import net.mcreator.thebackwoods.procedures.BlindspotSplinterItIsStruckByLightningProcedure;
@@ -137,6 +138,12 @@ public class BlindspotSplinterEntity extends Monster {
 		if (damagesource.is(DamageTypes.DRAGON_BREATH))
 			return false;
 		return super.hurt(damagesource, amount);
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		super.die(source);
+		SplinterEntityDiesProcedure.execute(this.level(), source.getEntity());
 	}
 
 	@Override

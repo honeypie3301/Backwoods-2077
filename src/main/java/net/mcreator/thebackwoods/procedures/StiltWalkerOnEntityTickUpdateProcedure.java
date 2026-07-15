@@ -3,6 +3,7 @@ package net.mcreator.thebackwoods.procedures;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +25,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.particles.ParticleTypes;
 
@@ -92,22 +91,68 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity) {
 		if (!(entity instanceof StiltWalkerEntity stilt)) return;
 
+		// 1. Predictive dodge: Look for attackers that are close and starting a swing
+		if (stilt.tickCount >= 20) {
+			List<LivingEntity> attackers = world.getEntitiesOfClass(LivingEntity.class, stilt.getBoundingBox().inflate(3.5));
+			for (LivingEntity attacker : attackers) {
+				if (attacker == stilt) continue;
+				if (attacker instanceof BlindspotSplinterEntity) continue; // don't dodge own splinters!
+				if (attacker instanceof Player p && (p.isCreative() || p.isSpectator())) continue; // don't dodge creative/spectator players!
+
+				boolean isSwinging = attacker.swinging || attacker.swingTime > 0;
+				double attackRange = 3.2; // standard attack reach
+
+				// If they are swinging and close enough, we predictively dodge!
+				if (isSwinging && stilt.distanceTo(attacker) <= attackRange) {
+					triggerPredictiveDodge(world, stilt, attacker);
+					return;
+				}
+			}
+		}
+
 		if (tryDodgeProjectile(world, stilt)) return;
 
-		Player target = findNearestPlayer(world, x, y, z, TARGET_RANGE);
-		if (target == null || target.isCreative() || target.isSpectator()) {
-			stilt.getPersistentData().putInt("sw_watch_timer", 0);
-			stilt.getPersistentData().putBoolean("sw_enraged", false);
-			stilt.getPersistentData().putInt("sw_stalk_timer", 0);
+		LivingEntity target = null;
+		LivingEntity lastAttacker = stilt.getLastHurtByMob();
+		if (lastAttacker != null && lastAttacker.isAlive() && stilt.distanceTo(lastAttacker) <= TARGET_RANGE) {
+			target = lastAttacker;
+		} else {
+			target = findNearestPlayer(world, x, y, z, TARGET_RANGE);
+		}
+
+		if (target == null || (target instanceof Player p && (p.isCreative() || p.isSpectator()))) {
+			putInt(stilt, "sw_watch_timer", 0);
+			putBool(stilt, "sw_enraged", false);
+			putInt(stilt, "sw_stalk_timer", 0);
 			setSpeed(stilt, 0.0);
 			if (stilt instanceof Mob mob) mob.getNavigation().stop();
 			return;
 		}
 
-		stilt.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(target.getX(), target.getEyeY(), target.getZ()));
+		// 2. Continuous head/body locking - look at target/attacker perfectly the whole time
+		double dX = target.getX() - stilt.getX();
+		double dY = target.getEyeY() - (stilt.getY() + stilt.getEyeHeight());
+		double dZ = target.getZ() - stilt.getZ();
+		float targetYaw = (float) (Math.atan2(dZ, dX) * 180.0 / Math.PI) - 90.0F;
+		
+		stilt.setYRot(targetYaw);
+		stilt.yRotO = targetYaw;
+		stilt.setYBodyRot(targetYaw);
+		stilt.yBodyRotO = targetYaw;
+		stilt.setYHeadRot(targetYaw);
+		stilt.yHeadRotO = targetYaw;
+		if (stilt instanceof Mob mob) {
+			mob.getLookControl().setLookAt(target, 100.0F, 100.0F);
+		}
 
-		boolean enraged = stilt.getPersistentData().getBoolean("sw_enraged");
-		int watchTimer = stilt.getPersistentData().getInt("sw_watch_timer");
+		boolean enraged = getBool(stilt, "sw_enraged", false);
+		int watchTimer = getInt(stilt, "sw_watch_timer", 0);
+
+		if (lastAttacker != null && lastAttacker.isAlive() && !enraged) {
+			enraged = true;
+			watchTimer = 0;
+			playAlertSound(world, stilt.blockPosition());
+		}
 
 		Vec3 toStilt = stilt.getBoundingBox().getCenter().subtract(target.getEyePosition());
 		if (toStilt.lengthSqr() > 1.0e-8) toStilt = toStilt.normalize();
@@ -120,7 +165,7 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 		if (enraged && dist > ESCAPE_RANGE) {
 			enraged = false;
 			watchTimer = 0;
-			stilt.getPersistentData().putInt("sw_stalk_timer", 0);
+			putInt(stilt, "sw_stalk_timer", 0);
 		}
 
 		// stare builds rage
@@ -137,8 +182,8 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 			}
 		}
 
-		stilt.getPersistentData().putBoolean("sw_enraged", enraged);
-		stilt.getPersistentData().putInt("sw_watch_timer", watchTimer);
+		putBool(stilt, "sw_enraged", enraged);
+		putInt(stilt, "sw_watch_timer", watchTimer);
 
 		// dormant until enraged
 		if (!enraged) {
@@ -158,13 +203,13 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 		tryMineFrontBlock(world, stilt, target);
 
 		// stalk timer logic
-		int stalkTimer = stilt.getPersistentData().getInt("sw_stalk_timer") + 1;
-		stilt.getPersistentData().putInt("sw_stalk_timer", stalkTimer);
+		int stalkTimer = getInt(stilt, "sw_stalk_timer", 0) + 1;
+		putInt(stilt, "sw_stalk_timer", stalkTimer);
 
-		int stalkGoal = stilt.getPersistentData().getInt("sw_stalk_goal");
+		int stalkGoal = getInt(stilt, "sw_stalk_goal", 0);
 		if (stalkGoal <= 0) {
 			stalkGoal = Mth.nextInt(stilt.getRandom(), STALK_MIN_TICKS, STALK_MAX_TICKS);
-			stilt.getPersistentData().putInt("sw_stalk_goal", stalkGoal);
+			putInt(stilt, "sw_stalk_goal", stalkGoal);
 		}
 
 		boolean approached = dist <= APPROACH_TRIGGER;
@@ -175,23 +220,46 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 			if (watched) {
 				target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
 				playAlertSound(world, stilt.blockPosition());
-				spawnReinforcements(world, stilt);
+				spawnReinforcements(world, stilt, target);
 			}
 
 			teleportAway(world, stilt);
 
 			// reset cycle
-			stilt.getPersistentData().putInt("sw_stalk_timer", 0);
-			stilt.getPersistentData().putInt("sw_stalk_goal", Mth.nextInt(stilt.getRandom(), STALK_MIN_TICKS, STALK_MAX_TICKS));
-			stilt.getPersistentData().putInt("sw_watch_timer", 0);
-			stilt.getPersistentData().putBoolean("sw_enraged", false);
+			putInt(stilt, "sw_stalk_timer", 0);
+			putInt(stilt, "sw_stalk_goal", Mth.nextInt(stilt.getRandom(), STALK_MIN_TICKS, STALK_MAX_TICKS));
+			putInt(stilt, "sw_watch_timer", 0);
+			putBool(stilt, "sw_enraged", false);
 		}
 	}
 
+	private static void triggerPredictiveDodge(LevelAccessor world, StiltWalkerEntity stilt, LivingEntity attacker) {
+		// Play alert sound
+		playAlertSound(world, stilt.blockPosition());
+
+		// Blind the attacker if it's a player
+		if (attacker instanceof Player player) {
+			player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
+		}
+
+		// Spawn reinforcements (splinters)
+		int count = Mth.nextInt(stilt.getRandom(), 2, 4);
+		spawnReinforcementsCount(world, stilt, attacker, count);
+
+		// Teleport away
+		teleportAway(world, stilt);
+
+		// Reset normal stalk cycle
+		putInt(stilt, "sw_stalk_timer", 0);
+		putInt(stilt, "sw_stalk_goal", Mth.nextInt(stilt.getRandom(), STALK_MIN_TICKS, STALK_MAX_TICKS));
+		putInt(stilt, "sw_watch_timer", 0);
+		putBool(stilt, "sw_enraged", false);
+	}
+
 	private static boolean tryDodgeProjectile(LevelAccessor world, StiltWalkerEntity stilt) {
-		int dodgeCooldown = stilt.getPersistentData().getInt("sw_projectile_dodge_cooldown");
+		int dodgeCooldown = getInt(stilt, "sw_projectile_dodge_cooldown", 0);
 		if (dodgeCooldown > 0) {
-			stilt.getPersistentData().putInt("sw_projectile_dodge_cooldown", dodgeCooldown - 1);
+			putInt(stilt, "sw_projectile_dodge_cooldown", dodgeCooldown - 1);
 			return false;
 		}
 
@@ -212,20 +280,20 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 			if (approachDot < PROJECTILE_DODGE_DOT_THRESHOLD) continue;
 
 			teleportAway(world, stilt);
-			stilt.getPersistentData().putInt("sw_projectile_dodge_cooldown", PROJECTILE_DODGE_COOLDOWN);
+			putInt(stilt, "sw_projectile_dodge_cooldown", PROJECTILE_DODGE_COOLDOWN);
 			return true;
 		}
 
 		return false;
 	}
 
-	private static void tryMineFrontBlock(LevelAccessor world, StiltWalkerEntity stilt, Player target) {
+	private static void tryMineFrontBlock(LevelAccessor world, StiltWalkerEntity stilt, LivingEntity target) {
 		Vec3 eyes = stilt.getEyePosition(1f);
 		Vec3 view = stilt.getViewVector(1f);
 		HitResult hit = world.clip(new ClipContext(eyes, eyes.add(view.scale(MINE_RAY_DISTANCE)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, stilt));
 
 		if (hit.getType() != HitResult.Type.BLOCK) {
-			stilt.getPersistentData().putInt("sw_mine_progress", 0);
+			putInt(stilt, "sw_mine_progress", 0);
 			return;
 		}
 
@@ -238,12 +306,12 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 		boolean canMineHead = canMine(world, facePos, target);
 
 		if (!(canMineFeet || canMineTorso || canMineHead)) {
-			stilt.getPersistentData().putInt("sw_mine_progress", 0);
+			putInt(stilt, "sw_mine_progress", 0);
 			return;
 		}
 
-		int mineProgress = stilt.getPersistentData().getInt("sw_mine_progress") + 1;
-		stilt.getPersistentData().putInt("sw_mine_progress", mineProgress);
+		int mineProgress = getInt(stilt, "sw_mine_progress", 0) + 1;
+		putInt(stilt, "sw_mine_progress", mineProgress);
 
 		if (stilt.tickCount % 6 == 0) stilt.swing(InteractionHand.MAIN_HAND);
 
@@ -258,47 +326,106 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 			if (canMineFeet) world.destroyBlock(feetPos, false);
 			if (canMineTorso) world.destroyBlock(torsoPos, false);
 			if (canMineHead) world.destroyBlock(facePos, false);
-			stilt.getPersistentData().putInt("sw_mine_progress", 0);
+			putInt(stilt, "sw_mine_progress", 0);
 		}
 	}
 
-	private static boolean canMine(LevelAccessor world, BlockPos pos, Player player) {
+	private static boolean canMine(LevelAccessor world, BlockPos pos, LivingEntity player) {
 		float speed = world.getBlockState(pos).getDestroySpeed(world, pos);
 		return speed >= 0 && speed < MAX_BREAKABLE_HARDNESS && pos.getY() != (int) (player.getY() - 2) && !world.getBlockState(pos).isAir();
 	}
 
-	private static void spawnReinforcements(LevelAccessor world, StiltWalkerEntity stilt) {
-		if (!(world instanceof ServerLevel serverLevel)) return;
+	@SubscribeEvent
+	public static void onIncomingDamage(LivingIncomingDamageEvent event) {
+		if (event.getEntity() != null && event.getEntity().getClass().getName().contains("StiltWalker")) {
+			Entity entity = event.getEntity();
+			Entity attacker = event.getSource().getEntity();
+			if (attacker instanceof LivingEntity livingAttacker) {
+				if (entity instanceof StiltWalkerEntity stilt) {
+					float hp = livingAttacker.getHealth();
+					int count = Math.min(20, Math.max(1, Math.round(hp)));
+					spawnReinforcementsCount(stilt.level(), stilt, livingAttacker, count);
+					teleportAway(stilt.level(), stilt);
+				}
+			}
+		}
+	}
 
-		int count = Mth.nextInt(stilt.getRandom(), 2, 3);
+	private static void spawnReinforcementsCount(LevelAccessor world, StiltWalkerEntity stilt, LivingEntity attacker, int count) {
+		if (!(world instanceof ServerLevel serverLevel)) return;
+		if (attacker == null) return;
+
+		double radius = 3.2; // circular radius around the attacker/player to surround them
+		double startAngle = stilt.getRandom().nextDouble() * Math.PI * 2.0;
+
 		for (int i = 0; i < count; i++) {
-			double sx = stilt.getX() + (stilt.getRandom().nextDouble() - 0.5) * 2.0;
-			double sy = stilt.getY();
-			double sz = stilt.getZ() + (stilt.getRandom().nextDouble() - 0.5) * 2.0;
+			double angle = startAngle + (i * Math.PI * 2.0 / count);
+			double sx = attacker.getX() + Math.cos(angle) * radius;
+			double sz = attacker.getZ() + Math.sin(angle) * radius;
+			double sy = attacker.getY();
 
 			BlindspotSplinterEntity splinter = new BlindspotSplinterEntity(TheBackwoodsModEntities.BLINDSPOT_SPLINTER.get(), serverLevel);
-			splinter.moveTo(sx, sy, sz, stilt.getYRot(), stilt.getXRot());
-			splinter.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(splinter.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
+			splinter.teleportTo(sx, sy, sz);
 			splinter.getEntityData().set(BlindspotSplinterEntity.DATA_isEnraged, 1);
 
-			splinter.getPersistentData().putBoolean("bw_stilt_summoned", true);
-			splinter.getPersistentData().putInt("bw_stilt_idle_ticks", 0);
+			putBool(splinter, "bw_stilt_summoned", true);
+			putString(splinter, "bw_stilt_parent_uuid", stilt.getStringUUID());
+			putLong(splinter, "bw_stilt_summon_time", world.getLevelData().getGameTime());
+			putInt(splinter, "bw_stilt_idle_ticks", 0);
 
 			serverLevel.addFreshEntity(splinter);
 		}
 	}
 
+	private static void spawnReinforcements(LevelAccessor world, StiltWalkerEntity stilt, LivingEntity attacker) {
+		int count = Mth.nextInt(stilt.getRandom(), 2, 3);
+		spawnReinforcementsCount(world, stilt, attacker, count);
+	}
+
 	private static void handleSummonedSplinterCleanup(LevelAccessor world, BlindspotSplinterEntity splinter) {
 		if (!(world instanceof ServerLevel serverLevel)) return;
-		if (!splinter.getPersistentData().getBoolean("bw_stilt_summoned")) return;
+		if (!getBool(splinter, "bw_stilt_summoned", false)) return;
 
-		Player nearby = findNearestPlayer(world, splinter.getX(), splinter.getY(), splinter.getZ(), SUMMONED_IDLE_PLAYER_RANGE);
+		// 1. Joint maximum lifespan of 15 seconds (300 ticks) to ensure they despawn exactly together
+		long summonTime = getLong(splinter, "bw_stilt_summon_time", 0L);
+		if (summonTime == 0L) {
+			summonTime = world.getLevelData().getGameTime();
+			putLong(splinter, "bw_stilt_summon_time", summonTime);
+		}
 
-		int idle = splinter.getPersistentData().getInt("bw_stilt_idle_ticks");
-		idle = (nearby == null) ? idle + 1 : 0;
-		splinter.getPersistentData().putInt("bw_stilt_idle_ticks", idle);
+		long age = world.getLevelData().getGameTime() - summonTime;
+		boolean shouldDespawn = age >= 300L;
 
-		if (idle >= SUMMONED_IDLE_TIMEOUT) {
+		// 2. Parent Stilt Walker rage tracking
+		if (!shouldDespawn) {
+			String parentUuid = getString(splinter, "bw_stilt_parent_uuid", "");
+			boolean parentEnraged = false;
+			if (!parentUuid.isEmpty()) {
+				try {
+					Entity parent = serverLevel.getEntity(java.util.UUID.fromString(parentUuid));
+					if (parent instanceof StiltWalkerEntity stilt) {
+						parentEnraged = getBool(stilt, "sw_enraged", false);
+					}
+				} catch (Throwable ignored) {}
+			}
+
+			if (parentEnraged) {
+				// Keep them alive and active during active combat!
+				putInt(splinter, "bw_stilt_idle_ticks", 0);
+			} else {
+				// If not in active combat, run standard idle timeout
+				Player nearby = findNearestPlayer(world, splinter.getX(), splinter.getY(), splinter.getZ(), SUMMONED_IDLE_PLAYER_RANGE);
+				int idle = getInt(splinter, "bw_stilt_idle_ticks", 0);
+				idle = (nearby == null) ? idle + 1 : 0;
+				putInt(splinter, "bw_stilt_idle_ticks", idle);
+
+				if (idle >= SUMMONED_IDLE_TIMEOUT) {
+					shouldDespawn = true;
+				}
+			}
+		}
+
+		if (shouldDespawn) {
 			serverLevel.sendParticles(ParticleTypes.SMOKE, splinter.getX(), splinter.getY() + 0.8, splinter.getZ(), 16, 0.25, 0.4, 0.25, 0.01);
 			serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, splinter.getX(), splinter.getY() + 0.8, splinter.getZ(), 8, 0.2, 0.35, 0.2, 0.005);
 			splinter.discard();
@@ -355,5 +482,38 @@ public class StiltWalkerOnEntityTickUpdateProcedure {
 		return players.stream()
 				.min(Comparator.comparingDouble(p -> p.distanceToSqr(x, y, z)))
 				.orElse(null);
+	}
+
+	// ---- Optional-safe persistent data helpers for 1.21.1 mappings ----
+	private static int getInt(Entity e, String key, int fallback) {
+		return e.getPersistentData().contains(key) ? e.getPersistentData().getInt(key) : fallback;
+	}
+
+	private static boolean getBool(Entity e, String key, boolean fallback) {
+		return e.getPersistentData().contains(key) ? e.getPersistentData().getBoolean(key) : fallback;
+	}
+
+	private static long getLong(Entity e, String key, long fallback) {
+		return e.getPersistentData().contains(key) ? e.getPersistentData().getLong(key) : fallback;
+	}
+
+	private static String getString(Entity e, String key, String fallback) {
+		return e.getPersistentData().contains(key) ? e.getPersistentData().getString(key) : fallback;
+	}
+
+	private static void putInt(Entity e, String key, int value) {
+		e.getPersistentData().putInt(key, value);
+	}
+
+	private static void putBool(Entity e, String key, boolean value) {
+		e.getPersistentData().putBoolean(key, value);
+	}
+
+	private static void putLong(Entity e, String key, long value) {
+		e.getPersistentData().putLong(key, value);
+	}
+
+	private static void putString(Entity e, String key, String value) {
+		e.getPersistentData().putString(key, value);
 	}
 }

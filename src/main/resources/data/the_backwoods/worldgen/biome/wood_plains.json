@@ -1,6 +1,6 @@
 {
   "has_precipitation": false,
-  "temperature": 1,
+  "temperature": 0.36,
   "downfall": 0,
   "effects": {
     "ambient_sound": "ambient.crimson_forest.additions",
@@ -55,8 +55,6 @@
     [
       "the_backwoods:wood_plains_tree"
     ],
-    [
-      "minecraft:freeze_top_layer"
-    ]
+    []
   ]
 }

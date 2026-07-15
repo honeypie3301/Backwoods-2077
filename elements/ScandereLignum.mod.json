@@ -19,9 +19,6 @@
     "itemTexture": "",
     "particleTexture": "",
     "blockSetType": "OAK",
-    "pottedPlant": {
-      "value": ""
-    },
     "leavesParticleChance": 0.0,
     "tintType": "No tint",
     "isItemTinted": false,
@@ -40,7 +37,15 @@
         "subtract": false
       }
     ],
-    "customProperties": [],
+    "customProperties": [
+      {
+        "min": 0,
+        "max": 25,
+        "name": "CUSTOM:age",
+        "type": "integer",
+        "value": 0
+      }
+    ],
     "name": "Scandere Lignum",
     "specialInformation": {
       "fixedValue": []

@@ -48,6 +48,8 @@ public class TheBackwoodsMod {
 		TheBackwoodsModEntities.REGISTRY.register(modEventBus);
 		TheBackwoodsModTabs.REGISTRY.register(modEventBus);
 		TheBackwoodsModVariables.ATTACHMENT_TYPES.register(modEventBus);
+		TheBackwoodsModFeatures.REGISTRY.register(modEventBus);
+		TheBackwoodsModPotions.REGISTRY.register(modEventBus);
 		TheBackwoodsModMobEffects.REGISTRY.register(modEventBus);
 		TheBackwoodsModParticleTypes.REGISTRY.register(modEventBus);
 		// Start of user code block mod init

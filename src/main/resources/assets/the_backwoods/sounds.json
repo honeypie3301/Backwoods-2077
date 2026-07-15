@@ -685,5 +685,14 @@
         "stream": false
       }
     ]
+  },
+  "sonic_scream": {
+    "subtitle": "subtitles.sonic_scream",
+    "sounds": [
+      {
+        "name": "the_backwoods:rot_disorient",
+        "stream": false
+      }
+    ]
   }
 }

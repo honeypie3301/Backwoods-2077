@@ -1,6 +1,7 @@
 package net.mcreator.thebackwoods.block;
 
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.block.state.BlockState;
@@ -9,7 +10,9 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Direction;
@@ -23,6 +26,11 @@ public class PottedAshRoseBlock extends FlowerPotBlock {
 	public PottedAshRoseBlock() {
 		super(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> TheBackwoodsModBlocks.ASH_ROSE.get(), BlockBehaviour.Properties.of().strength(1f, 0f).noOcclusion().pushReaction(PushReaction.DESTROY).isRedstoneConductor((bs, br, bp) -> false));
 		((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ResourceLocation.parse("the_backwoods:ash_rose"), () -> this);
+	}
+
+	@Override
+	public PathType getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+		return PathType.LAVA;
 	}
 
 	@Override

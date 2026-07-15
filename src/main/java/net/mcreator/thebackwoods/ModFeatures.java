@@ -23,6 +23,10 @@ import net.mcreator.thebackwoods.world.feature.TheUndersideFeature;
 import net.mcreator.thebackwoods.world.feature.VoidBedrockPlanksFeature;
 import net.mcreator.thebackwoods.world.feature.MengerSpongeFeature; // Added import
 import net.mcreator.thebackwoods.world.features.OakStalactiteFeature;
+import net.mcreator.thebackwoods.world.feature.FarLandsFeature; // Added import for Far Lands
+import net.mcreator.thebackwoods.world.feature.FamiliarFarLandsFeature; // Added import for Familiar Far Lands
+import net.mcreator.thebackwoods.world.feature.LignumColonyFeature; // Added import for Lignum Colony
+
 
 public class ModFeatures {
     public static final DeferredRegister<Feature<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.FEATURE, "the_backwoods");
@@ -46,8 +50,20 @@ public class ModFeatures {
     // Registered Menger Sponge with 1.21.1 explicit .CODEC syntax
     public static final DeferredHolder<Feature<?>, MengerSpongeFeature> MENGER_SPONGE = REGISTRY.register("menger_sponge", () -> new MengerSpongeFeature(net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC));
 
+    // Registered Far Lands Feature with explicit .CODEC syntax
+    public static final DeferredHolder<Feature<?>, FarLandsFeature> FAR_LANDS = REGISTRY.register("far_lands", () -> new FarLandsFeature(net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC));
+
+    // Registered Familiar Far Lands Feature with explicit .CODEC syntax
+    public static final DeferredHolder<Feature<?>, FamiliarFarLandsFeature> FAMILIAR_FAR_LANDS = REGISTRY.register("familiar_far_lands", () -> new FamiliarFarLandsFeature(net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC));
+
     // Decoration Features
     public static final DeferredHolder<Feature<?>, OakStalactiteFeature> OAK_STALACTITE = REGISTRY.register("oak_stalactite", OakStalactiteFeature::new);
+
+    // Procedural Surface Colony Feature
+    public static final DeferredHolder<Feature<?>, LignumColonyFeature> LIGNUM_COLONY = REGISTRY.register("lignum_colony", () -> new LignumColonyFeature(net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC));
+
+
+
 
     public static void register(IEventBus bus) {
         REGISTRY.register(bus);

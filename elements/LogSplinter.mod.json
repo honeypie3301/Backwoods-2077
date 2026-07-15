@@ -261,6 +261,9 @@
     "onStruckByLightning": {
       "name": "LogSplinterItIsStruckByLightning"
     },
+    "whenMobDies": {
+      "name": "SplinterEntityDies"
+    },
     "onMobTickUpdate": {
       "name": "LogSplinterOnEntityTickUpdate"
     },

@@ -24,22 +24,13 @@
             "affectedByFortune": false,
             "explosionDecay": false,
             "silkTouchMode": 0
-          }
-        ]
-      },
-      {
-        "minrolls": 1,
-        "maxrolls": 1,
-        "minbonusrolls": 1,
-        "maxbonusrolls": 1,
-        "hasbonusrolls": false,
-        "entries": [
+          },
           {
             "type": "item",
             "item": {
               "value": "Blocks.AIR"
             },
-            "weight": 60,
+            "weight": 10,
             "minCount": 1,
             "maxCount": 1,
             "minEnchantmentLevel": 0,

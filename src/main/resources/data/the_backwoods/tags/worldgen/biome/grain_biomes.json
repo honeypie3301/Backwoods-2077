@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:splinter_nest",
+    "the_backwoods:stillwood",
+    "the_backwoods:pillar_thicket",
+    "the_backwoods:labyrinthine_grids",
+    "the_backwoods:uniform_grain",
+    "the_backwoods:fractured_barrens"
+  ]
+}

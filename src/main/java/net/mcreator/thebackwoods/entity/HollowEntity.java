@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 
+import net.mcreator.thebackwoods.procedures.SplinterEntityDiesProcedure;
 import net.mcreator.thebackwoods.procedures.HollowOnEntityTickUpdateProcedure;
 import net.mcreator.thebackwoods.procedures.HollowNaturalEntitySpawningConditionProcedure;
 import net.mcreator.thebackwoods.procedures.HollowEntityIsHurtProcedure;
@@ -87,6 +88,12 @@ public class HollowEntity extends Monster {
 	@Override
 	public boolean ignoreExplosion(Explosion explosion) {
 		return true;
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		super.die(source);
+		SplinterEntityDiesProcedure.execute(this.level(), source.getEntity());
 	}
 
 	@Override

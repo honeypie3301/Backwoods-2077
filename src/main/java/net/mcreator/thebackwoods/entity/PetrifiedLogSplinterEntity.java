@@ -34,6 +34,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 
+import net.mcreator.thebackwoods.procedures.SplinterEntityDiesProcedure;
 import net.mcreator.thebackwoods.procedures.PetrifiedLogSplinterOnEntityTickUpdateProcedure;
 import net.mcreator.thebackwoods.procedures.PetrifiedLogSplinterNaturalEntitySpawningConditionProcedure;
 import net.mcreator.thebackwoods.procedures.PetrifiedLogSplinterEntityIsHurtProcedure;
@@ -143,6 +144,12 @@ public class PetrifiedLogSplinterEntity extends Monster {
 		if (damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL))
 			return false;
 		return super.hurt(damagesource, amount);
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		super.die(source);
+		SplinterEntityDiesProcedure.execute(this.level(), source.getEntity());
 	}
 
 	@Override

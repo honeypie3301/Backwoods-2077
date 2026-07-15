@@ -39,6 +39,9 @@ public class TheBackwoodsModTabs {
 			tabData.accept(TheBackwoodsModItems.RECOVERED_FADED_SHOVEL.get());
 			tabData.accept(TheBackwoodsModItems.RESONANT_ROT_EFFIGY.get());
 			tabData.accept(TheBackwoodsModItems.NULL_POINTERAXE.get());
+			tabData.accept(TheBackwoodsModItems.LIGNUM_COMPOST.get());
+			tabData.accept(TheBackwoodsModItems.CRYSTALLIZED_SCANDERE_RESIN.get());
+			tabData.accept(TheBackwoodsModItems.LIGNUM_CARO_SWORD.get());
 		} else if (tabData.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
 			tabData.accept(TheBackwoodsModItems.SPLINTER_SPAWN_EGG.get());
 			tabData.accept(TheBackwoodsModItems.HOLLOW_SPAWN_EGG.get());
@@ -79,6 +82,8 @@ public class TheBackwoodsModTabs {
 			tabData.accept(TheBackwoodsModBlocks.SCANDERE_LIGNUM.get().asItem());
 			tabData.accept(TheBackwoodsModBlocks.SCANDERE_LIGNUM_LOG.get().asItem());
 			tabData.accept(TheBackwoodsModBlocks.FALSE_OAK_PLANKS.get().asItem());
+			tabData.accept(TheBackwoodsModBlocks.LIGNUM_CARO.get().asItem());
+			tabData.accept(TheBackwoodsModBlocks.DECAYING_LEAVES.get().asItem());
 		} else if (tabData.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
 			tabData.accept(TheBackwoodsModBlocks.FADED_BLOCK.get().asItem());
 			tabData.accept(TheBackwoodsModBlocks.PLAQUE.get().asItem());
@@ -103,6 +108,7 @@ public class TheBackwoodsModTabs {
 			tabData.accept(TheBackwoodsModBlocks.COBBLED_NULLSTONE_SLAB.get().asItem());
 			tabData.accept(TheBackwoodsModBlocks.COBBLED_NULLSTONE_STAIR.get().asItem());
 			tabData.accept(TheBackwoodsModBlocks.COBBLED_NULLSTONE_WALL.get().asItem());
+			tabData.accept(TheBackwoodsModBlocks.LIGNUM_CARO.get().asItem());
 		} else if (tabData.getTabKey() == CreativeModeTabs.INGREDIENTS) {
 			tabData.accept(TheBackwoodsModItems.SEEP.get());
 			tabData.accept(TheBackwoodsModItems.ROTTEN_STICK.get());
@@ -123,6 +129,9 @@ public class TheBackwoodsModTabs {
 			tabData.accept(TheBackwoodsModItems.MEMORY_SHARD.get());
 			tabData.accept(TheBackwoodsModBlocks.FRACTUS_CORE.get().asItem());
 			tabData.accept(TheBackwoodsModItems.FRACTUS_CORE_NUGGET.get());
+			tabData.accept(TheBackwoodsModBlocks.FRACTUS_PRIME_CORE.get().asItem());
+			tabData.accept(TheBackwoodsModItems.CRYSTALLIZED_SCANDERE_RESIN.get());
+			tabData.accept(TheBackwoodsModItems.LIGNUM_CARO_ASH.get());
 		} else if (tabData.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
 			tabData.accept(TheBackwoodsModItems.PALE_REMEDY.get());
 			tabData.accept(TheBackwoodsModItems.PALE_DRAUGHT_BOTTLE.get());

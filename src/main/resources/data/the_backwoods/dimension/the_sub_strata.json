@@ -394,7 +394,10 @@
                           "then_run": {
                             "type": "minecraft:block",
                             "result_state": {
-                              "Name": "minecraft:oak_planks"
+                              "Name": "the_backwoods:lignum_caro",
+                              "Properties": {
+                                "infected": "false"
+                              }
                             }
                           }
                         },

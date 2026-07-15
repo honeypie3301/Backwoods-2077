@@ -14,14 +14,44 @@
     "enablePitch": false,
     "emissiveRendering": false,
     "displayFluidOverlay": false,
-    "states": [],
+    "states": [
+      {
+        "texture": "scandere_lignum_log_top",
+        "textureTop": "scandere_lignum_log_top",
+        "textureLeft": "oozing_scandere_log",
+        "textureFront": "oozing_scandere_log",
+        "textureRight": "oozing_scandere_log",
+        "textureBack": "oozing_scandere_log",
+        "renderType": 10,
+        "customModelName": "Normal",
+        "particleTexture": "",
+        "hasCustomBoundingBox": false,
+        "boundingBoxes": [
+          {
+            "mx": 0.0,
+            "my": 0.0,
+            "mz": 0.0,
+            "Mx": 16.0,
+            "My": 16.0,
+            "Mz": 16.0,
+            "subtract": false
+          }
+        ],
+        "stateMap": [
+          {
+            "property": {
+              "name": "CUSTOM:oozing",
+              "type": "logic"
+            },
+            "value": true
+          }
+        ]
+      }
+    ],
     "animations": [],
     "itemTexture": "",
     "particleTexture": "",
     "blockSetType": "OAK",
-    "pottedPlant": {
-      "value": ""
-    },
     "leavesParticleChance": 0.0,
     "tintType": "No tint",
     "isItemTinted": false,
@@ -40,7 +70,20 @@
         "subtract": false
       }
     ],
-    "customProperties": [],
+    "customProperties": [
+      {
+        "min": 0,
+        "max": 450,
+        "name": "CUSTOM:age",
+        "type": "integer",
+        "value": 0
+      },
+      {
+        "name": "CUSTOM:oozing",
+        "type": "logic",
+        "value": false
+      }
+    ],
     "name": "Scandere Lignum Log",
     "specialInformation": {
       "fixedValue": []
@@ -73,7 +116,7 @@
     "hasCustomOpacity": false,
     "lightOpacity": 15,
     "tickRate": 0,
-    "tickRandomly": false,
+    "tickRandomly": true,
     "isReplaceable": false,
     "canProvidePower": false,
     "emittedRedstonePower": {
@@ -144,6 +187,21 @@
     "isFluidTank": false,
     "fluidCapacity": 8000,
     "fluidRestrictions": [],
+    "onRightClicked": {
+      "name": "ScandereLignumLogOnBlockRightclicked"
+    },
+    "onTickUpdate": {
+      "name": "ScandereLignumLogOnTickUpdate"
+    },
+    "onDestroyedByPlayer": {
+      "name": "ScandereLignumLogBlockDestroyedByPlayer"
+    },
+    "onDestroyedByExplosion": {
+      "name": "ScandereLignumLogBlockDestroyedByExplosion"
+    },
+    "onStartToDestroy": {
+      "name": "ScandereLignumLogPlayerStartsToDestroy"
+    },
     "generateFeature": false,
     "restrictionBiomes": [],
     "blocksToReplace": [

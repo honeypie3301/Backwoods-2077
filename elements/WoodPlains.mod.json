@@ -39,7 +39,7 @@
     },
     "particlesProbability": 0.1,
     "rainingPossibility": 0.0,
-    "temperature": 1.0,
+    "temperature": 0.36,
     "spawnBiome": false,
     "spawnInCaves": false,
     "spawnBiomeNether": false,
@@ -83,9 +83,7 @@
     "treeFruits": {
       "value": ""
     },
-    "defaultFeatures": [
-      "FrozenTopLayer"
-    ],
+    "defaultFeatures": [],
     "spawnStronghold": false,
     "spawnMineshaft": true,
     "spawnMineshaftMesa": false,
