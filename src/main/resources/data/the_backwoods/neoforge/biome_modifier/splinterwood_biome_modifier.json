@@ -1,6 +1,0 @@
-{
-  "type": "neoforge:add_features",
-  "biomes": "the_backwoods:rotting_deep",
-  "features": "the_backwoods:splinterwood",
-  "step": "surface_structures"
-}

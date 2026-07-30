@@ -1,8 +1,0 @@
-{
-  "parent": "block/cross",
-  "textures": {
-    "cross": "the_backwoods:block/tall_sedgegrass_top",
-    "particle": "the_backwoods:block/tall_sedgegrass_top"
-  },
-  "render_type": "cutout"
-}

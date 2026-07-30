@@ -1,6 +1,0 @@
-{
-  "parent": "block/template_fire_wall",
-  "textures": {
-    "fire": "block/fire_0"
-  }
-}

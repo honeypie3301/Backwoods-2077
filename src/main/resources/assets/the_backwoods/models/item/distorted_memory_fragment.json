@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "the_backwoods:item/distorted_memory_fragment"
-  }
-}

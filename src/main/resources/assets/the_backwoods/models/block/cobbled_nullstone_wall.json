@@ -1,8 +1,0 @@
-{
-  "parent": "block/template_wall_side",
-  "textures": {
-    "wall": "the_backwoods:block/cobbled_nullstone",
-    "particle": "the_backwoods:block/cobbled_nullstone"
-  },
-  "render_type": "solid"
-}
