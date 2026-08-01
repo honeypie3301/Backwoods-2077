@@ -18,8 +18,8 @@ Inside, you'll find Splinters, hostile, humanoid creatures made of oak plank tha
 
 ## Built With
 
-- [MCreator 2025.3](https://mcreator.net/)
-- Minecraft 1.21.1 / NeoForge
+- [MCreator 2026.1](https://mcreator.net/)
+- Minecraft 1.21.1, 1.21.8 / NeoForge
 
 
 
