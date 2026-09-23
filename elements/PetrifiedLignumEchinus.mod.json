@@ -1,0 +1,194 @@
+{
+  "_fv": 85,
+  "_type": "livingentity",
+  "definition": {
+    "mobName": "Petrified Lignum Echinus",
+    "mobLabel": "",
+    "mobModelName": "ModelLignumEchinus",
+    "mobModelTexture": "petrified_lignum_echinus.png",
+    "transparentModelCondition": {
+      "fixedValue": false
+    },
+    "isShakingCondition": {
+      "fixedValue": false
+    },
+    "solidBoundingBox": {
+      "fixedValue": false
+    },
+    "visualScale": {
+      "fixedValue": 1.0
+    },
+    "boundingBoxScale": {
+      "fixedValue": 1.0
+    },
+    "modelLayers": [],
+    "animations": [
+      {
+        "animation": {
+          "value": "CUSTOM:LignumEchinusAnimation.roll"
+        },
+        "speed": 2.0,
+        "walking": true,
+        "amplitude": 1.0
+      }
+    ],
+    "modelWidth": 1.0,
+    "modelHeight": 1.0,
+    "modelShadowSize": 0.5,
+    "mountedYOffset": 0.0,
+    "hasSpawnEgg": true,
+    "spawnEggBaseColor": {
+      "value": -6914706,
+      "falpha": 0.0
+    },
+    "spawnEggDotColor": {
+      "value": -8308709,
+      "falpha": 0.0
+    },
+    "spawnEggTexture": "",
+    "creativeTabs": [
+      {
+        "value": "MISC"
+      }
+    ],
+    "isBoss": false,
+    "bossBarColor": "PINK",
+    "bossBarType": "PROGRESS",
+    "equipmentMainHand": {
+      "value": ""
+    },
+    "equipmentOffHand": {
+      "value": ""
+    },
+    "equipmentHelmet": {
+      "value": ""
+    },
+    "equipmentBody": {
+      "value": ""
+    },
+    "equipmentLeggings": {
+      "value": ""
+    },
+    "equipmentBoots": {
+      "value": ""
+    },
+    "mobBehaviourType": "Mob",
+    "mobCreatureType": "UNDEFINED",
+    "attackStrength": 7,
+    "attackKnockback": 0.0,
+    "knockbackResistance": 0.5,
+    "movementSpeed": 0.38,
+    "stepHeight": 1.0,
+    "armorBaseValue": 10.0,
+    "trackingRange": 64,
+    "followRange": 16,
+    "health": 32,
+    "xpAmount": 6,
+    "waterMob": false,
+    "breatheUnderwater": {
+      "fixedValue": false
+    },
+    "pushedByFluids": {
+      "fixedValue": false
+    },
+    "flyingMob": false,
+    "inventorySize": 9,
+    "inventoryStackSize": 99,
+    "disableCollisions": false,
+    "ridable": false,
+    "canControlForward": false,
+    "canControlStrafe": false,
+    "immuneToFire": false,
+    "immuneToArrows": false,
+    "immuneToFallDamage": true,
+    "immuneToCactus": true,
+    "immuneToDrowning": true,
+    "immuneToLightning": false,
+    "immuneToPotions": false,
+    "immuneToPlayer": false,
+    "immuneToExplosion": false,
+    "immuneToTrident": false,
+    "immuneToAnvil": false,
+    "immuneToWither": false,
+    "immuneToDragonBreath": false,
+    "mobDrop": {
+      "value": "Blocks.PLANKS#0"
+    },
+    "livingSound": {
+      "value": "CUSTOM:splinter_idle"
+    },
+    "hurtSound": {
+      "value": "CUSTOM:splinter_hurt"
+    },
+    "deathSound": {
+      "value": "CUSTOM:gigas_death"
+    },
+    "stepSound": {
+      "value": "CUSTOM:splinter_step"
+    },
+    "raidCelebrationSound": {
+      "value": ""
+    },
+    "entityDataEntries": [],
+    "whenMobIsHurt": {
+      "name": "LignumEchinusEntityIsHurt"
+    },
+    "onPlayerCollidesWith": {
+      "name": "LignumEchinusPlayerCollidesWithThisEntity"
+    },
+    "hasAI": true,
+    "aiBase": "(none)",
+    "aixml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"aitasks_container\" deletable=\"false\" x=\"40\" y=\"40\"><next><block type=\"swim_in_water\"><field name=\"condition\">null,null</field><next><block type=\"attack_on_collide\"><field name=\"speed\">1.2</field><field name=\"longmemory\">TRUE</field><field name=\"condition\">EchinusAttackCondition,EchinusAttackCondition</field><next><block type=\"avoid_entity\"><field name=\"entity\">EntityPlayer</field><field name=\"radius\">6</field><field name=\"farspeed\">1.4</field><field name=\"nearspeed\">1.1</field><field name=\"condition\">EchinusAvoidCondition,EchinusAvoidCondition</field><next><block type=\"attack_action\"><field name=\"callhelp\">TRUE</field><field name=\"condition\">EchinusAttackCondition,EchinusAttackCondition</field><next><block type=\"wander\"><field name=\"speed\">0.7</field><field name=\"condition\">EchinusAvoidCondition,EchinusAvoidCondition</field><next><block type=\"look_around\"><field name=\"condition\">null,null</field></block></next></block></next></block></next></block></next></block></next></block></next></block></xml>",
+    "breedable": false,
+    "tameable": false,
+    "breedTriggerItems": [],
+    "ranged": false,
+    "rangedAttackItem": {
+      "value": ""
+    },
+    "rangedItemType": "Default item",
+    "rangedAttackInterval": 20,
+    "rangedAttackRadius": 10.0,
+    "spawnThisMob": true,
+    "doesDespawnWhenIdle": true,
+    "spawningCondition": {
+      "name": "PretrifiedLignumEchinusNaturalEntitySpawningCondition"
+    },
+    "spawningProbability": 11,
+    "mobSpawningType": "monster",
+    "minNumberOfMobsPerGroup": 1,
+    "maxNumberOfMobsPerGroup": 1,
+    "restrictionBiomes": [
+      {
+        "value": "CUSTOM:WealdOutskirts"
+      },
+      {
+        "value": "CUSTOM:CalcifiedPlains"
+      },
+      {
+        "value": "CUSTOM:PetrifiedThickwoods"
+      },
+      {
+        "value": "CUSTOM:FossilizedCore"
+      },
+      {
+        "value": "CUSTOM:AshenBarrens"
+      }
+    ],
+    "spawnInDungeons": false,
+    "raidSpawnsCount": [
+      4,
+      3,
+      3,
+      4,
+      4,
+      4,
+      2
+    ],
+    "sensitiveToVibration": false,
+    "vibrationalEvents": [],
+    "vibrationSensitivityRadius": {
+      "fixedValue": 7.0
+    }
+  }
+}

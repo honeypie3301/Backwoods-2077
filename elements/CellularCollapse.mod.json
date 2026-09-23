@@ -1,0 +1,105 @@
+{
+  "_fv": 85,
+  "_type": "potioneffect",
+  "definition": {
+    "effectName": "Cellular Collapse",
+    "icon": "cellular_collapse",
+    "color": {
+      "value": -15658735,
+      "falpha": 0.0
+    },
+    "onAddedSound": {
+      "value": ""
+    },
+    "isInstant": false,
+    "mobEffectCategory": "HARMFUL",
+    "renderStatusInInventory": true,
+    "renderStatusInHUD": true,
+    "isCuredbyHoney": false,
+    "modifiers": [
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "ATTACK_DAMAGE"
+        },
+        "amount": -0.6,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "ATTACK_KNOCKBACK"
+        },
+        "amount": -0.5,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "ATTACK_SPEED"
+        },
+        "amount": -0.3,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "BLOCK_BREAK_SPEED"
+        },
+        "amount": -0.4,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "SUBMERGED_MINING_SPEED"
+        },
+        "amount": -0.5,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "SWIM_SPEED"
+        },
+        "amount": -0.35,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "WATER_MOVEMENT_EFFICIENCY"
+        },
+        "amount": -0.45,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "SWEEPING_DAMAGE_RATIO"
+        },
+        "amount": -0.5,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "JUMP_STRENGTH"
+        },
+        "amount": -0.25,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      },
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "MAX_HEALTH"
+        },
+        "amount": -6.0,
+        "operation": "ADD_VALUE"
+      }
+    ],
+    "onActiveTick": {
+      "name": "CellularCollapseOnEffectActiveTick"
+    }
+  }
+}

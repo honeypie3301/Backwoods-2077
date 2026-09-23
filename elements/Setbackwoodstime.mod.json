@@ -1,0 +1,10 @@
+{
+  "_fv": 85,
+  "_type": "command",
+  "definition": {
+    "commandName": "setbackwoodstime",
+    "type": "STANDARD",
+    "permissionLevel": "4",
+    "argsxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"args_start\" deletable=\"false\" x=\"40\" y=\"40\"><next><block type=\"number_default\"><field name=\"name\">time</field><statement name=\"args\"><block type=\"old_command\"><field name=\"procedure\">BackwoodsTimeSet</field></block></statement></block></next></block></xml>"
+  }
+}

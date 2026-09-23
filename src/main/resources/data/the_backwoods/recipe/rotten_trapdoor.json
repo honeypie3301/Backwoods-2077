@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:rotten_oak_planks"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:rotten_oak_trapdoor",
+    "count": 2
+  }
+}

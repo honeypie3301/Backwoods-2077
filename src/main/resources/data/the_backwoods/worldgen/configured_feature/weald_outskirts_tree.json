@@ -1,0 +1,53 @@
+{
+  "type": "minecraft:tree",
+  "config": {
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "the_backwoods:petrified_rotten_oak_wood"
+      }
+    },
+    "foliage_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "the_backwoods:petrified_weald_foliage"
+      }
+    },
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "the_backwoods:petrified_rotten_oak_log"
+      }
+    },
+    "force_dirt": false,
+    "ignore_vines": false,
+    "foliage_placer": {
+      "type": "minecraft:fancy_foliage_placer",
+      "radius": 2,
+      "offset": 4,
+      "height": 4
+    },
+    "trunk_placer": {
+      "type": "minecraft:fancy_trunk_placer",
+      "base_height": 10,
+      "height_rand_a": 2,
+      "height_rand_b": 3
+    },
+    "minimum_size": {
+      "type": "minecraft:two_layers_feature_size",
+      "limit": 0,
+      "lower_size": 0,
+      "upper_size": 0,
+      "min_clipped_height": 4
+    },
+    "decorators": [
+      {
+        "type": "minecraft:trunk_vine"
+      },
+      {
+        "type": "minecraft:leave_vine",
+        "probability": 0.1
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_fv": 85,
+  "_type": "damagetype",
+  "definition": {
+    "exhaustion": 0.4,
+    "scaling": "always",
+    "effects": "thorns",
+    "normalDeathMessage": "%1$s died trying to punch a Lignum Spina",
+    "itemDeathMessage": "%1$s was killed by a %2$s using %3$s",
+    "playerDeathMessage": "%1$s died whilst trying to escape a %2$s"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:weald_outskirts",
+  "features": "the_backwoods:weald_outskirts_tree",
+  "step": "surface_structures"
+}

@@ -1,0 +1,77 @@
+{
+  "_fv": 85,
+  "_type": "dimension",
+  "definition": {
+    "biomesInDimension": [
+      {
+        "value": "CUSTOM:TheDeadGrain"
+      }
+    ],
+    "biomesInDimensionCaves": [],
+    "worldGenType": "Normal world gen",
+    "mainFillerBlock": {
+      "value": "Blocks.PLANKS#0"
+    },
+    "fluidBlock": {
+      "value": "Blocks.PLANKS#0"
+    },
+    "seaLevel": 63,
+    "generateOreVeins": false,
+    "generateAquifers": false,
+    "horizontalNoiseSize": 4,
+    "verticalNoiseSize": 1,
+    "defaultEffects": "overworld",
+    "useCustomEffects": true,
+    "hasClouds": false,
+    "cloudHeight": 192,
+    "skyType": "NONE",
+    "airColor": {
+      "value": -6321344,
+      "falpha": 0.0
+    },
+    "sunHeightAffectsFog": false,
+    "canRespawnHere": true,
+    "hasFog": true,
+    "ambientLight": 0.035,
+    "doesWaterVaporize": false,
+    "hasFixedTime": false,
+    "fixedTimeValue": 0,
+    "coordinateScale": 1.0,
+    "infiniburnTag": "minecraft:infiniburn_overworld",
+    "bedWorks": true,
+    "hasSkyLight": false,
+    "imitateOverworldBehaviour": false,
+    "piglinSafe": false,
+    "hasRaids": false,
+    "minMonsterSpawnLightLimit": 0,
+    "maxMonsterSpawnLightLimit": 7,
+    "monsterSpawnBlockLightLimit": 0,
+    "onPlayerEntersDimension": {
+      "name": "TheSubStrataPlayerEntersDimension"
+    },
+    "portalFrame": {
+      "value": ""
+    },
+    "portalParticles": {
+      "value": "PORTAL"
+    },
+    "portalLuminance": 0,
+    "portalSound": {
+      "value": "block.portal.ambient"
+    },
+    "enableIgniter": true,
+    "igniterName": "The Sub Strata Portal Igniter",
+    "igniterRarity": "COMMON",
+    "specialInformation": {
+      "fixedValue": []
+    },
+    "creativeTabs": [
+      {
+        "value": "TOOLS"
+      }
+    ],
+    "texture": "",
+    "portalTexture": "",
+    "enablePortal": false
+  }
+}

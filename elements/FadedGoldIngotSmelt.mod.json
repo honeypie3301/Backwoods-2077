@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smelting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedGoldIngot"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.1,
+    "cookingTime": 170,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smeltingInputStack": {
+      "value": "CUSTOM:FadedGoldIngot"
+    },
+    "smeltingReturnStack": {
+      "value": "Items.GOLD_INGOT"
+    },
+    "name": "faded_gold_ingot_smelt",
+    "namespace": "mod"
+  }
+}

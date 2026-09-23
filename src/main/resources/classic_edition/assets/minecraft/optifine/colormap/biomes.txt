@@ -1,0 +1,8 @@
+===========colormap biome color coordinates===========
+
+Jungle 		(modern/classic) = 13,37 // 1,15
+Forest 		(modern/classic) = 77,113 // 62,160
+plains 		(modern/classic) = 51,174 // 8,170
+ocean 		(modern/classic) = 128,192 // 4,138
+snowy_taiga	(modern/classic) = 256,256 // 135,195
+Desert 		(modern/classic) = 1,256 // 13,256

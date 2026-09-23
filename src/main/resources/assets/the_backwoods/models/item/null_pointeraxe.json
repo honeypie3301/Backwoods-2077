@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "the_backwoods:item/null-pointer_axe"
+  }
+}

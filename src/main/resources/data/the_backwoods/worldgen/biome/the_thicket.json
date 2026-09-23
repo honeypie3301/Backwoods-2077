@@ -1,0 +1,77 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.38,
+  "downfall": 0,
+  "effects": {
+    "ambient_sound": "ambient.crimson_forest.additions",
+    "mood_sound": {
+      "sound": "ambient.cave",
+      "tick_delay": 6000,
+      "offset": 8,
+      "block_search_extent": 2
+    },
+    "additions_sound": {
+      "sound": "ambient.nether_wastes.additions",
+      "tick_chance": 0.0111
+    },
+    "music": {
+      "sound": "ambient.basalt_deltas.mood",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": true
+    },
+    "particle": {
+      "options": {
+        "type": "ash"
+      },
+      "probability": 0.005
+    },
+    "foliage_color": 10387789,
+    "grass_color": 9470285,
+    "sky_color": -7046095,
+    "fog_color": -6321344,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "spawners": {
+    "monster": [
+      {
+        "type": "the_backwoods:log_splinter",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "creature": [
+      {
+        "type": "the_backwoods:ash_weaver",
+        "weight": 1,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "the_backwoods:the_thicket_tree"
+    ],
+    []
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "_fv": 85,
+  "_type": "particle",
+  "definition": {
+    "texture": "flame_smoke_large",
+    "animate": true,
+    "frameDuration": 3,
+    "width": 1.0,
+    "height": 1.0,
+    "scale": {
+      "fixedValue": 12.0
+    },
+    "fixedScale": true,
+    "speedFactor": 0.1,
+    "gravity": -0.01,
+    "maxAge": 51,
+    "maxAgeDiff": 0,
+    "angularVelocity": 0.0,
+    "angularAcceleration": 0.0,
+    "canCollide": false,
+    "alwaysShow": true,
+    "emissiveRendering": false,
+    "renderType": "TRANSLUCENT"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "the_backwoods:splinter_shard"
+  },
+  "result": {
+    "id": "the_backwoods:sharpened_splinter_shard",
+    "count": 1
+  }
+}

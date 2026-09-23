@@ -1,0 +1,184 @@
+{
+  "_fv": 85,
+  "_type": "block",
+  "definition": {
+    "texture": "minecraft:oak_log",
+    "textureTop": "minecraft:oak_log",
+    "textureLeft": "minecraft:oak_log",
+    "textureFront": "minecraft:oak_log",
+    "textureRight": "minecraft:oak_log",
+    "textureBack": "minecraft:oak_log",
+    "renderType": 10,
+    "customModelName": "Normal",
+    "rotationMode": 5,
+    "enablePitch": false,
+    "emissiveRendering": false,
+    "displayFluidOverlay": false,
+    "states": [],
+    "animations": [],
+    "itemTexture": "",
+    "particleTexture": "",
+    "blockSetType": "OAK",
+    "leavesParticleChance": 0.0,
+    "tintType": "No tint",
+    "isItemTinted": false,
+    "hasTransparency": false,
+    "connectedSides": false,
+    "transparencyType": "SOLID",
+    "disableOffset": false,
+    "boundingBoxes": [
+      {
+        "mx": 0.0,
+        "my": 0.0,
+        "mz": 0.0,
+        "Mx": 16.0,
+        "My": 16.0,
+        "Mz": 16.0,
+        "subtract": false
+      }
+    ],
+    "customProperties": [
+      {
+        "min": 0,
+        "max": 25,
+        "name": "CUSTOM:age",
+        "type": "integer",
+        "value": 0
+      }
+    ],
+    "name": "Scandere Lignum",
+    "specialInformation": {
+      "fixedValue": []
+    },
+    "hardness": 2.0,
+    "resistance": 5.0,
+    "hasGravity": false,
+    "isWaterloggable": false,
+    "hasBlockItem": true,
+    "maxStackSize": 64,
+    "rarity": "COMMON",
+    "immuneToFire": false,
+    "creativeTabs": [
+      {
+        "value": "DECORATIONS"
+      }
+    ],
+    "destroyTool": "axe",
+    "customDrop": {
+      "value": ""
+    },
+    "dropAmount": 1,
+    "xpAmountMin": 0,
+    "xpAmountMax": 0,
+    "useLootTableForDrops": true,
+    "requiresCorrectTool": false,
+    "enchantPowerBonus": 0.0,
+    "plantsGrowOn": false,
+    "canRedstoneConnect": false,
+    "hasCustomOpacity": false,
+    "lightOpacity": 15,
+    "tickRate": 200,
+    "tickRandomly": true,
+    "isReplaceable": false,
+    "canProvidePower": false,
+    "emittedRedstonePower": {
+      "fixedValue": 15.0
+    },
+    "colorOnMap": "WOOD",
+    "noteBlockInstrument": "bass",
+    "creativePickItem": {
+      "value": ""
+    },
+    "offsetType": "NONE",
+    "aiPathNodeType": "DEFAULT",
+    "strippingResult": {
+      "value": ""
+    },
+    "ignitedByLava": false,
+    "flammability": 5,
+    "fireSpreadSpeed": 0,
+    "isLadder": false,
+    "slipperiness": 0.6,
+    "speedFactor": 1.0,
+    "jumpFactor": 1.0,
+    "reactionToPushing": "NORMAL",
+    "isNotColidable": false,
+    "isCustomSoundType": false,
+    "soundOnStep": {
+      "value": "WOOD"
+    },
+    "breakSound": {
+      "value": ""
+    },
+    "fallSound": {
+      "value": ""
+    },
+    "hitSound": {
+      "value": ""
+    },
+    "placeSound": {
+      "value": ""
+    },
+    "stepSound": {
+      "value": ""
+    },
+    "luminance": {
+      "fixedValue": 0.0
+    },
+    "unbreakable": false,
+    "vanillaToolTier": "NONE",
+    "isBonemealable": false,
+    "sensitiveToVibration": false,
+    "vibrationalEvents": [],
+    "vibrationSensitivityRadius": {
+      "fixedValue": 7.0
+    },
+    "hasInventory": false,
+    "openGUIOnRightClick": false,
+    "inventorySize": 9,
+    "inventoryStackSize": 99,
+    "inventoryDropWhenDestroyed": true,
+    "inventoryComparatorPower": true,
+    "inventoryOutSlotIDs": [],
+    "inventoryInSlotIDs": [],
+    "hasEnergyStorage": false,
+    "energyInitial": 0,
+    "energyCapacity": 400000,
+    "energyMaxReceive": 200,
+    "energyMaxExtract": 200,
+    "isFluidTank": false,
+    "fluidCapacity": 8000,
+    "fluidRestrictions": [],
+    "onTickUpdate": {
+      "name": "ScandereLignumSpreadOnTickUpdate"
+    },
+    "onDestroyedByPlayer": {
+      "name": "ScandereLignumBlockDestroyedByPlayer"
+    },
+    "onDestroyedByExplosion": {
+      "name": "ScandereLignumBlockDestroyedByExplosion"
+    },
+    "onStartToDestroy": {
+      "name": "ScandereLignumPlayerStartsToDestroy"
+    },
+    "generateFeature": false,
+    "restrictionBiomes": [
+      {
+        "value": "CUSTOM:Confusion"
+      }
+    ],
+    "blocksToReplace": [
+      {
+        "value": "TAG:stone_ore_replaceables"
+      },
+      {
+        "value": "Blocks.STONE#0"
+      }
+    ],
+    "generationShape": "UNIFORM",
+    "frequencyPerChunks": 10,
+    "frequencyOnChunk": 16,
+    "minGenerateHeight": -48,
+    "maxGenerateHeight": 64
+  }
+}

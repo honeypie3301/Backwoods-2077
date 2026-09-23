@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "abb",
+    "acb",
+    " ca"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:petrified_bark"
+    },
+    "b": {
+      "item": "the_backwoods:sharpened_splinter_shard"
+    },
+    "c": {
+      "item": "the_backwoods:rotten_stick"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:petrified_rotten_axe",
+    "count": 1
+  }
+}

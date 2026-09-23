@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:netherrack_replace_blobs",
+  "config": {
+    "target": {
+      "Name": "the_backwoods:nullstone"
+    },
+    "state": {
+      "Name": "the_backwoods:sinking_ash"
+    },
+    "radius": {
+      "type": "uniform",
+      "min_inclusive": 2,
+      "max_inclusive": 4
+    }
+  }
+}

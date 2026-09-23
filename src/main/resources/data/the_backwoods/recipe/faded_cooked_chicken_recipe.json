@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "experience": 0.67,
+  "cookingtime": 210,
+  "ingredient": {
+    "item": "the_backwoods:faded_raw_chicken"
+  },
+  "result": {
+    "id": "the_backwoods:faded_cooked_chicken"
+  }
+}

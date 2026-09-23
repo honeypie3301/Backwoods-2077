@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smoking",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedRawRabbit"
+      }
+    ],
+    "cookingBookCategory": "FOOD",
+    "xpReward": 0.35,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smokingInputStack": {
+      "value": "CUSTOM:FadedRawRabbit"
+    },
+    "smokingReturnStack": {
+      "value": "CUSTOM:FadedCookedRabbit"
+    },
+    "name": "faded_cooked_rabbit_recipe",
+    "namespace": "mod"
+  }
+}

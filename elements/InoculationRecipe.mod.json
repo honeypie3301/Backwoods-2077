@@ -1,0 +1,26 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Brewing",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "brewingInputStack": {
+      "value": "POTION:WATER"
+    },
+    "brewingIngredientStack": {
+      "value": "CUSTOM:LignumCaroAsh"
+    },
+    "brewingReturnStack": {
+      "value": "POTION:CUSTOM:Inoculation"
+    },
+    "name": "inoculation_recipe",
+    "namespace": "mod"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:rotten_oak_log"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:rotten_oak_planks",
+    "count": 4
+  }
+}

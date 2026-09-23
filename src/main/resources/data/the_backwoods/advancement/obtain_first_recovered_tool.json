@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "the_backwoods:recovered_faded_pickaxe"
+    },
+    "title": {
+      "translate": "advancements.obtain_first_recovered_tool.title"
+    },
+    "description": {
+      "translate": "advancements.obtain_first_recovered_tool.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_first_recovered_tool_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 11
+  },
+  "parent": "the_backwoods:enter_loss"
+}

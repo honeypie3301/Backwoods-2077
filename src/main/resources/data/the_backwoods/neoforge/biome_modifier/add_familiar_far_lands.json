@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#the_backwoods:familiar_biomes",
+  "features": [
+    "the_backwoods:familiar_far_lands"
+  ],
+  "step": "raw_generation"
+}

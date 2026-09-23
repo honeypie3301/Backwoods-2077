@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "the_backwoods:rotten_sword"
+  },
+  "base": {
+    "item": "the_backwoods:heartwood_shard"
+  },
+  "addition": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
+  },
+  "result": {
+    "id": "the_backwoods:heartwood_rotten_sword"
+  }
+}

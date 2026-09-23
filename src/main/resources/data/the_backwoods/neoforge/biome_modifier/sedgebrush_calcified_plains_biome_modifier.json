@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:calcified_plains",
+  "features": "the_backwoods:sedgebrush_calcified_plains",
+  "step": "vegetal_decoration"
+}

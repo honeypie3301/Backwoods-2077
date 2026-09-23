@@ -1,0 +1,45 @@
+{
+  "type": "the_backwoods:scandere_lignum_generation",
+  "config": {
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "the_backwoods:scandere_lignum"
+      }
+    },
+    "foliage_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:oak_leaves"
+      }
+    },
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "the_backwoods:scandere_lignum_log"
+      }
+    },
+    "force_dirt": true,
+    "ignore_vines": true,
+    "foliage_placer": {
+      "type": "minecraft:dark_oak_foliage_placer",
+      "radius": 0,
+      "offset": 0
+    },
+    "trunk_placer": {
+      "type": "minecraft:dark_oak_trunk_placer",
+      "base_height": 7,
+      "height_rand_a": 2,
+      "height_rand_b": 0
+    },
+    "minimum_size": {
+      "type": "minecraft:three_layers_feature_size",
+      "limit": 1,
+      "upper_limit": 1,
+      "lower_size": 0,
+      "middle_size": 1,
+      "upper_size": 2
+    },
+    "decorators": []
+  }
+}

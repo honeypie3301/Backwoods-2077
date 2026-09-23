@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:memory_shard"
+    },
+    {
+      "item": "the_backwoods:fractus_core_nugget"
+    },
+    {
+      "item": "the_backwoods:tetherless_pearl"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:resonant_tetherless_pearl",
+    "count": 1
+  }
+}

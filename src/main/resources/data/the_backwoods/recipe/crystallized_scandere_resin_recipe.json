@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "experience": 5,
+  "cookingtime": 250,
+  "ingredient": {
+    "item": "the_backwoods:scandere_resin"
+  },
+  "result": {
+    "id": "the_backwoods:crystallized_scandere_resin"
+  }
+}

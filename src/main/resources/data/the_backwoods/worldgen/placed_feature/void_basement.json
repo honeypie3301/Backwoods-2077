@@ -1,0 +1,11 @@
+{
+  "feature": "the_backwoods:void_basement",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

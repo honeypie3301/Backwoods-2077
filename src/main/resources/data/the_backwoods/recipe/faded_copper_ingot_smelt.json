@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "experience": 0.1,
+  "cookingtime": 200,
+  "ingredient": {
+    "item": "the_backwoods:faded_copper_ingot"
+  },
+  "result": {
+    "id": "minecraft:copper_ingot"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:mirrored_forest",
+    "the_backwoods:mirrored_plains",
+    "the_backwoods:mirrored_desert",
+    "the_backwoods:mirrored_birch_forest",
+    "the_backwoods:mirrored_ocean",
+    "the_backwoods:mirrored_taiga",
+    "the_backwoods:mirrored_jungle",
+    "the_backwoods:mirrored_savannah"
+  ]
+}

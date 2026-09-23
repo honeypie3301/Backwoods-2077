@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 30,
+    "discard_chance_on_air_exposure": 0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "tag_match",
+          "tag": "weald_replaceable"
+        },
+        "state": {
+          "Name": "the_backwoods:fossilized_silt"
+        }
+      }
+    ]
+  }
+}

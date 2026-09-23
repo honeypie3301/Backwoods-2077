@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "experience": 0.35,
+  "cookingtime": 120,
+  "ingredient": {
+    "item": "the_backwoods:faded_potato"
+  },
+  "result": {
+    "id": "the_backwoods:faded_baked_potato"
+  }
+}

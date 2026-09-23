@@ -1,0 +1,10 @@
+{
+  "parent": "block/inner_stairs",
+  "textures": {
+    "particle": "the_backwoods:block/petrified_rotten_oak_planks",
+    "bottom": "the_backwoods:block/petrified_rotten_oak_planks",
+    "top": "the_backwoods:block/petrified_rotten_oak_planks",
+    "side": "the_backwoods:block/petrified_rotten_oak_planks"
+  },
+  "render_type": "solid"
+}

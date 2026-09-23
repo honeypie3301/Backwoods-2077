@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "the_backwoods:the_thicket",
+  "spawners": {
+    "type": "the_backwoods:ash_weaver",
+    "weight": 1,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

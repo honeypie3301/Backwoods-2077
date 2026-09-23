@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:the_thicket",
+  "features": "the_backwoods:tree_thicket",
+  "step": "surface_structures"
+}

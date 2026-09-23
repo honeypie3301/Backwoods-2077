@@ -1,0 +1,12 @@
+{
+  "_fv": 85,
+  "_type": "damagetype",
+  "definition": {
+    "exhaustion": 5.0,
+    "scaling": "never",
+    "effects": "hurt",
+    "normalDeathMessage": "%1$s was crushed by gravitational collapse",
+    "itemDeathMessage": "%1$s was obliterated by the %2$s's singularity core",
+    "playerDeathMessage": "%1$s collapsed under extreme gravity whilst escaping the %2$s"
+  }
+}

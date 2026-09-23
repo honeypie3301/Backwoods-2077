@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smoking",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedMutton"
+      }
+    ],
+    "cookingBookCategory": "FOOD",
+    "xpReward": 0.35,
+    "cookingTime": 190,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smokingInputStack": {
+      "value": "CUSTOM:FadedMutton"
+    },
+    "smokingReturnStack": {
+      "value": "CUSTOM:FadedCookedMutton"
+    },
+    "name": "faded_cooked_mutton_recipe",
+    "namespace": "mod"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "experience": 0.35,
+  "cookingtime": 190,
+  "ingredient": {
+    "item": "the_backwoods:faded_mutton"
+  },
+  "result": {
+    "id": "the_backwoods:faded_cooked_mutton"
+  }
+}

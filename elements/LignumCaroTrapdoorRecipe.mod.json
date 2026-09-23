@@ -1,0 +1,53 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 2,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:LignumCaro"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "REDSTONE",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:LignumCaro"
+      },
+      {
+        "value": "CUSTOM:LignumCaro"
+      },
+      {
+        "value": "CUSTOM:LignumCaro"
+      },
+      {
+        "value": "CUSTOM:LignumCaro"
+      },
+      {
+        "value": "CUSTOM:LignumCaro"
+      },
+      {
+        "value": "CUSTOM:LignumCaro"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:LignumCaroTrapdoor"
+    },
+    "name": "lignum_caro_trapdoor_recipe",
+    "namespace": "mod"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:wood_plains",
+  "features": "the_backwoods:dead_tree",
+  "step": "surface_structures"
+}

@@ -1,0 +1,57 @@
+{
+  "type": "minecraft:geode",
+  "config": {
+    "blocks": {
+      "filling_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "the_backwoods:plaque"
+        }
+      },
+      "inner_layer_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "the_backwoods:plaque"
+        }
+      },
+      "alternate_inner_layer_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "the_backwoods:plaque_heart"
+        }
+      },
+      "middle_layer_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "the_backwoods:plaque"
+        }
+      },
+      "outer_layer_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "the_backwoods:faded_block"
+        }
+      },
+      "inner_placements": [
+        {
+          "Name": "the_backwoods:plaque_heart"
+        },
+        {
+          "Name": "the_backwoods:faded_block"
+        },
+        {
+          "Name": "the_backwoods:faded_block"
+        },
+        {
+          "Name": "the_backwoods:faded_block"
+        }
+      ],
+      "cannot_replace": "#features_cannot_replace",
+      "invalid_blocks": "#geode_invalid_blocks"
+    },
+    "layers": {},
+    "crack": {},
+    "invalid_blocks_threshold": 1,
+    "use_alternate_layer0_chance": 0.083
+  }
+}

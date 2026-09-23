@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "the_backwoods:block/cobbled_amber-grit",
+    "up": "the_backwoods:block/cobbled_amber-grit",
+    "north": "the_backwoods:block/cobbled_amber-grit",
+    "east": "the_backwoods:block/cobbled_amber-grit",
+    "south": "the_backwoods:block/cobbled_amber-grit",
+    "west": "the_backwoods:block/cobbled_amber-grit",
+    "particle": "the_backwoods:block/cobbled_amber-grit"
+  },
+  "render_type": "solid"
+}

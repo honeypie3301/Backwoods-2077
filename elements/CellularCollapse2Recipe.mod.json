@@ -1,0 +1,26 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Brewing",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "brewingInputStack": {
+      "value": "POTION:CUSTOM:CellularCollapsePotion"
+    },
+    "brewingIngredientStack": {
+      "value": "Items.GLOWSTONE_DUST"
+    },
+    "brewingReturnStack": {
+      "value": "POTION:CUSTOM:CellularCollapsePotion2"
+    },
+    "name": "cellular_collapse_2_recipe",
+    "namespace": "mod"
+  }
+}

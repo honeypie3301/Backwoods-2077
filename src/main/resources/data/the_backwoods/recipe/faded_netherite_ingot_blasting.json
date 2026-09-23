@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "experience": 0.67,
+  "cookingtime": 250,
+  "ingredient": {
+    "item": "the_backwoods:faded_netherite_ingot"
+  },
+  "result": {
+    "id": "minecraft:netherite_ingot"
+  }
+}

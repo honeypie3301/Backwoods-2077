@@ -1,0 +1,53 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 8,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:ScandereResin"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": ""
+      },
+      {
+        "value": "Items.DYE#15"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "Items.DYE#15"
+      },
+      {
+        "value": "CUSTOM:CrystallizedScandereResin"
+      },
+      {
+        "value": "Items.DYE#15"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "Items.DYE#15"
+      },
+      {
+        "value": ""
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:LignumCompost"
+    },
+    "name": "lignum_compost_recipe",
+    "namespace": "mod"
+  }
+}

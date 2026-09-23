@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "the_backwoods:uniform_grain",
+  "spawners": {
+    "type": "the_backwoods:stilt_walker",
+    "weight": 1,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

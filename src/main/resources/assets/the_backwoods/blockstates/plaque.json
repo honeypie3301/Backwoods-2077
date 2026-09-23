@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "the_backwoods:block/plaque"
+    },
+    "facing=east": {
+      "model": "the_backwoods:block/plaque",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "the_backwoods:block/plaque",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "the_backwoods:block/plaque",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "the_backwoods:block/plaque",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "the_backwoods:block/plaque",
+      "x": 90
+    }
+  }
+}

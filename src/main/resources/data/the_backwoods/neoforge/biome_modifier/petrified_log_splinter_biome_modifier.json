@@ -1,0 +1,14 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "the_backwoods:weald_outskirts",
+    "the_backwoods:petrified_thickwoods",
+    "the_backwoods:fossilized_core"
+  ],
+  "spawners": {
+    "type": "the_backwoods:petrified_log_splinter",
+    "weight": 1,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

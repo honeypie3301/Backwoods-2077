@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:deep_backwoods",
+  "features": "the_backwoods:rotten_geode_deep",
+  "step": "underground_decoration"
+}

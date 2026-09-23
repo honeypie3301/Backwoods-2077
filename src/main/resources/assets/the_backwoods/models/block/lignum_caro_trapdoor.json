@@ -1,0 +1,8 @@
+{
+  "parent": "block/template_orientable_trapdoor_bottom",
+  "textures": {
+    "texture": "minecraft:block/oak_trapdoor",
+    "particle": "minecraft:block/oak_trapdoor"
+  },
+  "render_type": "cutout"
+}

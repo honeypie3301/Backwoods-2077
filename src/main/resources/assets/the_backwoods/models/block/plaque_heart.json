@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "the_backwoods:block/plaque_heart",
+    "up": "the_backwoods:block/plaque_heart",
+    "north": "the_backwoods:block/plaque_heart",
+    "east": "the_backwoods:block/plaque_heart",
+    "south": "the_backwoods:block/plaque_heart",
+    "west": "the_backwoods:block/plaque_heart",
+    "particle": "the_backwoods:block/plaque_heart"
+  },
+  "render_type": "solid"
+}

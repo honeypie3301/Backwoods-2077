@@ -1,0 +1,10 @@
+{
+  "parent": "block/outer_stairs",
+  "textures": {
+    "particle": "the_backwoods:block/cobbled_nullstone",
+    "bottom": "the_backwoods:block/cobbled_nullstone",
+    "top": "the_backwoods:block/cobbled_nullstone",
+    "side": "the_backwoods:block/cobbled_nullstone"
+  },
+  "render_type": "solid"
+}

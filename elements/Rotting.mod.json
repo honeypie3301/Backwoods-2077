@@ -1,0 +1,73 @@
+{
+  "_fv": 85,
+  "_type": "dimension",
+  "definition": {
+    "biomesInDimension": [
+      {
+        "value": "CUSTOM:RottingDeep"
+      }
+    ],
+    "biomesInDimensionCaves": [],
+    "worldGenType": "Normal world gen",
+    "mainFillerBlock": {
+      "value": "CUSTOM:RottenOakWood"
+    },
+    "fluidBlock": {
+      "value": "CUSTOM:RottenOakWood"
+    },
+    "seaLevel": 64,
+    "generateOreVeins": false,
+    "generateAquifers": false,
+    "horizontalNoiseSize": 1,
+    "verticalNoiseSize": 2,
+    "defaultEffects": "overworld",
+    "useCustomEffects": true,
+    "hasClouds": false,
+    "cloudHeight": 192,
+    "skyType": "NONE",
+    "sunHeightAffectsFog": false,
+    "canRespawnHere": true,
+    "hasFog": true,
+    "ambientLight": 0.01,
+    "doesWaterVaporize": false,
+    "hasFixedTime": true,
+    "fixedTimeValue": 16000,
+    "coordinateScale": 2.0,
+    "infiniburnTag": "minecraft:infiniburn_overworld",
+    "bedWorks": true,
+    "hasSkyLight": false,
+    "imitateOverworldBehaviour": false,
+    "piglinSafe": false,
+    "hasRaids": false,
+    "minMonsterSpawnLightLimit": 0,
+    "maxMonsterSpawnLightLimit": 7,
+    "monsterSpawnBlockLightLimit": 0,
+    "onPlayerEntersDimension": {
+      "name": "RottingPlayerEntersDimension"
+    },
+    "portalFrame": {
+      "value": ""
+    },
+    "portalParticles": {
+      "value": "PORTAL"
+    },
+    "portalLuminance": 0,
+    "portalSound": {
+      "value": "block.portal.ambient"
+    },
+    "enableIgniter": true,
+    "igniterName": "Rotting Portal Igniter",
+    "igniterRarity": "COMMON",
+    "specialInformation": {
+      "fixedValue": []
+    },
+    "creativeTabs": [
+      {
+        "value": "TOOLS"
+      }
+    ],
+    "texture": "",
+    "portalTexture": "",
+    "enablePortal": false
+  }
+}

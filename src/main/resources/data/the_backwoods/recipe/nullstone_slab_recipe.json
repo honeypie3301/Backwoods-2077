@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:nullstone"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:nullstone_slab",
+    "count": 6
+  }
+}

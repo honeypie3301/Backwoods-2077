@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:faded_pickaxe",
+    "the_backwoods:rotten_pickaxe",
+    "the_backwoods:recovered_faded_pickaxe"
+  ]
+}

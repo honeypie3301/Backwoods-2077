@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:faded_cooked_porkchop",
+    "the_backwoods:faded_mutton",
+    "the_backwoods:faded_cooked_chicken",
+    "the_backwoods:faded_cooked_rabbit",
+    "the_backwoods:faded_cookie",
+    "the_backwoods:faded_raw_chicken",
+    "the_backwoods:faded_raw_beef",
+    "the_backwoods:faded_cod",
+    "the_backwoods:faded_cooked_cod",
+    "the_backwoods:faded_porkchop",
+    "the_backwoods:faded_cooked_mutton"
+  ]
+}

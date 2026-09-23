@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "the_backwoods:petrified_resin"
+    },
+    "title": {
+      "translate": "advancements.use_resin.title"
+    },
+    "description": {
+      "translate": "advancements.use_resin.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "use_resin_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 8
+  },
+  "parent": "the_backwoods:enter_weald"
+}

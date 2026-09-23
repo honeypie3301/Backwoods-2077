@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smelting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedNetheriteIngot"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.5,
+    "cookingTime": 700,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smeltingInputStack": {
+      "value": "CUSTOM:FadedNetheriteIngot"
+    },
+    "smeltingReturnStack": {
+      "value": "Items.NETHERITE_INGOT"
+    },
+    "name": "faded_netherite_ingot_smelt",
+    "namespace": "mod"
+  }
+}

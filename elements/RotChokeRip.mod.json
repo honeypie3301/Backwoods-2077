@@ -1,0 +1,12 @@
+{
+  "_fv": 85,
+  "_type": "damagetype",
+  "definition": {
+    "exhaustion": 2.0,
+    "scaling": "always",
+    "effects": "hurt",
+    "normalDeathMessage": "%1$s was throttled and torn apart by the %2$s",
+    "itemDeathMessage": "%1$s had their life squeezed out by the %2$s using %3$s",
+    "playerDeathMessage": "%1$s suffocated in the grasp of the %2$s"
+  }
+}

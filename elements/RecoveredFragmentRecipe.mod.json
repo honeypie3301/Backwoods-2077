@@ -1,0 +1,56 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:DistortedMemoryFragment"
+      },
+      {
+        "value": "CUSTOM:StabilizedPaleRemedy"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": true,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:DistortedMemoryFragment"
+      },
+      {
+        "value": "CUSTOM:PaleRemedy"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:DistortedMemoryFragment"
+      },
+      {
+        "value": "CUSTOM:HeartwoodShard"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:RecoveredMemoryFragment"
+    },
+    "name": "recovered_fragment_recipe",
+    "namespace": "mod"
+  }
+}

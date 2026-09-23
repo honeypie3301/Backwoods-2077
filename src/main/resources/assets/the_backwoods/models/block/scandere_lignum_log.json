@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "the_backwoods:block/scandere_lignum_log_top",
+    "up": "the_backwoods:block/scandere_lignum_log_top",
+    "north": "minecraft:block/oak_log",
+    "east": "minecraft:block/oak_log",
+    "south": "minecraft:block/oak_log",
+    "west": "minecraft:block/oak_log",
+    "particle": "the_backwoods:block/scandere_lignum_log_top"
+  },
+  "render_type": "solid"
+}

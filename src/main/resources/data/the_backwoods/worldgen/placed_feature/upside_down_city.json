@@ -1,0 +1,11 @@
+{
+  "feature": "the_backwoods:upside_down_city",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

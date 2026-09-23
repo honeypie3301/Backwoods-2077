@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "infected=false": {
+      "model": "the_backwoods:block/lignum_caro_0"
+    },
+    "infected=true": {
+      "model": "the_backwoods:block/lignum_caro_1"
+    }
+  }
+}

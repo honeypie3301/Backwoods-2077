@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cooked_porkchop",
+    "minecraft:cooked_chicken",
+    "minecraft:beef",
+    "minecraft:rabbit",
+    "minecraft:cooked_rabbit",
+    "minecraft:golden_apple",
+    "minecraft:carrot",
+    "minecraft:cooked_mutton",
+    "minecraft:apple",
+    "minecraft:cooked_cod",
+    "minecraft:cooked_beef",
+    "minecraft:golden_carrot",
+    "minecraft:mutton",
+    "minecraft:chicken",
+    "minecraft:enchanted_golden_apple",
+    "minecraft:bread",
+    "minecraft:porkchop",
+    "minecraft:cod",
+    "minecraft:dried_kelp",
+    "minecraft:beetroot"
+  ]
+}

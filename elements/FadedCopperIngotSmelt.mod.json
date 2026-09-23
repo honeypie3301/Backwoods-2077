@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smelting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedCopperIngot"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.1,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smeltingInputStack": {
+      "value": "CUSTOM:FadedCopperIngot"
+    },
+    "smeltingReturnStack": {
+      "value": "Items.COPPER_INGOT"
+    },
+    "name": "faded_copper_ingot_smelt",
+    "namespace": "mod"
+  }
+}

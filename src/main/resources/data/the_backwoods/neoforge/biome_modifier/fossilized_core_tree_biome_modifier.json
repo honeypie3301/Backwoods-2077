@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:fossilized_core",
+  "features": "the_backwoods:fossilized_core_tree",
+  "step": "surface_structures"
+}

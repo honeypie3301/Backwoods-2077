@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "the_backwoods:uniform_grain",
+    "the_backwoods:stillwood",
+    "the_backwoods:pillar_thicket",
+    "the_backwoods:fractured_barrens",
+    "the_backwoods:labyrinthine_grids"
+  ],
+  "features": "the_backwoods:void_basement",
+  "step": "top_layer_modification"
+}

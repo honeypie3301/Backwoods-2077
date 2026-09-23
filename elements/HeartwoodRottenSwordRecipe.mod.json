@@ -1,0 +1,36 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smithing",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:HeartwoodShard"
+      },
+      {
+        "value": "CUSTOM:RottenSword"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smithingInputStack": {
+      "value": "CUSTOM:HeartwoodShard"
+    },
+    "smithingInputAdditionStack": {
+      "value": "Items.NETHERITE_UPGRADE"
+    },
+    "smithingInputTemplateStack": {
+      "value": "CUSTOM:RottenSword"
+    },
+    "smithingReturnStack": {
+      "value": "CUSTOM:HeartwoodRottenSword"
+    },
+    "name": "heartwood_rotten_sword_recipe",
+    "namespace": "mod"
+  }
+}

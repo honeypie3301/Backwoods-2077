@@ -1,0 +1,79 @@
+{
+  "_fv": 85,
+  "_type": "dimension",
+  "definition": {
+    "biomesInDimension": [
+      {
+        "value": "CUSTOM:Confusion"
+      }
+    ],
+    "biomesInDimensionCaves": [],
+    "worldGenType": "Normal world gen",
+    "mainFillerBlock": {
+      "value": "CUSTOM:Nullstone"
+    },
+    "fluidBlock": {
+      "value": "Blocks.WATER"
+    },
+    "seaLevel": 40,
+    "generateOreVeins": false,
+    "generateAquifers": false,
+    "horizontalNoiseSize": 1,
+    "verticalNoiseSize": 4,
+    "defaultEffects": "overworld",
+    "useCustomEffects": true,
+    "hasClouds": false,
+    "cloudHeight": 192,
+    "skyType": "NONE",
+    "sunHeightAffectsFog": false,
+    "canRespawnHere": false,
+    "hasFog": false,
+    "ambientLight": 0.025,
+    "doesWaterVaporize": false,
+    "hasFixedTime": true,
+    "fixedTimeValue": 6000,
+    "coordinateScale": 1.0,
+    "infiniburnTag": "minecraft:infiniburn_overworld",
+    "bedWorks": true,
+    "hasSkyLight": false,
+    "imitateOverworldBehaviour": true,
+    "piglinSafe": false,
+    "hasRaids": false,
+    "minMonsterSpawnLightLimit": 0,
+    "maxMonsterSpawnLightLimit": 15,
+    "monsterSpawnBlockLightLimit": 0,
+    "onPlayerEntersDimension": {
+      "name": "LossPlayerEntersDimension"
+    },
+    "onPlayerLeavesDimension": {
+      "name": "LossPlayerLeavesDimension"
+    },
+    "portalFrame": {
+      "value": "CUSTOM:Nullstone"
+    },
+    "portalParticles": {
+      "value": "ASH"
+    },
+    "portalLuminance": 1,
+    "portalSound": {
+      "value": "block.portal.ambient"
+    },
+    "enableIgniter": true,
+    "igniterName": "Dead Memory Shard",
+    "igniterRarity": "UNCOMMON",
+    "specialInformation": {
+      "fixedValue": []
+    },
+    "creativeTabs": [
+      {
+        "value": "TOOLS"
+      }
+    ],
+    "texture": "dead_memory_shard",
+    "portalTexture": "loss_portal",
+    "enablePortal": true,
+    "portalMakeCondition": {
+      "name": "LossCanMakePortal"
+    }
+  }
+}

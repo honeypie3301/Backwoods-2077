@@ -1,0 +1,8 @@
+{
+  "parent": "block/wall_inventory",
+  "textures": {
+    "wall": "the_backwoods:block/cobbled_nullstone",
+    "particle": "the_backwoods:block/cobbled_nullstone"
+  },
+  "render_type": "solid"
+}

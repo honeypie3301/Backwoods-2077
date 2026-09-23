@@ -1,0 +1,10 @@
+{
+  "_fv": 85,
+  "_type": "command",
+  "definition": {
+    "commandName": "switchdimensions",
+    "type": "STANDARD",
+    "permissionLevel": "4",
+    "argsxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"args_start\" deletable=\"false\" x=\"40\" y=\"40\"><next><block type=\"string\"><field name=\"type\">word</field><field name=\"name\">target_dim</field><statement name=\"args\"><block type=\"call_procedure\"><field name=\"procedure\">SwitchDimensionsProc</field></block></statement></block></next></block></xml>"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "feature": "the_backwoods:catwalk_sub_cavern",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

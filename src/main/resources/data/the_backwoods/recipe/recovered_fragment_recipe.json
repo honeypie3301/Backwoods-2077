@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:distorted_memory_fragment"
+    },
+    {
+      "item": "the_backwoods:pale_remedy"
+    },
+    {
+      "item": "the_backwoods:distorted_memory_fragment"
+    },
+    {
+      "item": "the_backwoods:heartwood_shard"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:recovered_memory_fragment",
+    "count": 1
+  }
+}

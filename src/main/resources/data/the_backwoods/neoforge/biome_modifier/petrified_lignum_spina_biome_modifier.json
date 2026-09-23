@@ -1,0 +1,15 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "the_backwoods:weald_outskirts",
+    "the_backwoods:calcified_plains",
+    "the_backwoods:petrified_thickwoods",
+    "the_backwoods:fossilized_core"
+  ],
+  "spawners": {
+    "type": "the_backwoods:petrified_lignum_spina",
+    "weight": 15,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

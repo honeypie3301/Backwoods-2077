@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "the_backwoods:block/sinking_ash",
+    "up": "the_backwoods:block/sinking_ash",
+    "north": "the_backwoods:block/sinking_ash",
+    "east": "the_backwoods:block/sinking_ash",
+    "south": "the_backwoods:block/sinking_ash",
+    "west": "the_backwoods:block/sinking_ash",
+    "particle": "the_backwoods:block/sinking_ash"
+  },
+  "render_type": "solid"
+}

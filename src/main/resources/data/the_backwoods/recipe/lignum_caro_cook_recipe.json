@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "experience": 7,
+  "cookingtime": 70,
+  "ingredient": {
+    "item": "the_backwoods:lignum_caro"
+  },
+  "result": {
+    "id": "the_backwoods:lignum_caro_ash"
+  }
+}

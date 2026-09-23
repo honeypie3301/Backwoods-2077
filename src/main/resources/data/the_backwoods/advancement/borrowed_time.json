@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "the_backwoods:plaque_heart"
+    },
+    "title": {
+      "translate": "advancements.borrowed_time.title"
+    },
+    "description": {
+      "translate": "advancements.borrowed_time.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "borrowed_time_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 16
+  },
+  "parent": "the_backwoods:enter_loss"
+}

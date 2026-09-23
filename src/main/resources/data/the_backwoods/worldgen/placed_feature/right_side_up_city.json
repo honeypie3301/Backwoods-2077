@@ -1,0 +1,11 @@
+{
+  "feature": "the_backwoods:right_side_up_city",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

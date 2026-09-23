@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aba",
+    "cdc",
+    " a "
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:rotten_stick"
+    },
+    "b": {
+      "item": "the_backwoods:heartwood_shard"
+    },
+    "c": {
+      "item": "minecraft:string"
+    },
+    "d": {
+      "item": "the_backwoods:splinter_shard"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:rot_effigy",
+    "count": 1
+  }
+}

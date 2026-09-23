@@ -1,0 +1,11 @@
+{
+  "feature": "the_backwoods:cavern_grid",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

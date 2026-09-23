@@ -1,0 +1,13 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "the_backwoods:wood_plains",
+    "the_backwoods:the_thicket"
+  ],
+  "spawners": {
+    "type": "the_backwoods:lignum_gigas",
+    "weight": 1,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

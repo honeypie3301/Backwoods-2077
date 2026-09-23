@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "experience": 0.1,
+  "cookingtime": 170,
+  "ingredient": {
+    "item": "the_backwoods:faded_gold_ingot"
+  },
+  "result": {
+    "id": "minecraft:gold_ingot"
+  }
+}

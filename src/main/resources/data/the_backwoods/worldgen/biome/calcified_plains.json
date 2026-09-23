@@ -1,0 +1,58 @@
+{
+  "has_precipitation": true,
+  "temperature": 0.4,
+  "downfall": 0.1,
+  "effects": {
+    "music": {
+      "sound": "ambient.soul_sand_valley.loop",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": true
+    },
+    "particle": {
+      "options": {
+        "type": "ash"
+      },
+      "probability": 0.001
+    },
+    "foliage_color": -14077655,
+    "grass_color": -14077655,
+    "sky_color": -10790053,
+    "fog_color": -15065318,
+    "water_color": -16119808,
+    "water_fog_color": -16119808
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
+  "features": [
+    [],
+    [
+      "minecraft:lake_lava_underground"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:memory_fragment"
+    },
+    {
+      "item": "minecraft:glistering_melon_slice"
+    },
+    {
+      "item": "the_backwoods:seep"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:recovered_memory_fragment",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:faded_wheat"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:faded_bread",
+    "count": 3
+  }
+}

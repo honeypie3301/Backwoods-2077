@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:seep"
+    },
+    {
+      "item": "the_backwoods:ash_rose"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "the_backwoods:recovered_memory_fragment"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:stabilized_pale_remedy",
+    "count": 1
+  }
+}

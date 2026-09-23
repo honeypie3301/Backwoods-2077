@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "the_backwoods:fossilized_core",
+    "the_backwoods:weald_outskirts",
+    "the_backwoods:petrified_thickwoods"
+  ],
+  "features": "the_backwoods:weald_mushroom_patch",
+  "step": "surface_structures"
+}

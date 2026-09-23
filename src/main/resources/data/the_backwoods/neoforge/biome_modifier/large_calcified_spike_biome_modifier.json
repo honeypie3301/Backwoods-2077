@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "the_backwoods:weald_outskirts",
+    "the_backwoods:petrified_thickwoods",
+    "the_backwoods:fossilized_core"
+  ],
+  "features": "the_backwoods:large_calcified_spike",
+  "step": "vegetal_decoration"
+}

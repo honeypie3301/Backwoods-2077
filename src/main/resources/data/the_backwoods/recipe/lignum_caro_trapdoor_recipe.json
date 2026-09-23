@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:lignum_caro"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:lignum_caro_trapdoor",
+    "count": 2
+  }
+}

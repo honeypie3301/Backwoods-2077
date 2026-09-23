@@ -1,0 +1,47 @@
+{
+  "_fv": 85,
+  "_type": "tool",
+  "definition": {
+    "toolType": "Sword",
+    "renderType": 0,
+    "blockingRenderType": 0,
+    "texture": "heartwood_rotten_sword",
+    "customModelName": "Normal",
+    "blockingModelName": "Normal blocking",
+    "guiTexture": "",
+    "name": "Rotten Heartwood Sword",
+    "rarity": "COMMON",
+    "specialInformation": {
+      "fixedValue": [
+        "§8It feels warmer than it should."
+      ]
+    },
+    "creativeTabs": [
+      {
+        "value": "COMBAT"
+      }
+    ],
+    "efficiency": 4.0,
+    "attackSpeed": 1.1,
+    "enchantability": 6,
+    "damageVsEntity": 8.0,
+    "usageCount": 400,
+    "glowCondition": {
+      "fixedValue": false
+    },
+    "repairItems": [
+      {
+        "value": "CUSTOM:HeartwoodShard"
+      }
+    ],
+    "immuneToFire": false,
+    "blockDropsTier": "IRON",
+    "blocksAffected": [],
+    "attributeModifiers": [],
+    "stayInGridWhenCrafting": false,
+    "damageOnCrafting": false,
+    "onEntityHitWith": {
+      "name": "HeartwoodHeartwoodRottenSwordLivingEntityIsHitWithTool"
+    }
+  }
+}

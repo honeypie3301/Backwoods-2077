@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "experience": 0.2,
+  "cookingtime": 120,
+  "ingredient": {
+    "item": "the_backwoods:nullstone"
+  },
+  "result": {
+    "id": "the_backwoods:cracked_nullstone"
+  }
+}

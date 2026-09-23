@@ -1,0 +1,8 @@
+{
+  "feature": "the_backwoods:menger_sponge",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    }
+  ]
+}

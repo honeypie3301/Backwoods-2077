@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "the_backwoods:block/the_petrified_weald_portal_ew"
+    },
+    "axis=x": {
+      "model": "the_backwoods:block/the_petrified_weald_portal_ns"
+    }
+  }
+}

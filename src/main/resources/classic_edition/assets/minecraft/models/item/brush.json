@@ -1,0 +1,1 @@
+{"parent":"item/generated","textures":{"layer0":"item/brush"},"overrides":[{"predicate":{"brushing":0.25},"model":"item/brush_brushing_0"},{"predicate":{"brushing":0.5},"model":"item/brush_brushing_1"},{"predicate":{"brushing":0.75},"model":"item/brush_brushing_2"}]}

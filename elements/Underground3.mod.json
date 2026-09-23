@@ -1,0 +1,42 @@
+{
+  "_fv": 85,
+  "_type": "structure",
+  "definition": {
+    "structure": "underground_3",
+    "projection": "rigid",
+    "ignoredBlocks": [
+      {
+        "value": "Blocks.STRUCTURE_BLOCK"
+      }
+    ],
+    "spacing": 48,
+    "separation": 18,
+    "restrictionBiomes": [
+      {
+        "value": "CUSTOM:UniformGrain"
+      },
+      {
+        "value": "CUSTOM:Stillwood"
+      },
+      {
+        "value": "CUSTOM:SplinterNest"
+      },
+      {
+        "value": "CUSTOM:PillarThicket"
+      },
+      {
+        "value": "CUSTOM:FracturedBarrens"
+      }
+    ],
+    "terrainAdaptation": "bury",
+    "generationStep": "UNDERGROUND_DECORATION",
+    "surfaceDetectionType": "WORLD_SURFACE_WG",
+    "useStartHeight": true,
+    "startHeightProviderType": "UNIFORM",
+    "startHeightMin": 0,
+    "startHeightMax": 50,
+    "size": 1,
+    "maxDistanceFromCenter": 64,
+    "jigsawPools": []
+  }
+}

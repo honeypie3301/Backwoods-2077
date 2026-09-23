@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smoking",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedRawBeef"
+      }
+    ],
+    "cookingBookCategory": "FOOD",
+    "xpReward": 0.6,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smokingInputStack": {
+      "value": "CUSTOM:FadedRawBeef"
+    },
+    "smokingReturnStack": {
+      "value": "CUSTOM:FadedCookedBeef"
+    },
+    "name": "faded_steak_recipe",
+    "namespace": "mod"
+  }
+}

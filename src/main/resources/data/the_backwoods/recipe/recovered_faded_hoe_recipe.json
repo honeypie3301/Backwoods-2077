@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "the_backwoods:faded_hoe"
+    },
+    {
+      "item": "the_backwoods:recovered_memory_fragment"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:recovered_faded_hoe",
+    "count": 1
+  }
+}

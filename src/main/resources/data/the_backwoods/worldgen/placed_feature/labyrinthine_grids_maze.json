@@ -1,0 +1,11 @@
+{
+  "feature": "the_backwoods:labyrinthine_grids_maze",
+  "placement": [
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

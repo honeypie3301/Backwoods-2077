@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "the_backwoods:underground_2",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 24,
+    "separation": 9,
+    "salt": 1390201175
+  }
+}

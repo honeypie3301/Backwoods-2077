@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "the_backwoods:block/rotten_oak_slab"
+    },
+    "type=top": {
+      "model": "the_backwoods:block/rotten_oak_slab_top"
+    },
+    "type=double": {
+      "model": "the_backwoods:block/rotten_oak_slab_full"
+    }
+  }
+}

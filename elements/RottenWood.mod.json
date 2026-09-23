@@ -1,0 +1,49 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 3,
+    "group": "",
+    "unlockingItems": [],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "BUILDING",
+    "recipeShapeless": true,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:RottenOakLog"
+      },
+      {
+        "value": "CUSTOM:RottenOakLog"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:RottenOakLog"
+      },
+      {
+        "value": "CUSTOM:RottenOakLog"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:RottenOakWood"
+    },
+    "name": "rotten_wood",
+    "namespace": "mod"
+  }
+}

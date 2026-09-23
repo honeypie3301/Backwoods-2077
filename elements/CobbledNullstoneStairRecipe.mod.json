@@ -1,0 +1,53 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 4,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "BUILDING",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      },
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      },
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      },
+      {
+        "value": "CUSTOM:CobbledNullstone"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:CobbledNullstoneStair"
+    },
+    "name": "cobbled_nullstone_stair_recipe",
+    "namespace": "mod"
+  }
+}

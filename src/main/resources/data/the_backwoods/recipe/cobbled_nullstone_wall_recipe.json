@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:cobbled_nullstone"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:cobbled_nullstone_wall",
+    "count": 6
+  }
+}

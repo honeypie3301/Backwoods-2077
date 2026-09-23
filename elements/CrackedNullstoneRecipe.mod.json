@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smelting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:Nullstone"
+      }
+    ],
+    "cookingBookCategory": "BLOCKS",
+    "xpReward": 0.2,
+    "cookingTime": 120,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smeltingInputStack": {
+      "value": "CUSTOM:Nullstone"
+    },
+    "smeltingReturnStack": {
+      "value": "CUSTOM:CrackedNullstone"
+    },
+    "name": "cracked_nullstone_recipe",
+    "namespace": "mod"
+  }
+}

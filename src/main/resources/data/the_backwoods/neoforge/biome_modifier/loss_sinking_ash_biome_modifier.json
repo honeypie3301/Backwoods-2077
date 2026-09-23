@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:confusion",
+  "features": "the_backwoods:loss_sinking_ash",
+  "step": "underground_decoration"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:stillwood",
+  "features": "the_backwoods:tree_uniform_grain",
+  "step": "surface_structures"
+}

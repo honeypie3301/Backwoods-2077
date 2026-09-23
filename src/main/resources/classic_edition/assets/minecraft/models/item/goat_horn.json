@@ -1,0 +1,1 @@
+{"parent":"item/generated","textures":{"layer0":"item/goat_horn"},"display":{},"overrides":[{"predicate":{"tooting":1},"model":"item/tooting_goat_horn"}]}

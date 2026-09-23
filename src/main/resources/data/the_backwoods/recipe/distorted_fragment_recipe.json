@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:memory_fragment"
+    },
+    {
+      "item": "the_backwoods:memory_fragment"
+    },
+    {
+      "item": "the_backwoods:memory_fragment"
+    },
+    {
+      "item": "the_backwoods:memory_fragment"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:distorted_memory_fragment",
+    "count": 1
+  }
+}

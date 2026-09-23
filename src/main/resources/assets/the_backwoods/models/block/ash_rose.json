@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "the_backwoods:block/ash_rose",
+    "particle": "the_backwoods:block/ash_rose"
+  },
+  "render_type": "cutout"
+}

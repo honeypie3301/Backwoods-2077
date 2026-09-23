@@ -1,0 +1,33 @@
+{
+  "_fv": 85,
+  "_type": "potioneffect",
+  "definition": {
+    "effectName": "Light Lungs",
+    "icon": "light_lungs",
+    "color": {
+      "value": -6697729,
+      "falpha": 0.0
+    },
+    "onAddedSound": {
+      "value": ""
+    },
+    "isInstant": false,
+    "mobEffectCategory": "BENEFICIAL",
+    "renderStatusInInventory": true,
+    "renderStatusInHUD": true,
+    "isCuredbyHoney": false,
+    "modifiers": [
+      {
+        "equipmentSlot": "any",
+        "attribute": {
+          "value": "MOVEMENT_EFFICIENCY"
+        },
+        "amount": 0.08,
+        "operation": "ADD_MULTIPLIED_TOTAL"
+      }
+    ],
+    "onActiveTick": {
+      "name": "LightLungsOnEffectActiveTick"
+    }
+  }
+}

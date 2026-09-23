@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "the_backwoods:block/lignum_caro_infected",
+    "up": "the_backwoods:block/lignum_caro_infected",
+    "north": "the_backwoods:block/lignum_caro_infected",
+    "east": "the_backwoods:block/lignum_caro_infected",
+    "south": "the_backwoods:block/lignum_caro_infected",
+    "west": "the_backwoods:block/lignum_caro_infected",
+    "particle": "minecraft:block/oak_planks"
+  },
+  "render_type": "solid"
+}

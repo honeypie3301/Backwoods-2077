@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:faded_gold_ingot"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:faded_gold_nugget",
+    "count": 9
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "the_backwoods:block/rotten_oak_wood"
+    },
+    "facing=east": {
+      "model": "the_backwoods:block/rotten_oak_wood",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "the_backwoods:block/rotten_oak_wood",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "the_backwoods:block/rotten_oak_wood",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "the_backwoods:block/rotten_oak_wood",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "the_backwoods:block/rotten_oak_wood",
+      "x": 90
+    }
+  }
+}

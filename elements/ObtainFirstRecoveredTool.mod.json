@@ -1,0 +1,24 @@
+{
+  "_fv": 85,
+  "_type": "achievement",
+  "definition": {
+    "achievementName": "Edge of Recall",
+    "achievementDescription": "Forge your first Recovered Faded tool.",
+    "achievementIcon": {
+      "value": "CUSTOM:RecoveredFadedPickaxe"
+    },
+    "background": "Default",
+    "disableDisplay": false,
+    "showPopup": true,
+    "announceToChat": true,
+    "hideIfNotCompleted": false,
+    "rewardLoot": [],
+    "rewardRecipes": [],
+    "rewardXP": 11,
+    "achievementType": "goal",
+    "parent": {
+      "value": "CUSTOM:EnterLoss"
+    },
+    "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><block type=\"custom_trigger\"></block></next></block></xml>"
+  }
+}

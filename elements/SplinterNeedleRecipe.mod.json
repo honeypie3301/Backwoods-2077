@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Stone cutting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:SharpenedSplinterShard"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "stoneCuttingInputStack": {
+      "value": "CUSTOM:SharpenedSplinterShard"
+    },
+    "stoneCuttingReturnStack": {
+      "value": "CUSTOM:SplinterNeedle"
+    },
+    "name": "splinter_needle_recipe",
+    "namespace": "mod"
+  }
+}

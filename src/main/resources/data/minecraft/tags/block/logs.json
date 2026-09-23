@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:petrified_rotten_oak_log",
+    "the_backwoods:rotten_oak_log",
+    "the_backwoods:petrified_stripped_rotten_oak_log",
+    "the_backwoods:scandere_lignum_log"
+  ]
+}

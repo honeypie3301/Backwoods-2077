@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "the_backwoods:block/plaque_heart"
+    },
+    "facing=east": {
+      "model": "the_backwoods:block/plaque_heart",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "the_backwoods:block/plaque_heart",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "the_backwoods:block/plaque_heart",
+      "y": 270
+    }
+  }
+}

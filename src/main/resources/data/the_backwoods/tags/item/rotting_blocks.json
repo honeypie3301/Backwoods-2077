@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:rotten_oak_fence",
+    "the_backwoods:rotten_oak_planks",
+    "the_backwoods:rotten_oak_log",
+    "the_backwoods:rotten_oak_button",
+    "the_backwoods:rotten_oak_pressure_plate",
+    "the_backwoods:rotten_oak_wood",
+    "the_backwoods:rotten_oak_slab",
+    "the_backwoods:rotten_oak_stair",
+    "the_backwoods:rotten_oak_trapdoor",
+    "the_backwoods:rotten_oak_gate",
+    "the_backwoods:petrified_rotten_oak_wood"
+  ]
+}

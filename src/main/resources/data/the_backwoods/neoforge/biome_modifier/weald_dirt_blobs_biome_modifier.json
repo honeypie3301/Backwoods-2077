@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "the_backwoods:calcified_plains",
+    "the_backwoods:ashen_barrens"
+  ],
+  "features": "the_backwoods:weald_dirt_blobs",
+  "step": "underground_decoration"
+}

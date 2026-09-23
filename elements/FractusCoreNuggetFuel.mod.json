@@ -1,0 +1,15 @@
+{
+  "_fv": 85,
+  "_type": "itemextension",
+  "definition": {
+    "item": {
+      "value": "CUSTOM:FractusCoreNugget"
+    },
+    "enableFuel": true,
+    "fuelPower": {
+      "fixedValue": 111111.0
+    },
+    "hasDispenseBehavior": false,
+    "compostLayerChance": 0.0
+  }
+}

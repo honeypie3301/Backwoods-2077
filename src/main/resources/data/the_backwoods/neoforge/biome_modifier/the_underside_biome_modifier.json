@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "the_backwoods:the_dead_grain"
+  ],
+  "features": "the_backwoods:the_underside",
+  "step": "top_layer_modification"
+}

@@ -1,0 +1,27 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Blasting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:FadedNetheriteIngot"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.67,
+    "cookingTime": 250,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "blastingInputStack": {
+      "value": "CUSTOM:FadedNetheriteIngot"
+    },
+    "blastingReturnStack": {
+      "value": "Items.NETHERITE_INGOT"
+    },
+    "name": "faded_netherite_ingot_blasting",
+    "namespace": "mod"
+  }
+}

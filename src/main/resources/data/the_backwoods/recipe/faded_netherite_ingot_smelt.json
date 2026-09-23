@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "experience": 0.5,
+  "cookingtime": 700,
+  "ingredient": {
+    "item": "the_backwoods:faded_netherite_ingot"
+  },
+  "result": {
+    "id": "minecraft:netherite_ingot"
+  }
+}

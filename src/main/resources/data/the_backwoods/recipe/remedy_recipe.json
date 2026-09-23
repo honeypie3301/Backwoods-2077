@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:seep"
+    },
+    {
+      "item": "the_backwoods:ash_rose"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:pale_remedy",
+    "count": 1
+  }
+}

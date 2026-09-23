@@ -1,0 +1,95 @@
+{
+  "_fv": 85,
+  "_type": "dimension",
+  "definition": {
+    "biomesInDimension": [
+      {
+        "value": "CUSTOM:UniformGrain"
+      },
+      {
+        "value": "CUSTOM:Stillwood"
+      },
+      {
+        "value": "CUSTOM:SplinterNest"
+      },
+      {
+        "value": "CUSTOM:PillarThicket"
+      },
+      {
+        "value": "CUSTOM:FracturedBarrens"
+      },
+      {
+        "value": "CUSTOM:LabyrinthineGrids"
+      }
+    ],
+    "biomesInDimensionCaves": [],
+    "worldGenType": "Normal world gen",
+    "mainFillerBlock": {
+      "value": "CUSTOM:LignumCaro"
+    },
+    "fluidBlock": {
+      "value": "Blocks.PLANKS#0"
+    },
+    "seaLevel": 63,
+    "generateOreVeins": false,
+    "generateAquifers": false,
+    "horizontalNoiseSize": 1,
+    "verticalNoiseSize": 2,
+    "defaultEffects": "overworld",
+    "useCustomEffects": true,
+    "hasClouds": false,
+    "cloudHeight": 192,
+    "skyType": "NONE",
+    "airColor": {
+      "value": -6321344,
+      "falpha": 0.0
+    },
+    "sunHeightAffectsFog": false,
+    "canRespawnHere": true,
+    "hasFog": true,
+    "ambientLight": 0.035,
+    "doesWaterVaporize": false,
+    "hasFixedTime": true,
+    "fixedTimeValue": 6000,
+    "coordinateScale": 5.0,
+    "infiniburnTag": "minecraft:infiniburn_overworld",
+    "bedWorks": true,
+    "hasSkyLight": false,
+    "imitateOverworldBehaviour": false,
+    "piglinSafe": true,
+    "hasRaids": false,
+    "minMonsterSpawnLightLimit": 0,
+    "maxMonsterSpawnLightLimit": 15,
+    "monsterSpawnBlockLightLimit": 0,
+    "onPlayerEntersDimension": {
+      "name": "TheGrainPlayerEntersDimension"
+    },
+    "portalFrame": {
+      "value": "Blocks.PLANKS#0"
+    },
+    "portalParticles": {
+      "value": "ASH"
+    },
+    "portalLuminance": 5,
+    "portalSound": {
+      "value": "block.portal.ambient"
+    },
+    "enableIgniter": false,
+    "igniterName": "",
+    "igniterRarity": "COMMON",
+    "specialInformation": {
+      "fixedValue": []
+    },
+    "creativeTabs": [
+      {
+        "value": "TOOLS"
+      }
+    ],
+    "texture": "",
+    "portalTexture": "backwoods_portal2",
+    "enablePortal": true,
+    "portalMakeCondition": {
+      "name": "BackwoodsCanMakePortal"
+    }
+  }
+}

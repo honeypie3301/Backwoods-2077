@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:recovered_faded_hoe",
+    "the_backwoods:faded_hoe",
+    "the_backwoods:rotten_hoe"
+  ]
+}

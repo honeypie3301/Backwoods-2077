@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aba",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    "b": {
+      "item": "the_backwoods:faded_carrot"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:faded_golden_carrot",
+    "count": 1
+  }
+}

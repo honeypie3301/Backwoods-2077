@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    },
+    {
+      "item": "the_backwoods:faded_gold_nugget"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:faded_gold_ingot",
+    "count": 1
+  }
+}

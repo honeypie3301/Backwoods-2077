@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "the_backwoods:the_dead_grain",
+  "spawners": {
+    "type": "the_backwoods:lignum_vermis",
+    "weight": 15,
+    "minCount": 8,
+    "maxCount": 19
+  }
+}

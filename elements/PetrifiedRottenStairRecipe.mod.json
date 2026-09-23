@@ -1,0 +1,53 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 4,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "BUILDING",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:PetrifiedRottenOakStairs"
+    },
+    "name": "petrified_rotten_stair_recipe",
+    "namespace": "mod"
+  }
+}

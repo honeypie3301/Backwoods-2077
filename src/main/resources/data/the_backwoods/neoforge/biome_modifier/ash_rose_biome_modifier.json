@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:ashen_barrens",
+  "features": "the_backwoods:ash_rose",
+  "step": "vegetal_decoration"
+}

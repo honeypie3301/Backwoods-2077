@@ -1,0 +1,15 @@
+{
+  "_fv": 85,
+  "_type": "itemextension",
+  "definition": {
+    "item": {
+      "value": "CUSTOM:RottenOakWood"
+    },
+    "enableFuel": true,
+    "fuelPower": {
+      "fixedValue": 240.0
+    },
+    "hasDispenseBehavior": false,
+    "compostLayerChance": 0.0
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:recovered_faded_shovel",
+    "the_backwoods:recovered_faded_sword",
+    "the_backwoods:recovered_faded_axe",
+    "the_backwoods:recovered_faded_hoe",
+    "the_backwoods:recovered_faded_pickaxe"
+  ]
+}

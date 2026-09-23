@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "flower_forest",
+    "forest"
+  ],
+  "features": "the_backwoods:scandere_lignum_generation",
+  "step": "vegetal_decoration"
+}

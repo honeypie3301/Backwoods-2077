@@ -1,0 +1,7 @@
+{
+  "parent": "block/template_fire_bottom",
+  "textures": {
+    "fire": "block/fire_0",
+		"fire2": "block/fire_1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "the_backwoods:pillar_thicket_building_11",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 4,
+    "separation": 3,
+    "salt": 846184375
+  }
+}

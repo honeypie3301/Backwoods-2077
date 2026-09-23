@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "the_backwoods:block/faded",
+    "up": "the_backwoods:block/faded",
+    "north": "the_backwoods:block/faded",
+    "east": "the_backwoods:block/faded",
+    "south": "the_backwoods:block/faded",
+    "west": "the_backwoods:block/faded",
+    "particle": "the_backwoods:block/faded"
+  },
+  "render_type": "solid"
+}

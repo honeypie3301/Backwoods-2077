@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "the_backwoods:block/tall_sedgebrush"
+    },
+    "half=lower": {
+      "model": "the_backwoods:block/tall_sedgebrush_bottom"
+    }
+  }
+}

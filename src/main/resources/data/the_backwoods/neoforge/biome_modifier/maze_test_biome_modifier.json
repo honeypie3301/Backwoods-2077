@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "the_backwoods:labyrinthine_grids"
+  ],
+  "features": "the_backwoods:labyrinthine_grids_maze",
+  "step": "surface_structures"
+}

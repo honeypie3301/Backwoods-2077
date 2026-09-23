@@ -1,0 +1,20 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "the_backwoods:wood_plains",
+    "the_backwoods:deep_backwoods",
+    "the_backwoods:the_thicket",
+    "the_backwoods:uniform_grain",
+    "the_backwoods:stillwood",
+    "the_backwoods:splinter_nest",
+    "the_backwoods:pillar_thicket",
+    "the_backwoods:fractured_barrens",
+    "the_backwoods:labyrinthine_grids"
+  ],
+  "spawners": {
+    "type": "the_backwoods:lignum_trilobita",
+    "weight": 12,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

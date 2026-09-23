@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aba"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:sharpened_splinter_shard"
+    },
+    "b": {
+      "item": "minecraft:oak_wood"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:splintered_oak_wood",
+    "count": 1
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_fv": 85,
+  "_type": "potion",
+  "definition": {
+    "potionName": "Potion of Cellular Collapse",
+    "splashName": "Splash Potion of Cellular Collapse",
+    "lingeringName": "Lingering Potion of Cellular Collapse",
+    "arrowName": "Arrow of Cellular Collapse",
+    "effects": [
+      {
+        "effect": {
+          "value": "CUSTOM:CellularCollapse"
+        },
+        "duration": 2000,
+        "infinite": false,
+        "amplifier": 0,
+        "ambient": false,
+        "showParticles": false
+      }
+    ]
+  }
+}

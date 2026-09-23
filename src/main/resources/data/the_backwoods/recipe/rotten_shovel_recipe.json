@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a",
+    "b",
+    "b"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:rotten_oak_planks"
+    },
+    "b": {
+      "item": "the_backwoods:rotten_stick"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:rotten_shovel",
+    "count": 1
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_fv": 85,
+  "_type": "potion",
+  "definition": {
+    "potionName": "Potion of Atrophy",
+    "splashName": "Splash Potion of Atrophy",
+    "lingeringName": "Lingering Potion of Atrophy",
+    "arrowName": "Arrow of Atrophy",
+    "effects": [
+      {
+        "effect": {
+          "value": "CUSTOM:AtrophyEffect"
+        },
+        "duration": 900,
+        "infinite": false,
+        "amplifier": 0,
+        "ambient": false,
+        "showParticles": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "the_backwoods:fossilized_core",
+  "features": "the_backwoods:sedgebrush_fossilized_core",
+  "step": "vegetal_decoration"
+}

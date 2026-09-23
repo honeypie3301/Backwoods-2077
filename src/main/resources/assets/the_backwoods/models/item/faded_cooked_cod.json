@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "the_backwoods:item/faded_cooked_cod"
+  }
+}

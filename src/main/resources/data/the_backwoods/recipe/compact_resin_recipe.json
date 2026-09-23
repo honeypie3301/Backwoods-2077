@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "the_backwoods:petrified_resin"
+    },
+    {
+      "item": "the_backwoods:petrified_resin"
+    },
+    {
+      "item": "the_backwoods:petrified_resin"
+    }
+  ],
+  "result": {
+    "id": "the_backwoods:compact_petrified_resin",
+    "count": 1
+  }
+}

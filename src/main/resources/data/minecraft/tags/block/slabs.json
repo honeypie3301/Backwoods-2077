@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:petrified_rotten_oak_slab",
+    "the_backwoods:rotten_oak_slab",
+    "the_backwoods:nullstone_slab",
+    "the_backwoods:cobbled_nullstone_slab"
+  ]
+}

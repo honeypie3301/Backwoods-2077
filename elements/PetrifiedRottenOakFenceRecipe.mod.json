@@ -1,0 +1,56 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 3,
+    "group": "",
+    "unlockingItems": [
+      {
+        "value": "CUSTOM:PetrifiedRottenStick"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      }
+    ],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "BUILDING",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenStick"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenStick"
+      },
+      {
+        "value": "CUSTOM:PetrifiedRottenOakPlanks"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:PetrifiedRottenOakFence"
+    },
+    "name": "petrified_rotten_oak_fence_recipe",
+    "namespace": "mod"
+  }
+}

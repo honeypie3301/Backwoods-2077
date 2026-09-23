@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "the_backwoods:nullstone"
+    }
+  },
+  "result": {
+    "id": "the_backwoods:nullstone_wall",
+    "count": 6
+  }
+}

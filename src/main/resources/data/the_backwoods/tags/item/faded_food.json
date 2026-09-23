@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:faded_wheat",
+    "the_backwoods:faded_mutton",
+    "the_backwoods:faded_beetroot",
+    "the_backwoods:faded_raw_beef",
+    "the_backwoods:faded_raw_chicken",
+    "the_backwoods:faded_cod",
+    "the_backwoods:faded_rabbit",
+    "the_backwoods:faded_cooked_chicken",
+    "the_backwoods:faded_carrot",
+    "the_backwoods:faded_cooked_rabbit",
+    "the_backwoods:faded_golden_carrot",
+    "the_backwoods:faded_cooked_mutton",
+    "the_backwoods:faded_dried_kelp",
+    "the_backwoods:faded_golden_apple",
+    "the_backwoods:faded_enchanted_golden_apple",
+    "the_backwoods:faded_melon_slice",
+    "the_backwoods:faded_potato",
+    "the_backwoods:faded_apple",
+    "the_backwoods:faded_porkchop",
+    "the_backwoods:faded_cooked_porkchop",
+    "the_backwoods:faded_baked_potato",
+    "the_backwoods:faded_cookie",
+    "the_backwoods:faded_pumpkin_pie",
+    "the_backwoods:faded_cooked_beef",
+    "the_backwoods:faded_bread",
+    "the_backwoods:faded_cooked_cod"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "the_backwoods:nullstone_stair",
+    "the_backwoods:nullstone",
+    "the_backwoods:cobbled_nullstone",
+    "the_backwoods:cobbled_nullstone_stair",
+    "the_backwoods:cracked_nullstone",
+    "the_backwoods:nullstone_wall",
+    "the_backwoods:cobbled_nullstone_wall",
+    "the_backwoods:nullstone_slab",
+    "the_backwoods:cobbled_nullstone_slab"
+  ]
+}

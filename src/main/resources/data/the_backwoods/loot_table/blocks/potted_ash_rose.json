@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "the_backwoods:blocks/potted_ash_rose",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:flower_pot"
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "the_backwoods:ash_rose"
+        }
+      ]
+    }
+  ]
+}
