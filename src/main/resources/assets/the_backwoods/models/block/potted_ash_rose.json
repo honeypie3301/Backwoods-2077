@@ -1,8 +1,0 @@
-{
-  "parent": "block/flower_pot_cross",
-  "textures": {
-    "plant": "the_backwoods:block/ash_rose",
-    "particle": "the_backwoods:block/ash_rose"
-  },
-  "render_type": "cutout"
-}

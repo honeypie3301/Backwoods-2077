@@ -1,9 +1,0 @@
-{
-  "parent": "the_backwoods:custom/fractusprimecoreblock",
-  "textures": {
-    "all": "the_backwoods:block/fractus_prime_core_texture",
-    "particle": "the_backwoods:block/fractus_prime_core_texture",
-    "0": "the_backwoods:block/fractus_prime_core_texture"
-  },
-  "render_type": "cutout"
-}

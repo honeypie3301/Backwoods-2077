@@ -1,1 +1,0 @@
-{"credit":"Made by Hexy","texture":"optifine/entity/piglin/piglin2.png","textureSize":[64,128],"models":[{"part":"head","id":"head","invertAxis":"xy","boxes":[{"coordinates":[-4,0,-4,8,8,8],"textureOffset":[0,0]},{"coordinates":[-2,1,-5,4,3,1],"textureOffset":[24,0]}]},{"part":"left_ear"},{"part":"right_ear"}]}
